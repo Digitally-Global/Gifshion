@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% block content %}
+{% load divide %}
+{% load cart_tag %}
+{% load sellprice %}
+
+<section class="account-block py-5 my-5">
+  <div class="container">
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="account-nav">
+            <nav class="nav flex-column">
+              <a class="nav-link" aria-current="page" href="{% url 'profile' %}">Profile Dashboard</a>
+              <a class="nav-link" href="{% url 'orders' %}">Orders</a>
+              <a class="nav-link active" href="{% url 'wishlist' %}">Wishlist</a>
+            </nav>
+          </div>
+        </div>
+
+        <div class="col-md-8">
+          <div class="account-content-details">
+            <div class="dashboard-info products-listing">
+              <h1>My Wishlist</h1>
+              {% if wishlist_items|length > 0 %}
+              <div class="border rounded p-4 m-4">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>S.no</th>
+                      <th>image</th>
+                      <th>Name</th>
+                      <th>Price</th>
+                      <th>Remove</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for item in wishlist_items %}
+                    <tr>
+                      <td>{{ forloop.counter }}</td>
+                      <td><img style="height: 50px" src="{{item.product.image.url}}"></td>
+                      <td>
+                        <a href="{{item.product.get_absolute_url}}">
+                          {{item.product.name}}
+                        </a>
+                      </td>
+                      <td>
+                        {% with request.session.exchange as exchange %}
+                        <div class="price"><span>{{ request.session.icon }}
+                            {{ item.product.price|discount:item.product.Discount|divide:exchange }}
+                            <del>{{item.product.price|divide:exchange}}</del></span></div>
+
+                        {% endwith %}
+                      </td>
+                      {% comment %} <td>
+                        <div class="qun_input">
+                          <span class="minus"><a href="{% url 'item_decrement' item.product.id %}"
+                              class="text -center"><i class="fa fa-minus"></i></a></span>
+                          <input type="number" min="1" value="{{ item.product.quantity }}" id="quantity" />
+                          <span class="plus"><a href="{% url 'item_increment' item.product.id %}"
+                              class="text -center"><i class="fa fa-plus"></i></a></span>
+
+                        </div>
+                      </td> {% endcomment %}
+                      <td class="product-remove">
+                        <form action="{% url 'wishlist' %}" method="POST" id="wishlist-form">
+                          {% csrf_token %}
+                          <input type="text" hidden value="remove" name="action">
+                          <input type="text" value="{{item.product.id}}" name="id" hidden>
+                          <button style="all: unset; cursor:pointer" type="submit">
+                            <i class="fa fa-times"></i>
+                          </button>
+                        </form>
+                      </td>
+
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+                {% else %}
+                <p>No products in your wishlist.</p>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+        <a class="sing-out-btn" href="{% url 'logout' %}">SIGN OUT</a>
+      </div>
+    </div>
+  </div>
+
+  </div>
+  </div>
+  </div>
+</section>
+
+
+<script>
+  const handleWishlist = () => {
+    form = document.getElementById('wishlist-form')
+    form.submit()
+  }
+</script>
+
+{% endblock %}

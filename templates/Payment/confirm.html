@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% load cart_tag %}
+{% block content %}
+{%load divide %}
+
+
+<div class="container">
+  <div class="border rounded p-4 m-4">
+    <p class="display-5 border">Confirm Order</p>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>S.no</th>
+          <th>image</th>
+          <th>Name</th>
+          <th>Price</th>
+          <th>quantity</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for key,value in request.session.cart.items %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          <td><img style="height: 50px" src="{{value.image}}"></td>
+          <td>{{value.name}}</td>
+          <td>{% with request.session.exchange as exchange %}
+            <div class="price"><span>{{ request.session.icon }} {{ value.price|divide:exchange }}
+
+                {% endwith %}
+          </td>
+          <td>
+            <div>
+              <p>{{value.quantity}}</p>
+            </div>
+          </td>
+          <td>
+
+            {% with request.session.exchange as exchange %}
+            {% with value.price|multiply:value.quantity as total %}
+            <div class="price"><span>{{ request.session.icon }} {{total|divide:exchange}}
+                {%endwith%}
+                {% endwith %}
+          </td>
+
+        </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr>
+          <th colspan="4">Total</th>
+          <th>
+            {% with request.session.exchange as exchange %}
+            <div class="price"><span>{{ request.session.icon }} {{ cart_total_amount|divide:exchange }}
+
+                {% endwith %}
+          </th>
+        </tr>
+      </tfoot>
+    </table>
+    <hr>
+    <div class="m-3 p-3">
+      <form action="{% url 'confirm_order' %}">
+        <input type="text" name="paymentId" value="{{request.GET.paymentId}}" hidden>
+        <input type="text" name="PayerID" value="{{request.GET.PayerID}}" hidden>
+        <input type="text" name="token" value="{{request.GET.token}}" hidden>
+        <button type="submit" class="btn btn-danger">Confirm</button>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- Modal -->
+
+{% endblock %}

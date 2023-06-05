@@ -1,0 +1,188 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+{% load divide%} {% load cart_tag %}
+<section class="account-block py-5 my-5">
+	<div class="container">
+		<div class="col-md-12">
+			<div class="row">
+				<div class="col-md-4">
+					<div class="account-nav">
+						<nav class="nav flex-column">
+							<a class="nav-link" aria-current="page" href="{% url 'profile' %}">Profile Dashboard</a>
+							<a class="nav-link active" href="{% url 'orders' %}">Orders</a>
+							<a class="nav-link" href="{% url 'wishlist' %}">Wishlist</a>
+						</nav>
+					</div>
+				</div>
+
+				<div class="col-md-8">
+					<div class="account-content-details">
+						<div class="dashboard-info products-listing">
+							<div class="container">
+								<h3>Total Amount - {{order.currency}} {{order.total_amount}}</h3>
+								{{order.payment.data}}
+								<h3>Order Date - {{order.order_date}}</h3>
+								<ul class="cards">
+									{% for item in order.items.all %}
+									<li class="card">
+										<div>
+											<div onclick="details('{{item.product.slug}}')">
+												<div class="card-content">
+													<img src="{{item.product.image.url}}" class="img-fluid" alt="" />
+													<h5 class="card-title">
+														{{item.quantity}} x {{item.product.name}}
+													</h5>
+													<h5>{{order.currency}} {{item.price}}</h5>
+												</div>
+											</div>
+											</a>
+									</li>
+									{% endfor %}
+								</ul>
+								<h1>Payment Details </h1>
+								<h5>Payment Method - {{order.payment_set.all.0.payment_method }}</h5>
+								<h1>Delivery Details </h1>
+								<h5>{{order.checkout.address}}</h5>
+								<h5>{{order.checkout.city}}</h5>
+								<h5>{{order.checkout.state}}</h5>
+								<h5>{{order.checkout.country}}</h5>
+								<h5>{{order.checkout.zip}}</h5>
+							</div>
+						</div>
+						<div class="sing-out">
+							<a class="sing-out-btn" href="{% url 'logout' %}">SIGN OUT</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<script>
+	const handleWishlist = () => {
+		form = document.getElementById('wishlist-form')
+		form.submit()
+	}
+	const details = (slug) => {
+		window.location.href = `/product/${slug}`
+	}
+
+</script>
+<style>
+	:root {
+		--orange: #fd9940;
+		--darkorange: #dd7d25;
+		--platinum: #e5e5e5;
+		--black: #2b2d42;
+		--white: #fff;
+		--thumb: #edf2f4;
+	}
+
+	* {
+		box-sizing: border-box;
+		padding: 0;
+		margin: 0;
+	}
+
+	.container {
+		max-width: 1400px;
+		padding: 0 15px;
+		margin: 0 auto;
+	}
+
+	h2 {
+		font-size: 32px;
+		margin-bottom: 1em;
+	}
+
+	.cards {
+		display: grid;
+		grid-auto-columns: 100%;
+		grid-column-gap: 10px;
+		grid-auto-flow: column;
+		padding: 25px 0px;
+		list-style: none;
+		overflow-x: scroll;
+		scroll-snap-type: x mandatory;
+	}
+
+	.card {
+		display: flex;
+		flex-direction: column;
+		padding: 20px;
+		background: var(--white);
+		border-radius: 12px;
+		box-shadow: 0 5px 15px rgba(0, 0, 0, 15%);
+		scroll-snap-align: start;
+		transition: all 0.2s;
+	}
+
+
+	.card .card-title {
+		font-size: 20px;
+	}
+
+	.card .card-content {
+		margin: 20px 0;
+		max-width: 85%;
+	}
+
+	.card .card-link-wrapper {
+		margin-top: auto;
+	}
+
+	.card .card-link {
+		display: inline-block;
+		text-decoration: none;
+		color: white;
+		background: var(--orange);
+		padding: 6px 12px;
+		border-radius: 8px;
+		transition: background 0.2s;
+	}
+
+
+	.cards::-webkit-scrollbar {
+		height: 12px;
+	}
+
+	.card:hover {
+		cursor: pointer;
+	}
+
+	.cards::-webkit-scrollbar-thumb,
+	.cards::-webkit-scrollbar-track {
+		border-radius: 92px;
+	}
+
+	.cards::-webkit-scrollbar-thumb {
+		background: var(--darkorange);
+	}
+
+	.cards::-webkit-scrollbar-track {
+		background: var(--thumb);
+	}
+
+	@media (min-width: 500px) {
+		.cards {
+			grid-auto-columns: calc(50% - 10px);
+			grid-column-gap: 20px;
+		}
+	}
+
+	@media (min-width: 700px) {
+		.cards {
+			grid-auto-columns: calc(calc(100% / 3) - 20px);
+			grid-column-gap: 30px;
+		}
+	}
+
+	@media (min-width: 1100px) {
+		.cards {
+			grid-auto-columns: calc(25% - 30px);
+			grid-column-gap: 40px;
+		}
+	}
+</style>
+
+{% endblock %}

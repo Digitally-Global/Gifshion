@@ -1,0 +1,216 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+{% load divide %}{% load sellprice %}
+
+<!-- Products Listing Banner -->
+<!-- Products Listing -->
+<section class="products-listing-area pt-5">
+  <div class="container">
+    <div class="products-listing">
+      <div class="row">
+        <div class="col-md-12 pb-4">
+          <div class="products-filter d-flex justify-content-end">
+            <form method="GET" class="form-search">
+              <input type="text" placeholder="Search.." name="search">
+              <button type="submit" class="btn"><i class="fa fa-search"></i></button>
+            </form>
+            {% comment %} <div class="filter_by">
+              <div class="filter_by_link">
+                FILTER BY <i class="fa fa-filter"></i>
+              </div>
+            </div> {% endcomment %}
+            {% comment %} <div class="products-filter-menu-block">
+              <div class="products-filter-menu p-3">
+                <div class="pf-head d-flex justify-content-between">
+                  <h5>Filter</h5>
+                  <div class="close-icon">
+                    <i class="flaticon-close"></i>
+                  </div>
+                </div>
+                <div class="filter-nav">
+                  <h5>Gender</h5>
+                  <div class="filter-cat">
+                    <a class="btn btn-outline-secondary" href="#">male</a>
+                    <a class="btn btn-outline-secondary" href="#">female</a>
+                  </div>
+                </div>
+                <div class="filter-nav">
+                  <h5>Skin Type</h5>
+                  <div class="filter-cat">
+                    <a class="btn btn-outline-secondary" href="#">Normal</a>
+                    <a class="btn btn-outline-secondary" href="#">Oily</a>
+                    <a class="btn btn-outline-secondary" href="#">Dry</a>
+                    <a class="btn btn-outline-secondary" href="#">Sensitive</a>
+                  </div>
+                </div>
+                <div class="filter-nav">
+                  <h5>Concern</h5>
+                  <div class="filter-cat">
+                    <a class="btn btn-outline-secondary" href="#">Damaged Hair</a>
+                    <a class="btn btn-outline-secondary" href="#">Frizzy Hair</a>
+                    <a class="btn btn-outline-secondary" href="#">Dandruff</a>
+                    <a class="btn btn-outline-secondary" href="#">Color Protection</a>
+                    <a class="btn btn-outline-secondary" href="#">Dryness & Dehydration</a>
+                    <a class="btn btn-outline-secondary" href="#">Dry Hair</a>
+                    <a class="btn btn-outline-secondary" href="#">Greying</a>
+                    <a class="btn btn-outline-secondary" href="#">Night Routine</a>
+                    <a class="btn btn-outline-secondary" href="#">Oil Control</a>
+                    <a class="btn btn-outline-secondary" href="#">Hair Color</a>
+                    <a class="btn btn-outline-secondary" href="#">Anti Ageing</a>
+                    <a class="btn btn-outline-secondary" href="#">Pigmentation</a>
+                    <a class="btn btn-outline-secondary" href="#">Brightening & Tan removal</a>
+                    <a class="btn btn-outline-secondary" href="#">Hairfall</a>
+                    <a class="btn btn-outline-secondary" href="#">HairGrowth</a>
+                    <a class="btn btn-outline-secondary" href="#">Daily Use</a>
+                  </div>
+                </div>
+                <div class="filter-nav">
+                  <h5>Concern</h5>
+                  <div class="filter-cat">
+                    <a class="btn btn-outline-secondary" href="#">Damaged Hair</a>
+                    <a class="btn btn-outline-secondary" href="#">Frizzy Hair</a>
+                    <a class="btn btn-outline-secondary" href="#">Dandruff</a>
+                    <a class="btn btn-outline-secondary" href="#">Color Protection</a>
+                    <a class="btn btn-outline-secondary" href="#">Dryness & Dehydration</a>
+                    <a class="btn btn-outline-secondary" href="#">Dry Hair</a>
+                    <a class="btn btn-outline-secondary" href="#">Greying</a>
+                    <a class="btn btn-outline-secondary" href="#">Night Routine</a>
+                    <a class="btn btn-outline-secondary" href="#">Oil Control</a>
+                    <a class="btn btn-outline-secondary" href="#">Hair Color</a>
+                    <a class="btn btn-outline-secondary" href="#">Anti Ageing</a>
+                    <a class="btn btn-outline-secondary" href="#">Pigmentation</a>
+                    <a class="btn btn-outline-secondary" href="#">Brightening & Tan removal</a>
+                    <a class="btn btn-outline-secondary" href="#">Hairfall</a>
+                    <a class="btn btn-outline-secondary" href="#">HairGrowth</a>
+                    <a class="btn btn-outline-secondary" href="#">Daily Use</a>
+                  </div>
+                </div>
+                <div class="pf-bottom">
+                  <a class="btn btn-dark btn-lg" href="#">reset</a>
+                  <a class="btn btn-dark btn-lg" href="#">apply</a>
+                </div>
+              </div> {% endcomment %}
+              {% comment %}
+            </div> {% endcomment %}
+          </div>
+        </div>
+        {% if not product|length == 0%}
+        {% for i in product %}
+
+
+        <div class="col-md-4 col-6">
+          <div class="product-item">
+            <div class="product-box">
+              <div class="product-images">
+                <a href="{{i.get_absolute_url}}"><img class="img-fluid" src="{{i.image.url}}" alt="" /></a>
+              </div>
+              <div class="product-meta d-flex justify-content-between py-2">
+                <span class="category">{{i.category}}</span>
+                <span class="rating">{{i.rate}}<i class="fa fa-star"></i></span>
+              </div>
+              <a href="{{i.get_absolute_url}}">
+                <h4 class="title">
+                  {{i.nam }}
+                </h4>
+              </a>
+              <p>
+                {{i.Product_information}}
+              </p>
+              {% comment %} {{request.session.exchange}} {% endcomment %}
+              {% with request.session.exchange as exchange %}
+              <div class="price"><span>{{ request.session.icon }} {{ i.price|divide:exchange|discount:i.Discount }}
+                  <del>{{i.price|divide:exchange}}</del></span></div>
+
+            </div>
+            <div class="product-bottom">
+              <div class="wishlist-icon">
+                <form action="{% url 'wishlist' %}" method="POST" id="wishlist-form">
+                  {% csrf_token %}
+                  <input type="text" hidden value="add" name="action">
+                  <input type="text" value={{i.id}} name="id" hidden>
+                  <button style="all: unset; cursor:pointer"><i class="flaticon-love"></i></button>
+                  <!-- <a onclick="handleWishlist()"><i class="flaticon-love"></i></a> -->
+                </form>
+              </div>
+              <a class="add-cart" href="{% url 'cart_add' i.id %}"><i class="flaticon-shopping-bag"></i>add to bag</a>
+            </div>
+            {% endwith %}
+          </div>
+          {% endfor %}
+          {% else %}
+          {% if no_search %}
+          <h1 class="text-center">No Products Found!</h1>
+          {% endif %}{% endif %}
+        </div>
+      </div>
+    </div>
+</section>
+<style>
+  input[type=range] {
+    -webkit-appearance: none;
+    width: 100%;
+  }
+
+  input[type=range]::-webkit-slider-runnable-track {
+    width: 1000px;
+    height: 5px;
+    background: #FCBE00;
+    border: none;
+    border-radius: 3px;
+  }
+
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    border: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: goldenrod;
+    margin-top: -5px;
+  }
+
+  input[type=range]:focus {
+    outline: none;
+  }
+
+  input[type=range]:focus::-webkit-slider-runnable-track {
+    background: #FCBE00;
+  }
+
+  button {
+    width: auto !important;
+    height: auto ! important;
+  }
+
+  .form-search {
+    display: flex;
+    width: 200%;
+  }
+
+  .form-search input[type=text] {
+    float: right;
+    padding: 6px;
+    margin-top: 8px;
+    margin-right: 16px;
+    font-size: 17px;
+    width: 100%;
+  }
+
+  .from-search .search-container button {
+    padding: 6px 10px;
+    float: right;
+    margin-top: 8px;
+    margin-right: 16px;
+    background: #ddd;
+    font-size: 17px;
+    border: none;
+    cursor: pointer;
+  }
+
+
+  .form-search .search-container button:hover {
+    background: #ccc;
+  }
+</style>
+{% endblock %}

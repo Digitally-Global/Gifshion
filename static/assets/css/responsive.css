@@ -1,0 +1,143 @@
+/* Responsive CSS */
+
+/* // X-Small devices (portrait phones, less than 576px) */
+@media (max-width: 575.98px) {
+  #header {
+    -webkit-box-shadow: 0 3px 6px rgb(82 53 40 / 16%) !important;
+    box-shadow: 0 3px 6px rgb(82 53 40 / 16%) !important;
+  }
+  #header i {
+    font-size: 20px;
+  }
+  .main-header {
+    display: none;
+  }
+  .main-header.mobile-header {
+    display: block;
+  }
+  .home-banner-content {
+    margin-right: 0;
+  }
+  .header-promo {
+    background: #c4601d;
+    color: white;
+  }
+  .main-header.mobile-header ul.nav.nav-manu {
+    scroll-behavior: smooth;
+    white-space: nowrap;
+    overflow-y: auto;
+    transform: translateZ(0);
+    flex-wrap: nowrap;
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none;
+  }
+  .main-header.mobile-header ul.nav.nav-manu::-webkit-scrollbar {
+    display: none;
+  }
+  .main-header.mobile-header ul.nav.nav-manu span {
+    position: absolute;
+    top: -2px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 9px;
+    background: #c4601d;
+    color: white;
+    padding: 2px 4px;
+    border-radius: 3px;
+    letter-spacing: 1.25px;
+  }
+  section.products-slider-area a.shop-btn {
+    padding: 0;
+  }
+  .heading h2 {
+    font-size: 20px;
+    line-height: normal !important;
+  }
+  .products-slider-area {
+    padding-bottom: 0;
+  }
+  section.fearurd-caregory-area a.featurd-cta {
+    height: 210px;
+  }
+  .products-filter-menu-block .products-filter-menu,
+  .cart-popup-block .cart-container {
+    width: 100vw;
+  }
+  .product-gallery .owl-thumbs {
+    display: none;
+  }
+
+  .product-gallery {
+    padding: 0;
+    margin: 0;
+  }
+
+  .owl-carousel.product-gallery-block.chocolat-parent {
+    margin: 0;
+  }
+
+  .products-details h1 {
+    font-size: 28px;
+    padding-top: 20px;
+  }
+
+  .product-btn a {
+    width: 50%;
+    border-radius: 0;
+  }
+
+  .product-btn {
+    width: 90%;
+    position: fixed;
+    left: 5%;
+    bottom: 15px;
+    justify-content: flex-end !important;
+    z-index: 9;
+  }
+
+  .product-btn a.buy-now-btn {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+  }
+
+  .product-btn a.add-cart-btn {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+  }
+
+  button#back-to-top-btn {
+    left: 30px;
+    bottom: 75px;
+    width: 30px;
+    height: 30px;
+  }
+
+  button#back-to-top-btn i {
+    font-size: 26px;
+  }
+  .product-variations-color ul a img {
+    width: 50px;
+  }
+  .pf-bottom {
+    width: 90%;
+  }
+}
+
+/* // Small devices (landscape phones, less than 768px) */
+@media (max-width: 767.98px) {
+}
+
+/* // Medium devices (tablets, less than 992px) */
+@media (max-width: 991.98px) {
+}
+
+/* // Large devices (desktops, less than 1200px) */
+@media (max-width: 1199.98px) {
+}
+
+/* // X-Large devices (large desktops, less than 1400px) */
+@media (max-width: 1399.98px) {
+}
+
+/* // XX-Large devices (larger desktops)
+// No media query since the xxl breakpoint has no upper bound on its width */

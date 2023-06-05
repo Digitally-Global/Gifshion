@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% load cart_tag %}
+{% block content %}
+{%load divide %}
+
+
+<div class="container">
+  <div class="border rounded p-4 m-4">
+    <p class="display-5 border">Your Cart</p>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>S.no</th>
+          <th>image</th>
+          <th>Name</th>
+          <th>Price</th>
+          <th>quantity</th>
+          <th>Total</th>
+          <th>Remove</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for key,value in request.session.cart.items %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          <td><img style="height: 50px" src="{{value.image}}"></td>
+          <td>{{value.name}}</td>
+          <td>{% with request.session.exchange as exchange %}
+
+            <div class="price"><span>{{ request.session.icon }} {{ value.price|divide:exchange }}
+
+                {% endwith %}
+          </td>
+          <td>
+            <div class="qun_input">
+              <span class="minus"><a href="{% url 'item_decrement' value.product_id %}" class="text -center"><i
+                    class="fa fa-minus"></i></a></span>
+              <input type="number" min="1" value="{{ value.quantity }}" id="quantity" />
+              <span class="plus"><a href="{% url 'item_increment' value.product_id %}" class="text -center"><i
+                    class="fa fa-plus"></i></a></span>
+
+            </div>
+          </td>
+          <td>
+
+            {% with request.session.exchange as exchange %}
+            {% with value.price|multiply:value.quantity as total %}
+            <div class="price"><span>{{ request.session.icon }} {{total|divide:exchange}}
+                {%endwith%}
+                {% endwith %}
+          </td>
+          <td class="product-remove"><a href="{% url 'item_clear' key %}"><i class="fa fa-times"></a></td>
+
+        </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr>
+          <th colspan="4">Total</th>
+          <th>
+            {% with request.session.exchange as exchange %}
+            <div class="price"><span>{{ request.session.icon }} {{ cart_total_amount|divide:exchange }}
+
+                {% endwith %}
+          </th>
+        </tr>
+      </tfoot>
+    </table>
+    <hr>
+    <div class="m-3 p-3">
+      {% if cart_total_amount is 0 %}
+      <a href="{% url 'cart_details' %}" class="btn btn-danger">Checkout</a>
+      {% else %}
+      <a href="{% url 'checkout' %}" class="btn btn-danger">Checkout</a>
+      {% endif %}
+    </div>
+    <!-- <div class="coupon rounded-3 bg-white p-3 pb-2">
+      <p class="">
+        If you have a coupon code, please apply it below.
+      </p>
+      <form class="input-group mb-3" method="get">
+        <input type="text" class="form-control" placeholder="coupon_code" name="Coupon code"
+          aria-describedby="button-addon2" />{{coupon.discount}}
+        <button class="btn btn-dark" type="submit" id="button-addon2">
+          Apply
+        </button>
+      </form>
+    </div> -->
+  </div>
+</div>
+<!-- Modal -->
+
+{% endblock %}

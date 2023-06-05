@@ -1,0 +1,141 @@
+<footer class="py-5">
+  {% load static %}
+  <div class="container">
+    <div class="row">
+      <div class="col-2">
+        <h4>Shop</h4>
+        <ul>
+          <li><a href="{% url 'Home' %}">All Products</a></li>
+        </ul>
+      </div>
+      <div class="col-2">
+        <h4>My Account</h4>
+        <ul>
+          <li><a href="{% url 'profile' %}">My Profile</a></li>
+          <li><a href="#">My Orders</a></li>
+          <li><a href="#">Track My Order</a></li>
+          <li><a href="#">Delivery &amp; Returns</a></li>
+        </ul>
+      </div>
+      <div class="col-2">
+      </div>
+      <div class="col-2">
+      </div>
+      <div class="col-4">
+        <h4>Sign Up for our NEWSLETTER!</h4>
+        <div class="footer-newsletter">
+          <label>Your Email Id*</label>
+          <form id="form">
+            <input type="email" id="email" placeholder="Enter your email" name="email" required="" /><button
+              type="submit">SUSBCRIBE</button>
+          </form>
+        </div>
+      </div>
+      <div class="col-md-12 mt-3">
+        <ul class="nav justify-content-center footer-social">
+          <li>
+            <a href="{{social.facebook}}"><i class="flaticon-facebook"></i></a>
+          </li>
+          <li>
+            <a href="{{social.twitter}}"><i class="flaticon-twitter"></i></a>
+          </li>
+          <li>
+            <a href="{{social.instagram}}"><i class="flaticon-instagram"></i></a>
+          </li>
+        </ul>
+        <p class="text-center">©2023 GIFshion</p>
+      </div>
+    </div>
+  </div>
+
+</footer>
+
+<div class="hemburger-menu-block">
+  <div class="hemburger-menu">
+    <div class="h-head d-flex justify-content-between align-items-center py-2">
+      <div class="">
+        <a href="{% url 'Home' %}"><img src={% static './assets/images/Asset 1@300x (1).png' %} alt="GI Fshion"
+            width="50px" height="20px" /></a>
+      </div>
+      {% comment %} <div>
+        <ul class="d-flex">
+          <li>
+            <select name="" id="">
+              <option value="inr">₹ INR</option>
+              <option value="usd">$ USD</option>
+            </select>
+          </li>
+          <li>
+            <div class="close-icon">
+              <i class="fa fa-close"></i>
+            </div>
+          </li>
+        </ul>
+      </div> {% endcomment %}
+    </div>
+    {% if not user.is_authenticated %}
+    <ul class="d-flex">
+      <li class="w-50"><a href="{% url 'login' %}">Sign in</a></li>
+      <li class="w-50"><a href="{% url 'handleregister' %}">Register</a></li>
+    </ul>
+    {% endif %}
+    <div class="h-menu">
+      <ul>
+        <li>
+          <a href={% url 'Home' %}>Home
+            <div class="m-icon"><i class="fa fa-home"></i></div>
+          </a>
+        </li>
+        {% for nav in categories%}
+        <li><a href="{% url 'category' nav.id%}">{{nav}}</a></li>
+        {% endfor %}
+        <li class="dropdown">
+          <a href="{% url 'profile' %}">My Account
+            <div class="m-icon"><i class="flaticon-next"></i></div>
+          </a>
+          <ul class="h-sub-menu">
+            <li><a href="{% url 'profile' %}">My Profile</a></li>
+            <li><a href="#">My Orders</a></li>
+            <li><a href="#">Track My Order</a></li>
+            <li><a href="#">Delivery &amp; Returns</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+    <div class="h-bottom">
+      <ul class="nav justify-content-center footer-social">
+        <li>
+          <a href="{{social.facebook}}"><i class="flaticon-facebook"></i></a>
+        </li>
+        <li>
+          <a href="{{social.twitter}}"><i class="flaticon-twitter"></i></a>
+        </li>
+        <li>
+          <a href="{{social.instagram}}"><i class="flaticon-instagram"></i></a>
+        </li>
+      </ul>
+      <p class="text-center">©2023 GIFshion</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  function processForm(e) {
+    if (e.preventDefault) e.preventDefault();
+    let mail = document.getElementById('email').value
+    if (mail == '') {
+      alert('Please enter your email')
+    }
+    fetch(`/mail/${mail}`)
+    document.body.scrollTop = 0; // For Safari
+    document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+    return false;
+  }
+
+  var form = document.getElementById('form');
+  if (form.attachEvent) {
+    form.attachEvent("submit", processForm);
+  } else {
+    form.addEventListener("submit", processForm);
+  }
+</script>

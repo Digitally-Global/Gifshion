@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {%load static %}
+    
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Optimal rendering on mobile devices. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Sample CSS styles for demo purposes. You can override these styles to match your web page's branding. -->
+    <link rel="stylesheet" type="text/css" href="https://www.paypalobjects.com/webstatic/en_US/developer/docs/css/cardfields.css"/>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{% static './assets/css/bootstrap.min.css' %}" />
+    <!-- Flaticon CSS -->
+    <link rel="stylesheet" href="{%static './assets/fonts/flaticon_mycollection.css' %}" />
+    <!-- Google font  -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond&family=Open+Sans:wght@300;400;500;600;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Font awesome CSS-->
+    <link rel="stylesheet" href="{% static './assets/css/font-awesome.min.css' %}" />
+    
+    <!-- itnt Tell CSS-->
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static './assets/css/intlTelInput.min.css' %}"
+    />
+    <!-- owl carousel CSS-->
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static './assets/css/owl.carousel.min.css' %}"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static './assets/css/owl.theme.default.min.css' %}"
+    />
+    <link rel="stylesheet" type="text/css" href="{% static './assets/css/style.css' %}" />
+
+    <title>Gifshion</title>
+    <link rel="icon" type="image/x-icon" href="{% static './assets/images/Asset 1@300x (1).png' %}">
+  </head>
+  <body>
+    {% load static %}
+    {% include 'includes/header.html' %}
+    {%  block content %}
+
+    {%  endblock %}
+    {% include 'includes/footer.html' %}
+
+    <!-- jQuery -->
+    <script src="{%static './assets/js/jquery.min.js' %}"></script>
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="{%static './assets/js/bootstrap.bundle.min.js' %}"></script>
+    <!-- Owl Carousel -->
+    <script src="{%static './assets/js/owl.carousel.min.js' %}"></script>
+    <!-- Owl Carousel thumb-->
+    <script src="{%static './assets/js/owl-thumb.min.js' %}"></script>
+    <!-- Tel Input -->
+    <script src="{%static './assets/js/intlTelInput.min.js' %}"></script>
+    <!-- Chocolate -->
+    <script src="{%static './assets/js/chocolat.js' %}"></script>
+    <!-- Tel Input -->
+    <script src="{%static './assets/js/intlTelInput.min.js' %}"></script>
+    <!-- Main JS -->
+    <script src="{%static './assets/js/main.js' %}"></script>
+  </body>
+</html>
