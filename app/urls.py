@@ -15,7 +15,7 @@ urlpatterns = [
     #Error
     path('404', views.Error, name='404'),
     path('checkout', views.checkout, name='checkout'),
-    path('execute', views.create_payment, name='create_payment'),
+    path('execute/<int:id>', views.create_payment, name='create_payment'),
     path('cash/', views.Cash, name='cash'),
     path('share-product/<int:product_id>/', views.share_product, name='share_product'),
 #     cart

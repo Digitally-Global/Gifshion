@@ -1,22 +1,28 @@
 <header>
 
   {% load static %}
+  {% if not notification|length == 0%}
   <div class="header-promo p-2">
     <div id="promoslide" class="carousel slide" data-bs-ride="carousel">
       <div class="carousel-inner">
+        {% for alert in notification|slice:":1" %}
         <div class="carousel-item active">
           <p class="m-0 text-center">
-            5% Cashback on SIMPL- Pay in 3 EMIs, Zero Interest.
+            {{alert.announcement}}
           </p>
         </div>
+        {% endfor %}
+         {% for alert in notification|slice:"1:" %}
         <div class="carousel-item">
           <p class="m-0 text-center">
-            End Of Season Treats at up to 50% off
+            {{alert.announcement}}
           </p>
         </div>
-      </div>
+        {% endfor %}
     </div>
   </div>
+</div>
+{% endif %}
   <div class="main-bar">
     <div class="container">
       <div class="row">
@@ -93,7 +99,7 @@
               <a href="{% url 'cart_detail' %}" class="position-relative">
                 <i class="flaticon-shopping-bag"></i>
                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark">
-                  {{request.session.cart|length}}
+                  {{cart|length}}
                   <span class="visually-hidden">unread messages</span>
                 </span>
               </a>

@@ -1,5 +1,6 @@
-{% extends 'base.html' %} {% load cart_tag %} {% load product_tags %} {% load
+{% extends 'base.html' %}  {% load product_tags %} {% load
 static %} {% block content %}
+{% load divide %}
 <section class="checkout cart-page mt-5">
 	<div class="custom-breadcrumbs mb-5">
 		<div class="container bg-white rounded-3 shadow p-5">
@@ -9,6 +10,7 @@ static %} {% block content %}
 						><i class="flaticon flaticon-next"></i> BACK</a
 					>
 				</div>
+        
 				<div class="col-md-6">
 					<div class="custom-breadcrumbs-area d-flex justify-content-between">
 						<div class="cart-block">
@@ -28,8 +30,25 @@ static %} {% block content %}
 			</div>
 		</div>
 	</div>
+  
 	<div class="chackout-main">
+    
 		<div class="container bg-white rounded-3 shadow p-5 mb-5">
+      {% if messages %}
+    {% for message in messages %}
+    {% if message.tags == 'error'%}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      {{message}}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {%else%}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      {{message}}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endif %}
+    {% endfor %}
+    {% endif %}
 			<div class="row">
 				<div class="col-md-8 pe-5">
 					<div class="chackout-items">
@@ -130,6 +149,20 @@ static %} {% block content %}
 									aria-describedby="inputGroupPrepend"
 									required
 								/>
+                 {% if  coupon %}
+                  {% if not coupon.invalid %}
+                	<input
+									type="text"
+									class="form-control"
+									name="coupon_code"
+									id="validationCustomCountry"
+									aria-describedby="inputGroupPrepend"
+									required
+                  value={{coupon.code}}
+                  hidden
+								/>
+                {% endif %}
+                {% endif %}
 								<div class="invalid-feedback">
 									Please provide a valid country.
 								</div>
@@ -168,6 +201,7 @@ static %} {% block content %}
 									<button class="cart-btn" type="submit">Paypal</button>
 								</div>
 							</div>
+              {% if request.session.currency_code == "INR" %}
 							<div class="col-6">
 								<button class="cart-btn" type="submit">
 									<a style="color: white" href="{% url 'cash' %}"
@@ -175,6 +209,7 @@ static %} {% block content %}
 									>
 								</button>
 							</div>
+              {%endif%}
 						</form>
 					</div>
 				</div>
@@ -182,7 +217,7 @@ static %} {% block content %}
 					<div class="checkout-bag">
 						<div class="checkout-bag-head d-flex justify-content-between p-3">
 							<h6 class="m-0">
-								{{request.session.cart|length}} Item in your Bag
+								{{cart|length}} Item in your Bag
 							</h6>
 							<div class="edit-bag">
 								<a href="{% url 'cart_detail' %}">
@@ -190,14 +225,14 @@ static %} {% block content %}
 								</a>
 							</div>
 						</div>
-						{% for key,value in request.session.cart.items %}
+						{% for value in cart %}
 						<div class="checkout-bag-body mb-4 p-2 pb-3">
 							<div class="cart-items">
 								<div class="cart-item bg-white p-3 rounded-3">
 									<div class="cart-prod-details d-flex">
 										<div class="cart-prod-img">
 											<a href="#"
-												><img src="{{value.image}}" class="img-fluid" alt=""
+												><img src="{{value.product.image.url}}" class="img-fluid" alt=""
 											/></a>
 										</div>
 
@@ -219,7 +254,7 @@ static %} {% block content %}
 											<p>Subtotal</p>
 										</div>
                     
-										<div><span class="price">₹{{value.price}}</span></div>
+										<div><span class="price">{{request.session.icon}}{{ value.price|divide:request.session.exchange }}</span></div>
 									</div>
 								</div>
 							</div>
@@ -228,15 +263,17 @@ static %} {% block content %}
 					</div>
 					<div class="coupon rounded-3 bg-white p-3 pb-2">
 						<p class="">If you have a coupon code, please apply it below.</p>
-						<form class="input-group mb-3" method="get">
+						<form class="input-group mb-3" action="{% url  'checkout' %}" method="get">
 							<input
 								type="text"
 								class="form-control"
 								placeholder="Coupon code"
 								aria-label="Coupon code"
 								aria-describedby="button-addon2"
+                name="coupon_code"
+                required
 							/>
-							<button class="btn btn-dark" type="submit" id="button-addon2">
+							<button class="btn-small btn-dark" type="submit" id="button-addon2">
 								Apply
 							</button>
 						</form>
@@ -246,21 +283,35 @@ static %} {% block content %}
 						<div class="d-flex justify-content-between pb-1">
 							<span>Bag Total </span>
 							<span{{cart_total_amount}} </span>
+							<span{{cart_total_amount|divide:request.session.exchange}} </span>
+              {{cart_total_amount|divide:request.session.exchange}} 
+						</div>
+            	<div class="d-flex justify-content-between pb-1">
+							<span>Shipping Charges </span>
+							<span>₹0.00 </span>
+						</div>
+            {% if  coupon %}
+              {% if not coupon.invalid %}
+            <div class="d-flex justify-content-between pb-1">
+							<span>Coupon Code </span>
+							<span>{{coupon.code}} </span>
 						</div>
 						<div class="d-flex justify-content-between pb-1">
 							<span>Promo Applied </span>
-							<span>₹{{coupon.discount}} </span>
-						</div>
-						<div class="d-flex justify-content-between pb-1">
-							<span>Shipping Charges </span>
-							<span>₹0.00 </span>
+							<span>{{ request.session.icon }}{{coupon.discount|divide:request.session.exchange}} </span>
 						</div>
 						<hr />
 						<div class="d-flex justify-content-between align-items-center">
 							<span>Grand Total </span>
-							<span class="order-price">{{cart_total_amount}} </span>
+							<span class="order-price">{{cart_total_amount|sub:coupon.discount|divide:request.session.exchange}} </span>
 						</div>
-
+              {% endif %}
+            {% else %}
+            <div class="d-flex justify-content-between align-items-center">
+							<span>Grand Total </span>
+							<span class="order-price">{{cart_total_amount|divide:request.session.exchange}} </span>
+						</div>
+            {% endif %}
 						<hr />
 					</div>
 				</div>

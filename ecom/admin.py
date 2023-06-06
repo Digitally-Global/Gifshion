@@ -1,16 +1,15 @@
 from django.contrib import admin
 from .models import *
 
-class colors(admin.TabularInline):
-    
-    model = color
+class colors(admin.TabularInline):    
+    model = Color
 class sizes(admin.TabularInline):
     model = size
 class Productsimageurls(admin.TabularInline):
     model = Productsimageurl 
 
 class ProductAdmin(admin.ModelAdmin):
-    inlines = [sizes,Productsimageurls]
+    inlines = [sizes,Productsimageurls,colors ]
 
 admin.site.register(Product,ProductAdmin)
 admin.site.register(Slider)
@@ -30,7 +29,6 @@ admin.site.register(Coupon_Code)
 admin.site.register(Checkout)
 admin.site.register(Productsimageurl)
 admin.site.register(Additional_Information)
-admin.site.register(color)
 admin.site.register(size)
 admin.site.register(Currency)
 admin.site.register(CartItem)
@@ -48,3 +46,4 @@ class OrderAdmin(admin.ModelAdmin):
         return False
 admin.site.register(Payment)
 admin.site.register(Order,OrderAdmin)
+admin.site.register(Notification)

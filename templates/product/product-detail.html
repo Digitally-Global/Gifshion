@@ -99,15 +99,22 @@
             {% endwith %}
             <p>(incl. of all taxes)</p>
           </div>
-          <p class="mb-1">Select Color</p>
-          <div class="d-flex">
-            <div class="product-variations-color">
+
+          <p class="mb-1 mt-3">Select Size</p>
+          <div class="d-flex justify-content-between">
+            <div class="product-variations">
+
               <ul class="nav">
-
-                <li>
-                  <a class="active" href="#">{{color.code}}</a>
-                </li>
-
+                {% for color in i.color.all|slice:':1'%}
+                <div class="active color-select" id="{{color.id}}" onclick="selectColor(`{{color.id}}`)">
+                  <input type="color" value={{color.color}} disabled />
+                </div>
+                {% endfor %}
+                {% for color in i.color.all|slice:'1:'%}
+                <div class="color-select" id="{{color.id}}" onclick="selectColor(`{{color.id}}`)">
+                  <input type="color" value={{color.color}} disabled />
+                </div>
+                {% endfor %}
               </ul>
             </div>
           </div>
@@ -115,8 +122,13 @@
           <div class="d-flex justify-content-between">
             <div class="product-variations">
               <ul class="nav">
-                {% for size in i.size_set.all %}
-                <li><a class="active" href="#">{{ size.Num }}</a></li>
+                {% for size in i.size_set.all|slice:":1" %}
+                <li><a class="active size-select" href="#" id="{{size.id}}" onclick="selectSize(`{{size.id}}`)">
+                    {{ size.Num }}</a></li>
+                {% endfor %}
+                {% for size in i.size_set.all|slice:"1:" %}
+                <li><a class="size-select" id="{{size.id}}" onclick="selectSize(`{{size.id}}`)">
+                    {{size.Num }}</a></li>
                 {% endfor %}
               </ul>
             </div>
@@ -131,9 +143,11 @@
           </div>
 
           </p>
+
           <div class="product-btn d-flex justify-content-between">
             <a class="buy-now-btn" href="{%  url 'single_checkout' i.id %}">Buy Now</a>
-            <a class="add-cart-btn" href="{% url 'cart_add' i.id %}"><i class="flaticon-shopping-bag"></i>add to bag</a>
+            <a class="add-cart-btn" href="{% url 'cart_add' i.id %}"><i class="flaticon-shopping-bag"></i>add to
+              bag</a>
           </div>
         </div>
         {% endfor %}
@@ -201,26 +215,64 @@
 </section>
 <!-- Products Slider -->
 
-
-{% endblock %}
-{% block scripts %}
 <script>
+  function selectSize(id) {
+    let elements = document.getElementsByClassName('size-select')
+    for (let element of elements) {
+      element.classList.remove('active')
+    }
+    document.getElementById(id).classList.add('active');
+  }
+  function selectColor(id) {
+    let elements = document.getElementsByClassName('color-select')
+    for (let element of elements) {
+      element.classList.remove('active')
+    }
+    document.getElementById(id).classList.add('active');
+  }
   const shareBtn = document.getElementById('share-btn');
   shareBtn.addEventListener('click', () => {
-    const productId = {{ product.id }
-  };
-  fetch(`/share-product/${productId}/`)
-    .then(response => response.json())
-    .then(data => {
-      const shareUrl = encodeURIComponent(data.product_url);
-      const shareText = 'Check out this product!';
-      const shareTitle = '{{ product.name }}';
-      const shareWindow = window.open(`https://twitter.com/intent/tweet?text=${shareText}&url=${shareUrl}&hashtags=example,product`);
-      if (shareWindow) {
-        shareWindow.focus();
-      }
-    });
-        });
+    const productId = "{{product.id}}"
+    fetch(`/share-product/${productId}/`)
+      .then(response => response.json())
+      .then(data => {
+        const shareUrl = encodeURIComponent(data.product_url);
+        const shareText = 'Check out this product!';
+        const shareTitle = '{{ product.name }}';
+        const shareWindow = window.open(`https://twitter.com/intent/tweet?text=${shareText}&url=${shareUrl}&hashtags=example,product`);
+        if (shareWindow) {
+          shareWindow.focus();
+        }
+      });
+  })
 </script>
+
+<style>
+  .color-select input {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-color: transparent;
+    width: 50px;
+    height: 50px;
+    border: none;
+    cursor: pointer;
+  }
+
+  .color-select input::-webkit-color-swatch {
+    border-radius: 15%;
+    border: 4px solid #eee;
+
+  }
+
+  .color-select input::-moz-color-swatch {
+    border-radius: 50%;
+    border: 4px solid #000000;
+  }
+
+  .active input::-webkit-color-swatch {
+    border: 4px solid #000000
+  }
+</style>
 
 {% endblock %}

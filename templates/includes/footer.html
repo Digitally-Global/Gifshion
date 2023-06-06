@@ -12,9 +12,7 @@
         <h4>My Account</h4>
         <ul>
           <li><a href="{% url 'profile' %}">My Profile</a></li>
-          <li><a href="#">My Orders</a></li>
-          <li><a href="#">Track My Order</a></li>
-          <li><a href="#">Delivery &amp; Returns</a></li>
+          <li><a href="{% url 'orders' %}">My Orders</a></li>
         </ul>
       </div>
       <div class="col-2">
@@ -95,9 +93,7 @@
           </a>
           <ul class="h-sub-menu">
             <li><a href="{% url 'profile' %}">My Profile</a></li>
-            <li><a href="#">My Orders</a></li>
-            <li><a href="#">Track My Order</a></li>
-            <li><a href="#">Delivery &amp; Returns</a></li>
+            <li><a href="{% url 'orders' %}">My Orders</a></li>
           </ul>
         </li>
       </ul>

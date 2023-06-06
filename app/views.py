@@ -7,7 +7,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from cart.cart import Cart
+# from cart.cart import Cart
+from ecom.models import CartItem 
 from paypalrestsdk import Payment
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
@@ -27,11 +28,10 @@ def order_detail(request, id):
     return render(request, 'checkout/order_detail.html', {'order': order})
 
 def single_checkout(request,id):
-    cart = request.session["cart"]
-    cart.clear()
-    cart = Cart(request)
+    cart = CartItem.objects.filter(user=request.user)
+    cart.delete()
     product = Product.objects.get(id=id)
-    cart.add(product=product)
+    cart_add(request,product.id)
     return redirect('checkout')
     
 def mail(request,email):
@@ -84,13 +84,13 @@ def confirm_order(request):
             order.total_amount = payment.transactions[0].amount.total
             order.currency = request.session['currency_code']
             order.save()
-            cart = request.session['cart']
-            for _,value in cart.items():
+            cart = CartItem.objects.filter(user=request.user)
+            for value in cart:
                 item = OrderItem()
                 item.order = order
-                item.product = Product.objects.get(id=value['product_id'])
-                item.quantity = value['quantity']
-                item.price = str(round(float(value['price'])/request.session['exchange'],2))
+                item.product = Product.objects.get(id=value.product.id)
+                item.quantity = value.quantity
+                item.price = str(round(float(value.price)/request.session['exchange'],2))
                 item.save()
             order.paid=True 
             order.checkout=Checkout.objects.get(id=request.session['checkout_id'])
@@ -102,31 +102,40 @@ def confirm_order(request):
             pay.order=order
             pay.payment_method="Paypal"
             pay.save()
-            request.session['cart'] = {}
+            cart.delete()
             return redirect('successful')
 
-def create_payment(request):
+def create_payment(request,id):
     if request.method == 'GET' and request.GET.get('paymentId') and request.GET["token"] and  request.GET["PayerID"]:
         return render(request, 'Payment/confirm.html')
     else:
-        cart = request.session['cart']
-        items = len(cart)
-        print(request.session['cart'])
-        print(len(request.session['cart']))
+        checkout = Checkout.objects.get(id=id)
+        cart = CartItem.objects.filter(user=request.user)
         total=0
-        for key,value in cart.items():
-            print(key,value)
-            total += round((float(value['price'])/request.session['exchange']),2)*value['quantity']
-        print(str(round(total,2)))
+        for value in cart:
+            total += float(value.price)*value.quantity
+        discounted_price = round(checkout.coupons.get_discounted_value(initial_value=total)/request.session['exchange'],2)
+        total = round(total/request.session['exchange'],2)
+        print(total)
+        print(discounted_price)
         data = []
-        for _,value in cart.items():
+        for value in cart:
             sub_data = {}
-            sub_data['name'] = value['name']
-            sub_data['quantity'] = value['quantity']
-            sub_data['price'] = str(round(float(value['price'])/request.session['exchange'],2))
-            sub_data['quantity']=value['quantity']
+            sub_data['name'] = value.product.name
+            sub_data['quantity'] = value.quantity
+            sub_data['price'] = str(round(float(value.price)/request.session['exchange'],2))
+            sub_data['quantity']=value.quantity
             sub_data['currency']=request.session['currency_code']
-            data.append(sub_data)   
+            data.append(sub_data)
+        data.append(
+            {
+            "name": "Coupon Code Applied",
+            "quantity": "1",
+            "price": f"-{format(total-discounted_price)}",
+            "sku": "product",
+            "currency": request.session['currency_code']
+            }
+        )   
         print(data)
         payment = Payment({
             "intent": "sale",
@@ -135,7 +144,8 @@ def create_payment(request):
             },
             "transactions": [{
                 "amount": {
-                    "total":  str(round(total,2)),  # Make sure the currency amount is correctly formatted
+                    "total": str(total-discounted_price),
+                   # Make sure the currency amount is correctly formatted
                     "currency": request.session['currency_code'],
                 },
                 "description": "Payment for Gifsion Products",
@@ -145,7 +155,7 @@ def create_payment(request):
             }],
             "redirect_urls": {
                 "cancel_url": request.build_absolute_uri(reverse ('cancelled')),
-                "return_url": request.build_absolute_uri(reverse ('create_payment' )),
+                "return_url": request.build_absolute_uri(reverse ('confirm_order')),
             }
             })
         if payment.create():
@@ -161,44 +171,52 @@ def share_product(request, product_id):
 
 @login_required(login_url="/myaccount/login/")
 def cart_add(request, id):
-    cart = Cart(request)
     product = Product.objects.get(id=id)
-    cart.add(product=product)
+    if CartItem.objects.filter(user=request.user, product=product).exists():
+        cart = CartItem.objects.get(user=request.user, product=product)
+        cart.quantity += 1
+        cart.save()
+    else:
+        CartItem.objects.create(user=request.user, product=product,quantity=1,price=round(product.price-(product.Discount/100)*product.price,2),discount=product.Discount)
     return redirect("cart_detail")
 
 
 @login_required(login_url="/myaccount/login/")
 def item_clear(request, id):
-    cart = Cart(request)
     product = Product.objects.get(id=id)
-    cart.remove(product)
+    CartItem.objects.get(user=request.user, product=product).delete()
     return redirect("cart_detail")
 
 
 @login_required(login_url="/myaccount/login/")
 def item_increment(request, id):
-    cart = Cart(request)
     product = Product.objects.get(id=id)
-    cart.add(product=product)
+    cart = CartItem.objects.get(user=request.user, product=product)
+    cart.quantity += 1
+    cart.save()
     return redirect("cart_detail")
 
 @login_required(login_url="/myaccount/login/")
 def item_decrement(request, id):
-    cart = Cart(request)
     product = Product.objects.get(id=id)
-    cart.decrement(product=product)
+    cart = CartItem.objects.get(user=request.user, product=product)
+    if cart.quantity <= 1:
+        cart.delete()
+    else:
+        cart.quantity -= 1
+        cart.save()
     return redirect("cart_detail")
 
 
 @login_required(login_url="/myaccount/login/")
 def cart_clear(request):
-    cart = Cart(request)
-    cart.clear()
+    cart = CartItem.objects.filter(user=request.user)
+    for carts in cart:
+        carts.delete()
     return redirect("cart_detail")
 
 @login_required(login_url="/myaccount/login/")
 def cart_detail(request):
-    
     valid_coupon = None
     coupon = None
     Invalid_coupon = None
@@ -216,9 +234,9 @@ def cart_detail(request):
         'invalid_coupon' : Invalid_coupon,
     }    
     return render(request, 'cart/cart.html',context)
-#def Cart(request):
+def Cart(request):
         
-        #return render(request, 'cart/cart.html')
+        return render(request, 'cart/cart.html')
 @login_required(login_url="/myaccount/login/")
 def Pedit(request,id):
     if request.method == "POST":
@@ -257,16 +275,16 @@ def Pay(request):
     return render(request, 'payment/pay.html')       
 def checkout(request):
     if request.method == "POST":
-       mobile_number = request.POST.get('mobile_number')
-       email = request.POST.get('email')
-       fname = request.POST.get('fname')
-       lname = request.POST.get('lname')
-       zip = request.POST.get('zip')
-       city = request.POST.get('city')
-       country = request.POST.get('country')
-       state = request.POST.get('state')
-       address = request.POST.get('address')
-       checkout = Checkout(
+        mobile_number = request.POST.get('mobile_number')
+        email = request.POST.get('email')
+        fname = request.POST.get('fname')
+        lname = request.POST.get('lname')
+        zip = request.POST.get('zip')
+        city = request.POST.get('city')
+        country = request.POST.get('country')
+        state = request.POST.get('state')
+        address = request.POST.get('address')
+        checkout = Checkout(
               mobile_number = mobile_number,
                 email = email,
                 fname = fname,
@@ -276,11 +294,42 @@ def checkout(request):
                 country = country,
                 state = state,
                 address = address,
-         )
-       checkout.save()
-       request.session['checkout_id'] = checkout.id
-       return redirect('create_payment')
-    return render(request, "checkout/checkout.html")
+        )
+        if request.POST.get('coupon_code'):
+            coupon_code = request.POST.get('coupon_code')
+            if Coupon.objects.filter(code=coupon_code).exists():
+                coupon = Coupon.objects.get(code=coupon_code)
+                discount_value = round(coupon.get_discounted_value(initial_value=request.session.get("cart_total_amount")),2)
+                checkout.coupons = coupon
+            else:
+                messages.error(request, "Invalid Coupon")
+                return redirect("checkout")
+        
+        checkout.save()
+        request.session['checkout_id'] = checkout.id
+        return redirect('create_payment',checkout.id)
+    if request.GET.get("coupon_code"):
+        if Coupon.objects.filter(code=request.GET.get("coupon_code")).exists():
+            coupon = Coupon.objects.get(code=request.GET.get("coupon_code"))
+            discount_value = round(coupon.get_discounted_value(initial_value=request.session.get("cart_total_amount")),2)
+            coupon = {
+                "code": coupon.code,
+                "discount_value": discount_value,
+                "discount" : round(request.session.get("cart_total_amount")-discount_value,2),
+            }
+            context = {
+                "coupon": coupon,
+            }
+            messages.success(request, "Coupon Successfully Applied")
+        else:
+            context = {
+                "coupon": {
+                    "invalid": "Invalid",
+                    },
+            }
+            messages.error(request, "Invalid Coupon Code")
+    else : context = {}
+    return render(request, "checkout/checkout.html",context)
 def filter_data(request):
     return None
 def Register(request):

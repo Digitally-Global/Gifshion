@@ -5,3 +5,10 @@ register = template.Library()
 def divide(value,div):
     return round((float(value) / float(div)) , 2)
 
+@register.filter()
+def multiply(value, arg):
+    return float(value) * arg
+
+@register.filter()
+def sub(value, arg):
+    return float(value) - arg

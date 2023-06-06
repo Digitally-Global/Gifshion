@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% load cart_tag %}
+
 {% block content %}
 {%load divide %}
 
@@ -8,6 +8,7 @@
 <div class="container">
   <div class="border rounded p-4 m-4">
     <p class="display-5 border">Your Cart</p>
+    {% if not cart|length == 0%}
     <table class="table">
       <thead>
         <tr>
@@ -21,11 +22,15 @@
         </tr>
       </thead>
       <tbody>
-        {% for key,value in request.session.cart.items %}
+        {% for value in cart %}
         <tr>
           <td>{{ forloop.counter }}</td>
-          <td><img style="height: 50px" src="{{value.image}}"></td>
-          <td>{{value.name}}</td>
+          <td><img style="height: 50px" src="{{value.product.image.url}}"></td>
+          <td>
+            <a href="{{value.product.get_absolute_url}}">
+              {{value.product.name}}
+            </a>
+          </td>
           <td>{% with request.session.exchange as exchange %}
 
             <div class="price"><span>{{ request.session.icon }} {{ value.price|divide:exchange }}
@@ -34,10 +39,10 @@
           </td>
           <td>
             <div class="qun_input">
-              <span class="minus"><a href="{% url 'item_decrement' value.product_id %}" class="text -center"><i
+              <span class="minus"><a href="{% url 'item_decrement' value.product.id %}" class="text -center"><i
                     class="fa fa-minus"></i></a></span>
               <input type="number" min="1" value="{{ value.quantity }}" id="quantity" />
-              <span class="plus"><a href="{% url 'item_increment' value.product_id %}" class="text -center"><i
+              <span class="plus"><a href="{% url 'item_increment' value.product.id  %}" class="text -center"><i
                     class="fa fa-plus"></i></a></span>
 
             </div>
@@ -50,7 +55,7 @@
                 {%endwith%}
                 {% endwith %}
           </td>
-          <td class="product-remove"><a href="{% url 'item_clear' key %}"><i class="fa fa-times"></a></td>
+          <td class="product-remove"><a href="{% url 'item_clear' value.product.id %}"><i class="fa fa-times"></a></td>
 
         </tr>
         {% endfor %}
@@ -67,10 +72,13 @@
         </tr>
       </tfoot>
     </table>
+    {% else %}
+     <p class="text-center">No products in your cart. Continue <a href="{% url 'Home' %}">Shopping</a> </p>
+    {% endif %}
     <hr>
     <div class="m-3 p-3">
       {% if cart_total_amount is 0 %}
-      <a href="{% url 'cart_details' %}" class="btn btn-danger">Checkout</a>
+      <a href="{% url 'cart_detail' %}" class="btn btn-danger">Checkout</a>
       {% else %}
       <a href="{% url 'checkout' %}" class="btn btn-danger">Checkout</a>
       {% endif %}

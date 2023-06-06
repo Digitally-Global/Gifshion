@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 
-{% load cart_tag %}
 {% block content %}
 {%load divide %}
 
@@ -20,11 +19,11 @@
         </tr>
       </thead>
       <tbody>
-        {% for key,value in request.session.cart.items %}
+        {% for value in cart %}
         <tr>
           <td>{{ forloop.counter }}</td>
-          <td><img style="height: 50px" src="{{value.image}}"></td>
-          <td>{{value.name}}</td>
+          <td><img style="height: 50px" src="{{value.product.image.url}}"></td>
+          <td>{{value.product.name}}</td>
           <td>{% with request.session.exchange as exchange %}
             <div class="price"><span>{{ request.session.icon }} {{ value.price|divide:exchange }}
 

@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'ecom',
     'ckeditor',
     'ckeditor_uploader',
-    'cart',
+    'colorfield',
+    # 'cart',
     'django_simple_coupons',
     'colorful',
     'paypalrestsdk',
@@ -54,7 +55,7 @@ INSTALLED_APPS = [
 # set paypal test mode
 PAYPAL_TEST = True
 DSC_COUPON_CODE_LENGTH = 16
-CART_SESSION_ID = 'cart'
+# CART_SESSION_ID = 'cart'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -81,7 +82,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'cart.context_processor.cart_total_amount',
+                # 'cart.context_processor.cart_total_amount',
                 'django.template.context_processors.request',
                "app.context_processors.categories_processor", 
                 
