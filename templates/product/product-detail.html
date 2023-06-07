@@ -100,10 +100,10 @@
             <p>(incl. of all taxes)</p>
           </div>
 
-          <p class="mb-1 mt-3">Select Size</p>
+          {% if not i.color.all|length == 0%}
+          <p class="mb-1 mt-3">Select Color</p>
           <div class="d-flex justify-content-between">
             <div class="product-variations">
-
               <ul class="nav">
                 {% for color in i.color.all|slice:':1'%}
                 <div class="active color-select" id="{{color.id}}" onclick="selectColor(`{{color.id}}`)">
@@ -118,6 +118,8 @@
               </ul>
             </div>
           </div>
+          {% endif %}
+          {% if not i.size_set.all|length == 0%}
           <p class="mb-1 mt-3">Select Size</p>
           <div class="d-flex justify-content-between">
             <div class="product-variations">
@@ -132,21 +134,22 @@
                 {% endfor %}
               </ul>
             </div>
-            <!--<div class="quantity-form d-flex align-items-center">
-                  <div class="qun_label">Quantity</div>
-                  <div class="qun_input">
-                    <span class="minus"><i class="fa fa-minus"></i></span>
-                    <input type="number" min="1" value="1" id="quantity">
-                    <span class="plus"><i class="fa fa-plus"></i></span>
-                  </div>
-                </div>-->
+            {%endif %}
           </div>
 
           </p>
 
           <div class="product-btn d-flex justify-content-between">
-            <a class="buy-now-btn" href="{%  url 'single_checkout' i.id %}">Buy Now</a>
-            <a class="add-cart-btn" href="{% url 'cart_add' i.id %}"><i class="flaticon-shopping-bag"></i>add to
+            <form action="{%  url 'single_checkout' i.id %}" id="buy-now-form">
+              <input type="hidden" name="color" id="buy-color" value="" hidden>
+              <input type="hidden" name="size" id="buy-size" value="" hidden>
+            </form>
+            <a class="buy-now-btn" onclick="handleBuy()">Buy Now</a>
+            <form action="{% url 'cart_add' i.id %}" id="add-cart-form">
+              <input type="hidden" name="color" id="cart-color" value="" hidden>
+              <input type="hidden" name="size" id="cart-size" value="" hidden>
+            </form>
+            <a class="add-cart-btn" onclick="handleCartCheckout()"><i class="flaticon-shopping-bag"></i>add to
               bag</a>
           </div>
         </div>
@@ -198,7 +201,14 @@
             <p>
               {{i.Product_information}}
             </p>
-            <div class="price"><span>₹ {{i.price}}</span></div>
+            {% with request.session.exchange as exchange %}
+            {% if not i.Discount == 0 %}
+            <div class="price"><span>{{ request.session.icon }} {{ i.price|divide:exchange|discount:i.Discount }}
+                <del>{{i.price|divide:exchange}}</del></span></div>
+            {% else %}
+            <div class="price"><span>{{ request.session.icon }} {{ i.price|divide:exchange }}</span></div>
+            {% endif %}
+            {% endwith %}
           </div>
           <div class="product-bottom">
             <div class="wishlist-icon">
@@ -245,6 +255,43 @@
         }
       });
   })
+
+  function handleBuy() {
+    let form = document.getElementById('buy-now-form');
+    let color = document.getElementById('buy-color');
+    let size = document.getElementById('buy-size');
+    let elements = document.getElementsByClassName('color-select')
+    for (let element of elements) {
+      if (element.classList.contains('active')) {
+        color.value = element.children[0].value
+      }
+    }
+    elements = document.getElementsByClassName('size-select')
+    for (let element of elements) {
+      if (element.classList.contains('active')) {
+        size.value = parseInt(element.innerHTML)
+      }
+    }
+    form.submit()
+  }
+  function handleCartCheckout() {
+    let form = document.getElementById('add-cart-form');
+    let color = document.getElementById('cart-color');
+    let size = document.getElementById('cart-size');
+    let elements = document.getElementsByClassName('color-select')
+    for (let element of elements) {
+      if (element.classList.contains('active')) {
+        color.value = element.children[0].value
+      }
+    }
+    elements = document.getElementsByClassName('size-select')
+    for (let element of elements) {
+      if (element.classList.contains('active')) {
+        size.value = parseInt(element.innerHTML)
+      }
+    }
+    form.submit()
+  }
 </script>
 
 <style>

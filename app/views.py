@@ -6,8 +6,10 @@ from django.http import JsonResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
 # from cart.cart import Cart
+from ecom.models import size as Size
+from django.contrib.auth.decorators import login_required
+from colorfield.fields import ColorField
 from ecom.models import CartItem 
 from paypalrestsdk import Payment
 from django.contrib.auth.decorators import login_required
@@ -113,8 +115,11 @@ def create_payment(request,id):
         cart = CartItem.objects.filter(user=request.user)
         total=0
         for value in cart:
-            total += float(value.price)*value.quantity
-        discounted_price = round(checkout.coupons.get_discounted_value(initial_value=total)/request.session['exchange'],2)
+            total += round(float(value.price)*value.quantity,2)
+        if checkout.coupons:
+            discounted_price = round(checkout.coupons.get_discounted_value(initial_value=total)/request.session['exchange'],2)
+        else:
+            discounted_price = 0
         total = round(total/request.session['exchange'],2)
         print(total)
         print(discounted_price)
@@ -127,15 +132,16 @@ def create_payment(request,id):
             sub_data['quantity']=value.quantity
             sub_data['currency']=request.session['currency_code']
             data.append(sub_data)
-        data.append(
-            {
-            "name": "Coupon Code Applied",
-            "quantity": "1",
-            "price": f"-{format(total-discounted_price)}",
-            "sku": "product",
-            "currency": request.session['currency_code']
-            }
-        )   
+        if checkout.coupons:
+            data.append(
+                {
+                "name": "Coupon Code Applied",
+                "quantity": "1",
+                "price": f"-{format(total-discounted_price)}",
+                "sku": "product",
+                "currency": request.session['currency_code']
+                }
+            )   
         print(data)
         payment = Payment({
             "intent": "sale",
@@ -171,13 +177,15 @@ def share_product(request, product_id):
 
 @login_required(login_url="/myaccount/login/")
 def cart_add(request, id):
+    color = Color.objects.get(color=str((request.GET['color']).upper()))
+    size = Size.objects.get(Num=request.GET['size'],product=Product.objects.get(id=id))
     product = Product.objects.get(id=id)
-    if CartItem.objects.filter(user=request.user, product=product).exists():
+    if CartItem.objects.filter(user=request.user, product=product,color=color,size=size).exists():
         cart = CartItem.objects.get(user=request.user, product=product)
         cart.quantity += 1
         cart.save()
     else:
-        CartItem.objects.create(user=request.user, product=product,quantity=1,price=round(product.price-(product.Discount/100)*product.price,2),discount=product.Discount)
+        CartItem.objects.create(user=request.user, product=product,quantity=1,price=round(product.price-(product.Discount/100)*product.price,2),discount=product.Discount,color=color,size=size)
     return redirect("cart_detail")
 
 
@@ -414,9 +422,9 @@ def Home(request):
     Category = category.objects.all().order_by('-id')[0:3]
     product = Product.objects.filter(section__name = "By Concern")
     Rakhi = Product.objects.filter(section__name = "Rakhi Special")
-    BestSeller = Product.objects.filter(section__name="Best Seller")
+    BestSeller = Product.objects.filter(section__name="BestSeller")
     Products = Product.objects.all().order_by('-id')
-    sections = Section.objects.exclude(name="Best Seller")
+    sections = Section.objects.exclude(name="BestSeller")
 
     context = {
         'banner' : banner,

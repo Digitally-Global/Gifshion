@@ -217,6 +217,8 @@ class Mail(models.Model):
     
 class CartItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    color = models.ForeignKey(Color, on_delete=models.CASCADE,null=True)
+    size = models.ForeignKey(size, on_delete=models.CASCADE,null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     quantity = models.IntegerField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
