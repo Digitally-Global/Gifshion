@@ -51,6 +51,7 @@ urlpatterns = [
     path('paypal-return/', views.PaypalReturnView.as_view(), name='successful'),
     path('paypal-cancel/', views.PaypalCancelView.as_view(), name='cancelled'),
     path('payment', views.paypal_process, name='paypal-form'),
+    path("paypal-confirm-order",views.confirm_order_payment, name="confirm-paypal-order"),
     path("confirm_order", views.confirm_order, name="confirm_order")
     
 ]+static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

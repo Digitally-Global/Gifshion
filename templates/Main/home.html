@@ -57,7 +57,9 @@
             <div class="wishlist-icon">
               <a href="{% url 'wishlist' %}"><i class="flaticon-love"></i></a>
             </div>
+            {% if not i.color.all and i.size%}
             <a class="add-cart" href="{% url 'cart_add' i.id %}"><i class="flaticon-shopping-bag"></i>add to bag</a>
+            {% endif %}
           </div>
         </div>
         {% endfor %}
@@ -106,6 +108,7 @@
                 {{i.Product_information}}
               </p>
               {% with request.session.exchange as exchange %}
+
               {% if not i.Discount == 0 %}
               <div class="price"><span>{{ request.session.icon }} {{ i.price|divide:exchange|discount:i.Discount }}
                   <del>{{i.price|divide:exchange}}</del></span></div>
@@ -123,7 +126,9 @@
                   <!-- <a onclick="handleWishlist()"><i class="flaticon-love"></i></a> -->
                 </form>
               </div>
-              <a class="add-cart" href="{% url 'cart_add' i.id %}"><i class="flaticon-shopping-bag"></i>add to bag</a>
+             {% if not i.color.all  and i.size%}
+            <a class="add-cart" href="{% url 'cart_add' i.id %}"><i class="flaticon-shopping-bag"></i>add to bag</a>
+            {% endif %}
             </div>
             {% endwith %}
           </div>

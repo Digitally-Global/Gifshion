@@ -101,10 +101,15 @@
           </div>
 
           {% if not i.color.all|length == 0%}
+          {% if not request.GET.color %}
           <p class="mb-1 mt-3">Select Color</p>
+          {% else %}
+          <p class="mb-1 mt-3">Color</p>
+          {% endif %}
           <div class="d-flex justify-content-between">
             <div class="product-variations">
               <ul class="nav">
+                {% if not request.GET.color %}
                 {% for color in i.color.all|slice:':1'%}
                 <div class="active color-select" id="{{color.id}}" onclick="selectColor(`{{color.id}}`)">
                   <input type="color" value={{color.color}} disabled />
@@ -115,15 +120,25 @@
                   <input type="color" value={{color.color}} disabled />
                 </div>
                 {% endfor %}
+                {% else %}
+                <div class="color-select">
+                  <input type="color" value=#{{request.GET.color}} disabled />
+                </div>
+                {% endif %}
               </ul>
             </div>
           </div>
           {% endif %}
           {% if not i.size_set.all|length == 0%}
+          {% if not request.GET.size %}
           <p class="mb-1 mt-3">Select Size</p>
+          {% else %}
+          <p class="mb-1 mt-3">Size</p>
+          {% endif %}
           <div class="d-flex justify-content-between">
             <div class="product-variations">
               <ul class="nav">
+                {% if not request.GET.size %}
                 {% for size in i.size_set.all|slice:":1" %}
                 <li><a class="active size-select" href="#" id="{{size.id}}" onclick="selectSize(`{{size.id}}`)">
                     {{ size.Num }}</a></li>
@@ -132,6 +147,11 @@
                 <li><a class="size-select" id="{{size.id}}" onclick="selectSize(`{{size.id}}`)">
                     {{size.Num }}</a></li>
                 {% endfor %}
+                {% else %}
+                <li><a class="size-select active" id="{{request.GET.size}}"
+                    onclick="selectSize(`{{request.GET.size}}`)">
+                    {{request.GET.size}}</a></li>
+                {% endif %}
               </ul>
             </div>
             {%endif %}

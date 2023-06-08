@@ -15,84 +15,6 @@
               <input type="text" placeholder="Search.." name="search">
               <button type="submit" class="btn"><i class="fa fa-search"></i></button>
             </form>
-            {% comment %} <div class="filter_by">
-              <div class="filter_by_link">
-                FILTER BY <i class="fa fa-filter"></i>
-              </div>
-            </div> {% endcomment %}
-            {% comment %} <div class="products-filter-menu-block">
-              <div class="products-filter-menu p-3">
-                <div class="pf-head d-flex justify-content-between">
-                  <h5>Filter</h5>
-                  <div class="close-icon">
-                    <i class="flaticon-close"></i>
-                  </div>
-                </div>
-                <div class="filter-nav">
-                  <h5>Gender</h5>
-                  <div class="filter-cat">
-                    <a class="btn btn-outline-secondary" href="#">male</a>
-                    <a class="btn btn-outline-secondary" href="#">female</a>
-                  </div>
-                </div>
-                <div class="filter-nav">
-                  <h5>Skin Type</h5>
-                  <div class="filter-cat">
-                    <a class="btn btn-outline-secondary" href="#">Normal</a>
-                    <a class="btn btn-outline-secondary" href="#">Oily</a>
-                    <a class="btn btn-outline-secondary" href="#">Dry</a>
-                    <a class="btn btn-outline-secondary" href="#">Sensitive</a>
-                  </div>
-                </div>
-                <div class="filter-nav">
-                  <h5>Concern</h5>
-                  <div class="filter-cat">
-                    <a class="btn btn-outline-secondary" href="#">Damaged Hair</a>
-                    <a class="btn btn-outline-secondary" href="#">Frizzy Hair</a>
-                    <a class="btn btn-outline-secondary" href="#">Dandruff</a>
-                    <a class="btn btn-outline-secondary" href="#">Color Protection</a>
-                    <a class="btn btn-outline-secondary" href="#">Dryness & Dehydration</a>
-                    <a class="btn btn-outline-secondary" href="#">Dry Hair</a>
-                    <a class="btn btn-outline-secondary" href="#">Greying</a>
-                    <a class="btn btn-outline-secondary" href="#">Night Routine</a>
-                    <a class="btn btn-outline-secondary" href="#">Oil Control</a>
-                    <a class="btn btn-outline-secondary" href="#">Hair Color</a>
-                    <a class="btn btn-outline-secondary" href="#">Anti Ageing</a>
-                    <a class="btn btn-outline-secondary" href="#">Pigmentation</a>
-                    <a class="btn btn-outline-secondary" href="#">Brightening & Tan removal</a>
-                    <a class="btn btn-outline-secondary" href="#">Hairfall</a>
-                    <a class="btn btn-outline-secondary" href="#">HairGrowth</a>
-                    <a class="btn btn-outline-secondary" href="#">Daily Use</a>
-                  </div>
-                </div>
-                <div class="filter-nav">
-                  <h5>Concern</h5>
-                  <div class="filter-cat">
-                    <a class="btn btn-outline-secondary" href="#">Damaged Hair</a>
-                    <a class="btn btn-outline-secondary" href="#">Frizzy Hair</a>
-                    <a class="btn btn-outline-secondary" href="#">Dandruff</a>
-                    <a class="btn btn-outline-secondary" href="#">Color Protection</a>
-                    <a class="btn btn-outline-secondary" href="#">Dryness & Dehydration</a>
-                    <a class="btn btn-outline-secondary" href="#">Dry Hair</a>
-                    <a class="btn btn-outline-secondary" href="#">Greying</a>
-                    <a class="btn btn-outline-secondary" href="#">Night Routine</a>
-                    <a class="btn btn-outline-secondary" href="#">Oil Control</a>
-                    <a class="btn btn-outline-secondary" href="#">Hair Color</a>
-                    <a class="btn btn-outline-secondary" href="#">Anti Ageing</a>
-                    <a class="btn btn-outline-secondary" href="#">Pigmentation</a>
-                    <a class="btn btn-outline-secondary" href="#">Brightening & Tan removal</a>
-                    <a class="btn btn-outline-secondary" href="#">Hairfall</a>
-                    <a class="btn btn-outline-secondary" href="#">HairGrowth</a>
-                    <a class="btn btn-outline-secondary" href="#">Daily Use</a>
-                  </div>
-                </div>
-                <div class="pf-bottom">
-                  <a class="btn btn-dark btn-lg" href="#">reset</a>
-                  <a class="btn btn-dark btn-lg" href="#">apply</a>
-                </div>
-              </div> {% endcomment %}
-              {% comment %}
-            </div> {% endcomment %}
           </div>
         </div>
         {% if not product|length == 0%}
@@ -133,18 +55,23 @@
                   <!-- <a onclick="handleWishlist()"><i class="flaticon-love"></i></a> -->
                 </form>
               </div>
+              {% if not i.color.all and i.size%}
+
               <a class="add-cart" href="{% url 'cart_add' i.id %}"><i class="flaticon-shopping-bag"></i>add to bag</a>
+              {% endif %}
             </div>
             {% endwith %}
           </div>
-          {% endfor %}
-          {% else %}
-          {% if no_search %}
-          <h1 class="text-center">No Products Found!</h1>
-          {% endif %}{% endif %}
         </div>
+
+        {% endfor %}
+        {% else %}
+        {% if no_search %}
+        <h1 class="text-center">No Products Found!</h1>
+        {% endif %}{% endif %}
       </div>
     </div>
+  </div>
 </section>
 <style>
   input[type=range] {
