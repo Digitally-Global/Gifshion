@@ -9,7 +9,8 @@ def categories_processor(request):
   if request.user.is_authenticated:
     cart = CartItem.objects.filter(user=request.user)
     for item in CartItem.objects.filter(user=request.user):
-      cart_total_amount += item.quantity * item.price
+      cart_total_amount += float(float(item.quantity) * round(float(item.price)/request.session['exchange'],2))
+    cart_total_amount = round(cart_total_amount,2)
   else :
     cart = []
   return {'categories': categories,'currencies':currencies,'social':social,'cart_total_amount':cart_total_amount,'cart':cart,'notification':notification}

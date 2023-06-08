@@ -8,9 +8,9 @@ def send_mail(order):
   smtp_server = "smtp.mailtrap.io"
 
   sender_email = "mailtrap@example.com"
-  receiver_email = "dkediaphone@icloud.com"
+  receiver_email = order.checkout.email
   message = MIMEMultipart("alternative")
-  message["Subject"] = "multipart test"
+  message["Subject"] = "Gifshion Payment Receipt"
   message["From"] = sender_email
   message["To"] = receiver_email
 
@@ -317,17 +317,17 @@ def send_mail(order):
                     </td>
                   </tr>"""
   for item in order.items.all():
-                    html += """
+                    html += f"""
                   <tr>
                     <td align="left" width="75%"
                       style="padding: 6px 25px;font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
-                      Item</td>
+                      {item.product.name}</td>
                     <td align="left" width="75%"
                       style="padding: 6px 25px;font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
-                      3</td>
+                      {item.quantity}</td>
                     <td align="left" width="25%"
                       style="padding: 6px 25px;font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
-                      $24.00</td>
+                      {order.currency}{item.price}</td>
                   </tr>
                  """
   html += """
@@ -392,7 +392,7 @@ def send_mail(order):
   message.attach(part2)
 
   # send your email
-  with smtplib.SMTP("smtp.mailtrap.io", 2525) as server:
+  with smtplib.SMTP(smtp_server,port) as server:
       server.login("37b854dadb9bcf", "a6a22f91ed1216")
       server.sendmail(
           sender_email, receiver_email, message.as_string()

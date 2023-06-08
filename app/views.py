@@ -104,72 +104,74 @@ def confirm_order(request):
             pay.order=order
             pay.payment_method="Paypal"
             pay.save()
+            send_mail(order)
             cart.delete()
             return redirect('successful')
 
-def create_payment(request,id):
+def confirm_order_payment(request):
     if request.method == 'GET' and request.GET.get('paymentId') and request.GET["token"] and  request.GET["PayerID"]:
         return render(request, 'Payment/confirm.html')
+
+def create_payment(request,id):
+    checkout = Checkout.objects.get(id=id)
+    cart = CartItem.objects.filter(user=request.user)
+    total  = request.session['cart_total_amount']
+    print(total)
+    if checkout.coupons:
+        discounted_price = checkout.coupons.get_discounted_value(initial_value=total)
     else:
-        checkout = Checkout.objects.get(id=id)
-        cart = CartItem.objects.filter(user=request.user)
-        total=0
-        for value in cart:
-            total += round(float(value.price)*value.quantity,2)
-        if checkout.coupons:
-            discounted_price = round(checkout.coupons.get_discounted_value(initial_value=total)/request.session['exchange'],2)
-        else:
-            discounted_price = 0
-        total = round(total/request.session['exchange'],2)
-        print(total)
-        print(discounted_price)
-        data = []
-        for value in cart:
-            sub_data = {}
-            sub_data['name'] = value.product.name
-            sub_data['quantity'] = value.quantity
-            sub_data['price'] = str(round(float(value.price)/request.session['exchange'],2))
-            sub_data['quantity']=value.quantity
-            sub_data['currency']=request.session['currency_code']
-            data.append(sub_data)
-        if checkout.coupons:
-            data.append(
-                {
-                "name": "Coupon Code Applied",
-                "quantity": "1",
-                "price": f"-{format(total-discounted_price)}",
-                "sku": "product",
-                "currency": request.session['currency_code']
-                }
-            )   
-        print(data)
-        payment = Payment({
-            "intent": "sale",
-            "payer": {
-                "payment_method": "paypal"
-            },
-            "transactions": [{
-                "amount": {
-                    "total": str(total-discounted_price),
-                   # Make sure the currency amount is correctly formatted
-                    "currency": request.session['currency_code'],
-                },
-                "description": "Payment for Gifsion Products",
-                "item_list": {
-                    "items": data
-                }
-            }],
-            "redirect_urls": {
-                "cancel_url": request.build_absolute_uri(reverse ('cancelled')),
-                "return_url": request.build_absolute_uri(reverse ('confirm_order')),
+        discounted_price = total
+    total=round(total,2)
+    discounted_price=round(discounted_price,2)
+    print(total,discounted_price)
+    data = []
+    if len(cart) == 0:
+        return redirect('cart')
+    for value in cart:
+        sub_data = {}
+        sub_data['name'] = value.product.name
+        sub_data['quantity'] = value.quantity
+        sub_data['price'] = str(round(float(value.price)/request.session['exchange'],2))
+        sub_data['quantity']=value.quantity
+        sub_data['currency']=request.session['currency_code']
+        data.append(sub_data)
+    if checkout.coupons:
+        data.append(
+            {
+            "name": "Coupon Code Applied",
+            "quantity": "1",
+            "price": f"-{round(total-discounted_price,2)}",
+            "sku": "product",
+            "currency": request.session['currency_code']
             }
-            })
-        if payment.create():
-            for link in payment.links:
-                if link.rel == "approval_url":
-                    return redirect(link.href)
-        else:
-            print(payment.error)
+        )   
+    print(data)
+    payment = Payment({
+        "intent": "sale",
+        "payer": {
+            "payment_method": "paypal"
+        },
+        "transactions": [{
+            "amount": {
+                "total": discounted_price,
+                "currency": request.session['currency_code'],
+            },
+            "description": "Payment for Gifsion Products",
+            "item_list": {
+                "items": data
+            }
+        }],
+        "redirect_urls": {
+            "cancel_url": request.build_absolute_uri(reverse ('cancelled')),
+            "return_url": request.build_absolute_uri(reverse ('confirm-paypal-order')),
+        }
+        })
+    if payment.create():
+        for link in payment.links:
+            if link.rel == "approval_url":
+                return redirect(link.href)
+    else:
+        print(payment.error)
 
 def share_product(request, product_id):
     product_url = request.build_absolute_uri(reverse('product_detail', args=[product_id]))
@@ -177,29 +179,80 @@ def share_product(request, product_id):
 
 @login_required(login_url="/myaccount/login/")
 def cart_add(request, id):
-    color = Color.objects.get(color=str((request.GET['color']).upper()))
-    size = Size.objects.get(Num=request.GET['size'],product=Product.objects.get(id=id))
-    product = Product.objects.get(id=id)
-    if CartItem.objects.filter(user=request.user, product=product,color=color,size=size).exists():
-        cart = CartItem.objects.get(user=request.user, product=product)
-        cart.quantity += 1
-        cart.save()
+    if not request.GET.get('color'): 
+        color = None
     else:
-        CartItem.objects.create(user=request.user, product=product,quantity=1,price=round(product.price-(product.Discount/100)*product.price,2),discount=product.Discount,color=color,size=size)
-    return redirect("cart_detail")
+        color = Color.objects.get(color=str((request.GET['color']).upper()))
+    if not request.GET.get('size'): 
+        size = None
+    else:
+        size = Size.objects.get(Num=request.GET['size'],product=Product.objects.get(id=id))
+    product = Product.objects.get(id=id)
+    if color and size:
+        if CartItem.objects.filter(user=request.user, product=product,color=color,size=size).exists():
+            cart = CartItem.objects.get(user=request.user, product=product)
+            cart.quantity += 1
+            cart.save()
+        else:
+            CartItem.objects.create(user=request.user, product=product,quantity=1,price=round(product.price-(product.Discount/100)*product.price,2),discount=product.Discount,color=color,size=size)
+        return redirect("cart_detail")
+    elif color:
+        if CartItem.objects.filter(user=request.user, product=product,color=color).exists():
+            cart = CartItem.objects.get(user=request.user, product=product)
+            cart.quantity += 1
+            cart.save()
+        else:
+            CartItem.objects.create(user=request.user, product=product,quantity=1,price=round(product.price-(product.Discount/100)*product.price,2),discount=product.Discount,color=color)
+        return redirect("cart_detail")
+    else:
+        if CartItem.objects.filter(user=request.user, product=product,size=size).exists():
+            cart = CartItem.objects.get(user=request.user, product=product)
+            cart.quantity += 1
+            cart.save()
+        else:
+            CartItem.objects.create(user=request.user, product=product,quantity=1,price=round(product.price-(product.Discount/100)*product.price,2),discount=product.Discount,size=size)
+        return redirect("cart_detail")
+        
 
 
 @login_required(login_url="/myaccount/login/")
 def item_clear(request, id):
     product = Product.objects.get(id=id)
-    CartItem.objects.get(user=request.user, product=product).delete()
+    color = None
+    size = None
+    if request.GET.get('color') != "": 
+        color = Color.objects.get(color=str((request.GET['color']).upper()),product=product)
+    if request.GET.get('size') != "": 
+        size = Size.objects.get(Num=request.GET['size'],product=product)
+    if color and size:
+        cart = CartItem.objects.get(user=request.user, product=product,color=color,size=size)
+    elif color:
+        cart = CartItem.objects.get(user=request.user, product=product,color=color)
+    elif size:
+        cart = CartItem.objects.get(user=request.user, product=product,size=size)
+    else:
+        cart = CartItem.objects.get(user=request.user, product=product)
+    cart.delete()
     return redirect("cart_detail")
 
 
 @login_required(login_url="/myaccount/login/")
 def item_increment(request, id):
     product = Product.objects.get(id=id)
-    cart = CartItem.objects.get(user=request.user, product=product)
+    color = None
+    size = None
+    if request.GET.get('color') != "": 
+        color = Color.objects.get(color=str((request.GET['color']).upper()),product=product)
+    if request.GET.get('size') != "": 
+        size = Size.objects.get(Num=request.GET['size'],product=product)
+    if color and size:
+        cart = CartItem.objects.get(user=request.user, product=product,color=color,size=size)
+    elif color:
+        cart = CartItem.objects.get(user=request.user, product=product,color=color)
+    elif size:
+        cart = CartItem.objects.get(user=request.user, product=product,size=size)
+    else:
+        cart = CartItem.objects.get(user=request.user, product=product)
     cart.quantity += 1
     cart.save()
     return redirect("cart_detail")
@@ -207,7 +260,20 @@ def item_increment(request, id):
 @login_required(login_url="/myaccount/login/")
 def item_decrement(request, id):
     product = Product.objects.get(id=id)
-    cart = CartItem.objects.get(user=request.user, product=product)
+    color = None
+    size = None
+    if request.GET.get('color') != "": 
+        color = Color.objects.get(color=str((request.GET['color']).upper()),product=product)
+    if request.GET.get('size') != "": 
+        size = Size.objects.get(Num=request.GET['size'],product=product)
+    if color and size:
+        cart = CartItem.objects.get(user=request.user, product=product,color=color,size=size)
+    elif color:
+        cart = CartItem.objects.get(user=request.user, product=product,color=color)
+    elif size:
+        cart = CartItem.objects.get(user=request.user, product=product,size=size)
+    else:
+        cart = CartItem.objects.get(user=request.user, product=product)
     if cart.quantity <= 1:
         cart.delete()
     else:

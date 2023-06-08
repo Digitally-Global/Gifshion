@@ -27,7 +27,7 @@
           <td>{{ forloop.counter }}</td>
           <td><img style="height: 50px" src="{{value.product.image.url}}"></td>
           <td>
-            <a href="{{value.product.get_absolute_url}}">
+            <a href="{{value.product.get_absolute_url}}?color={{value.color.color|slice:'1:'}}&size={{value.size.Num}}">
               {{value.product.name}}
             </a>
           </td>
@@ -39,24 +39,37 @@
           </td>
           <td>
             <div class="qun_input">
-              <span class="minus"><a href="{% url 'item_decrement' value.product.id %}" class="text -center"><i
-                    class="fa fa-minus"></i></a></span>
+              <span class="minus"><a class="text-center" onclick="decrement_cart({{value.id}})"><i
+                class="fa fa-minus"></i></a>
+              <form hidden id="decrement-form-{{value.id}}" action="{% url 'item_decrement' value.product.id %}">
+                    <input type="" name="color" value="{{value.color.color}}" hidden>
+                    <input type="" name="size" value="{{value.size.Num}}" hidden>
+                    </form>
+              </span>
               <input type="number" min="1" value="{{ value.quantity }}" id="quantity" />
-              <span class="plus"><a href="{% url 'item_increment' value.product.id  %}" class="text -center"><i
-                    class="fa fa-plus"></i></a></span>
+              <span class="plus"><a onclick="increment_cart({{value.id}})" class="text-center"><i class="fa fa-plus"></i></a>
+                    <form action="{% url 'item_increment' value.product.id  %}" id="increment-form-{{value.id}}">
+                      <input type="" name="color" value="{{value.color.color}}" hidden>
+                      <input type="" name="size" value="{{value.size.Num}}" hidden>
+                    </form>
+                  </span>
 
             </div>
           </td>
           <td>
 
             {% with request.session.exchange as exchange %}
-            {% with value.price|multiply:value.quantity as total %}
-            <div class="price"><span>{{ request.session.icon }} {{total|divide:exchange}}
+            {% with value.price|divide:exchange as total %}
+            <div class="price"><span>{{ request.session.icon }} {{total|multiply:value.quantity}}
                 {%endwith%}
                 {% endwith %}
           </td>
-          <td class="product-remove"><a href="{% url 'item_clear' value.product.id %}"><i class="fa fa-times"></a></td>
-
+          <td class="product-remove"><a><i class="fa fa-times" onclick="clear_cart({{value.id}})"></a></td>
+ <form action="{% url 'item_clear' value.product.id %}" id="clear-form-{{value.id}}">
+                      <input type="" name="color" value="{{value.color.color}}" hidden>
+                      <input type="" name="size" value="{{value.size.Num}}" hidden>
+                    </form>
+                  </span>
         </tr>
         {% endfor %}
       </tbody>
@@ -65,7 +78,7 @@
           <th colspan="4">Total</th>
           <th>
             {% with request.session.exchange as exchange %}
-            <div class="price"><span>{{ request.session.icon }} {{ cart_total_amount|divide:exchange }}
+            <div class="price"><span>{{ request.session.icon }} {{ cart_total_amount }}
 
                 {% endwith %}
           </th>
@@ -98,5 +111,18 @@
   </div>
 </div>
 <!-- Modal -->
+
+<script>
+  function increment_cart(id) {
+    document.getElementById(`increment-form-${id}`).submit();
+  }
+  function decrement_cart(id) {
+    document.getElementById(`decrement-form-${id}`).submit();
+  }
+  function clear_cart(id)
+  {
+    document.getElementById(`clear-form-${id}`).submit();
+  }
+  </script>
 
 {% endblock %}

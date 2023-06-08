@@ -37,21 +37,24 @@
           <td>
 
             {% with request.session.exchange as exchange %}
-            {% with value.price|multiply:value.quantity as total %}
-            <div class="price"><span>{{ request.session.icon }} {{total|divide:exchange}}
+            {% with value.price|divide:exchange as total %}
+            <div class="price"><span>{{ request.session.icon }} {{total|multiply:value.quantity}}
                 {%endwith%}
                 {% endwith %}
           </td>
 
         </tr>
         {% endfor %}
+        <tr>
+
+        </tr>
       </tbody>
       <tfoot>
         <tr>
           <th colspan="4">Total</th>
           <th>
             {% with request.session.exchange as exchange %}
-            <div class="price"><span>{{ request.session.icon }} {{ cart_total_amount|divide:exchange }}
+            <div class="price"><span>{{ request.session.icon }} {{ cart_total_amount }}
 
                 {% endwith %}
           </th>

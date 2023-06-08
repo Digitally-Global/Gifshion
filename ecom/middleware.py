@@ -10,8 +10,12 @@ def simplemiddleware(get_response):
             request.session["cart"]=serializers.serialize('json', CartItem.objects.filter(user=request.user))
             cart_total_amount=0
             for item in CartItem.objects.filter(user=request.user):
-                cart_total_amount += item.quantity * item.price
-            request.session["cart_total_amount"]=float(cart_total_amount)
+                cart_total_amount += float(float(item.quantity) * round(float(item.price)/request.session['exchange'],2))
+            request.session["cart_total_amount"]=cart_total_amount
+            cart_count = 0
+            for item in CartItem.objects.filter(user=request.user):
+                cart_count += item.quantity 
+            request.session['cart_items']=cart_count
         try:
             print(request.session["currency_code"])
         except:
