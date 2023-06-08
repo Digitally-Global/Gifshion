@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+{%load divide %}
+
+
+<div class="container">
+  <div class="border rounded p-4 m-4">
+    <p class="display-5 border">Confrim Order</p>
+    {% if not cart|length == 0%}
+    <table class="table">
+      <thead>
+        <tr>
+          <th>S.no</th>
+          <th>image</th>
+          <th>Name</th>
+          <th>Price</th>
+          <th>Quantity</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for value in cart %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          <td><img style="height: 50px" src="{{value.product.image.url}}"></td>
+          <td>
+            <a href="{{value.product.get_absolute_url}}?color={{value.color.color|slice:'1:'}}&size={{value.size.Num}}">
+              {{value.product.name}}
+            </a>
+          </td>
+          <td>{% with request.session.exchange as exchange %}
+
+            <div class="price"><span>{{ request.session.icon }} {{ value.price|divide:exchange }}
+
+                {% endwith %}
+          </td>
+          <td>
+              {{ value.quantity }}
+          </td>
+          <td>
+
+            {% with request.session.exchange as exchange %}
+            {% with value.price|divide:exchange as total %}
+            <div class="price"><span>{{ request.session.icon }} {{total|multiply:value.quantity}}
+                {%endwith%}
+                {% endwith %}
+          </td>
+
+ <form action="{% url 'item_clear' value.product.id %}" id="clear-form-{{value.id}}">
+                      <input type="" name="color" value="{{value.color.color}}" hidden>
+                      <input type="" name="size" value="{{value.size.Num}}" hidden>
+                    </form>
+                  </span>
+        </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr>
+          <th colspan="4">Total  </th>
+          <th>
+            {% with request.session.exchange as exchange %}
+            <div class="price"><span>{{ request.session.icon }} {{ total_after_discount  }}
+
+                {% endwith %}
+          </th>
+        </tr>
+      </tfoot>
+    </table>
+    {% else %}
+     <p class="text-center">No products in your cart. Continue <a href="{% url 'Home' %}">Shopping</a> </p>
+    {% endif %}
+    <hr>
+    <div class="m-3 p-3">
+      <button class="btn btn-danger" id="rzp-button1">Confrim Order</button> 
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div id="cover-spin"></div>
+<style>
+  #cover-spin {
+    position: fixed;
+    width: 100%;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.7);
+    z-index: 9999;
+    display: none;
+  }
+
+  @-webkit-keyframes spin {
+    from {
+      -webkit-transform: rotate(0deg);
+    }
+
+    to {
+      -webkit-transform: rotate(360deg);
+    }
+  }
+
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  #cover-spin::after {
+    content: '';
+    display: block;
+    position: absolute;
+    left: 48%;
+    top: 40%;
+    width: 40px;
+    height: 40px;
+    border-style: solid;
+    border-color: black;
+    border-top-color: transparent;
+    border-width: 4px;
+    border-radius: 50%;
+    -webkit-animation: spin .8s linear infinite;
+    animation: spin .8s linear infinite;
+  }
+</style>
+<script>
+  function handleSubmit(e) {
+    e.preventDefault()
+    $('#cover-spin').show(0)
+    let form = document.getElementById('checkout-form')
+    form.submit()
+  }
+</script>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+  var options = {
+    "key": "rzp_test_G54HO1qwPxfLIK", // Enter the Key ID generated from the Dashboard
+    "amount": parseFloat("{{response.amount}}") * 100, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+    "currency": "INR",
+    "name": "Gifshion", //your business name
+    "description": "Gifshion Product Transaction",
+    "image": "https://example.com/your_logo",
+    "order_id": "{{response.id}}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+    "callback_url": "{% url 'confirm_razor_payment' %}",
+    "prefill": { //We recommend using the prefill parameter to auto-fill customer's contact information especially their phone number
+      "name": "{{user.username}}", //your customer's name
+      "email": "{{user.email}}",
+      "contact": "{{user.profile.phone}}" //Provide the customer's phone number for better conversion rates 
+    },
+    "theme": {
+      "color": "#3399cc"
+    }
+  };
+  var rzp1 = new Razorpay(options);
+  document.getElementById('rzp-button1').onclick = function (e) {
+    rzp1.open();
+    e.preventDefault();
+    //let form = document.getElementById('checkout-form')
+    // <!-- form.submit() -->
+  }
+</script>
+
+{% endblock %}

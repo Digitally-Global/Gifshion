@@ -17,10 +17,16 @@
 				<div class="col-md-8">
 					<div class="account-content-details">
 						<div class="dashboard-info products-listing">
+							{% if not  order.paid == True %}
+							<div class="alert alert-danger" role="alert">
+								Your Order is not paid yet
+							</div>
+							{% endif %}
 							<div class="container">
 								<h3>Total Amount - {{order.currency}} {{order.total_amount}}</h3>
 								{{order.payment.data}}
 								<h3>Order Date - {{order.order_date}}</h3>
+								<h3>Order Id - {{order.id}} </h3>
 								<ul class="cards">
 									{% for item in order.items.all %}
 									<li class="card">

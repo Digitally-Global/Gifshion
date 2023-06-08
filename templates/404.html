@@ -1,0 +1,73 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+
+<div class="wrapper">
+  <div class="container">
+    <div class="grid-row">
+      <div class="colmun colmun-left">
+        <img src="{% static './assets/images/image-left.png' %}" alt="image-left' />
+        <h1 class="px-spc-b-20">We can't find the page you are looking for.</h1>
+        <span class="px-spc-b-20">This page has been relocated or removed.</span>
+
+        <a class="btn btn-group-lg btn-danger go-home" href={% url 'Home' %}><i class="fa fa-home"></i> Go Home</a>
+      </div>
+      <div class="colmun colmun-right">
+        <img src="{% static './assets/images/right-shape.png' %}" alt="right-shape" />
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <style>
+    .wrapper{
+      padding: 100px 0;
+    }
+    
+    .wrapper h1 {
+      font-size: 50px;
+      line-height: 60px;
+    }
+    .wrapper span {
+      display: block;
+      font-size: 18px;
+      line-height: 30px;
+    }
+    .container {
+      width: 80%;
+      max-width: 1600px;
+      margin: auto;
+    }
+    .grid-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      place-items: center;
+      grid-gap: 50px;
+    }
+    .colmun-left {
+      text-align: left;
+    }
+    .colmun-right {
+      text-align: right;
+    }
+    .px-spc-b-20 {
+      padding-bottom: 20px;
+    }
+    .wrapper button.go-home {
+      padding: 5px 20px;
+      background: #ffa000;
+      border: transparent;
+      border-radius: 2px;
+      box-shadow: 0 0 2px rgb(0 0 0 / 30%);
+      cursor: pointer;
+      margin: 20px 0;
+      color: #fff;
+    }
+    .wrapper button.go-home i {
+      color: #fff;
+    }
+    .wrapper img {
+      display: block;
+      width: 100%;
+    }
+  </style>
+  {% endblock %}
+</div>

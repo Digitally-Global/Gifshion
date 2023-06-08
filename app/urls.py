@@ -11,9 +11,9 @@ app_name = 'paypalrestsdk'
 
 
 urlpatterns = [
+    path('404', views.request_404, name='404'),
     path('admin/', admin.site.urls),
     #Error
-    path('404', views.Error, name='404'),
     path('checkout', views.checkout, name='checkout'),
     path('execute/<int:id>', views.create_payment, name='create_payment'),
     path('cash/', views.Cash, name='cash'),
@@ -40,7 +40,7 @@ urlpatterns = [
     path('product/product-listing/',views.Product_listing, name= 'product-listing'),
     path('myaccount/profile/', views.Profile, name = 'profile'),
     path("myaccount/orders", views.order_page, name="orders"),
-    path("myaccount/orders/<int:id>", views.order_detail, name="order"),
+    path("myaccount/orders/<str:id>", views.order_detail, name="order"),
     path('myaccount/login/', views.My_Account, name = 'handlemy_account'),
     path('myaccount/register/', views.Register, name = 'handleregister'),
     path('myaccount/change-currency/<int:id>' , views.switch_currency ,name="change_currency"),
@@ -48,10 +48,11 @@ urlpatterns = [
     path('cart/cart/',views.Cart,name="cart"),
     path('mail/<str:email>',views.mail,name="mail"),
     path('paypal/', include('paypal.standard.ipn.urls')),
-    path('paypal-return/', views.PaypalReturnView.as_view(), name='successful'),
-    path('paypal-cancel/', views.PaypalCancelView.as_view(), name='cancelled'),
+    path('paypal-return/', views.PaypalReturnView, name='successful'),
+    path('paypal-cancel/', views.PaypalCancelView, name='cancelled'),
     path('payment', views.paypal_process, name='paypal-form'),
     path("paypal-confirm-order",views.confirm_order_payment, name="confirm-paypal-order"),
-    path("confirm_order", views.confirm_order, name="confirm_order")
+    path("confirm_order", views.confirm_order, name="confirm_order"),
+    path('confirm_razor_payment',views.confirm_razor_payment, name="confirm_razor_payment")
     
 ]+static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

@@ -6,6 +6,8 @@ from django.contrib.auth.models import User
 from app.mail import send_mail
 from django_simple_coupons.models import Coupon
 from colorfield.fields import ColorField
+from shortuuid.django_fields import ShortUUIDField
+
 
 
 class Currency(models.Model):
@@ -167,6 +169,14 @@ class Tracking(models.Model):
     link = models.CharField(max_length=100) 
     
 class Order(models.Model):
+    id = ShortUUIDField(
+        length=16,
+        max_length=40,
+        prefix="gif-",
+        alphabet="abcdefg1234",
+        primary_key=True,
+    )
+    razorpay_order_id = models.CharField(max_length=100, null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     total_amount = models.DecimalField(max_digits=10, decimal_places=2)
     checkout = models.OneToOneField(Checkout, on_delete=models.CASCADE, null=True, blank=True)
@@ -210,7 +220,7 @@ class Social(models.Model):
     
 class Mail(models.Model):
     email = models.EmailField(max_length=100,unique=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE,unique=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     
     def __str__(self):
         return self.email

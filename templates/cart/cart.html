@@ -18,7 +18,6 @@
           <th>Price</th>
           <th>quantity</th>
           <th>Total</th>
-          <th>Remove</th>
         </tr>
       </thead>
       <tbody>
@@ -38,6 +37,7 @@
                 {% endwith %}
           </td>
           <td>
+            <div class="special-flex">
             <div class="qun_input">
               <span class="minus"><a class="text-center" onclick="decrement_cart({{value.id}})"><i
                 class="fa fa-minus"></i></a>
@@ -46,15 +46,22 @@
                     <input type="" name="size" value="{{value.size.Num}}" hidden>
                     </form>
               </span>
-              <input type="number" min="1" value="{{ value.quantity }}" id="quantity" />
+                {{ value.quantity }}
               <span class="plus"><a onclick="increment_cart({{value.id}})" class="text-center"><i class="fa fa-plus"></i></a>
                     <form action="{% url 'item_increment' value.product.id  %}" id="increment-form-{{value.id}}">
                       <input type="" name="color" value="{{value.color.color}}" hidden>
                       <input type="" name="size" value="{{value.size.Num}}" hidden>
                     </form>
                   </span>
+                </div>
 
-            </div>
+                  <button class="btn btn-danger fa fa-times special-button" onclick="clear_cart({{value.id}})">
+                  </button>
+                  <form action="{% url 'item_clear' value.product.id %}" id="clear-form-{{value.id}}">
+                    <input type="" name="color" value="{{value.color.color}}" hidden>
+                    <input type="" name="size" value="{{value.size.Num}}" hidden>
+                  </form>
+                  </div>
           </td>
           <td>
 
@@ -64,11 +71,7 @@
                 {%endwith%}
                 {% endwith %}
           </td>
-          <td class="product-remove"><a><i class="fa fa-times" onclick="clear_cart({{value.id}})"></a></td>
- <form action="{% url 'item_clear' value.product.id %}" id="clear-form-{{value.id}}">
-                      <input type="" name="color" value="{{value.color.color}}" hidden>
-                      <input type="" name="size" value="{{value.size.Num}}" hidden>
-                    </form>
+         
                   </span>
         </tr>
         {% endfor %}
@@ -124,5 +127,15 @@
     document.getElementById(`clear-form-${id}`).submit();
   }
   </script>
+  <style>
+    .special-button {
+      width:40px;
+      height: 30px;
+    }
+    .special-flex{
+      display: flex;
+      gap:2px;
+    }
+  </style>
 
 {% endblock %}

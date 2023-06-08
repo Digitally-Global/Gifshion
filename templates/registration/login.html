@@ -1,26 +1,19 @@
-{% extends 'base.html' %}
-{% load static %}
-{% block content %}
+{% extends 'base.html' %} {% load static %} {% block content %}
 <!-- Login Page -->
 <section class="login-page-block my-5 py-5">
   <div class="container">
-    {% if messages %}
-    {% for message in messages %}
-    {% if message.tags == 'error'%}
+    {% if messages %} {% for message in messages %} {% if message.tags == 'error'%}
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
       {{message}}
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
-    {% endif %}
-    {% endfor %}
-    {% endif %}
+    {% endif %} {% endfor %} {% endif %}
     <div class="login-block bg-mode shadow rounded-3 overflow-hidden">
       <div class="row">
         <div class="col-md-6 p-5 p-sm-6">
           <div class="login-title">
             <h4>Have an account ?</h4>
             <h2>Sign in</h2>
-
           </div>
           <form action="{% url 'handlemy_account' %}" method="post">
             {% csrf_token %}
@@ -35,26 +28,15 @@
               <label for="exampleInputPassword1" class="form-label">Password</label>
               <input type="password" class="form-control" id="" name="password" />
             </div>
-            <button type="submit" class="btn btn-primary w-100">
-              Login
-            </button>
+            <button type="submit" class="btn btn-primary w-100">Login</button>
             <div class="login-action md-10 fix">
+              {% comment %}
               <span cvlass="forgot-login f-left">
-                <a href="{% url 'password_reset' %}">
-                  lost my password ?</a>
+                <a href="{% url 'password_reset' %}"> lost my password ?</a>
               </span>
+              {% endcomment %}
             </div>
           </form>
-          <div class="position-relative my-4">
-            <hr />
-            <p class="small position-absolute top-50 start-50 translate-middle bg-white px-1 px-sm-2">
-              Or sign in with
-            </p>
-          </div>
-          <div class="login-width text-center">
-            <a href="#"><i class="fa fa-facebook"></i></a>
-            <a href="#"><i class="fa fa-google"></i></a>
-          </div>
         </div>
         <div class="col-md-6 p-5 p-sm-6">
           <div class="login-title">
@@ -65,13 +47,17 @@
           <form action="{% url 'handleregister' %}" method="post">
             {% csrf_token %}
             <div class="mb-3">
-
               <label for="exampleInputname" class="form-label">Full Name</label>
               <input class="form-control" id="exampleInputname" name="username" />
             </div>
             <div class="mb-3">
               <label for="exampleInputEmail1" class="form-label">Email address</label>
-              <input class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="email" />
+              <input
+                class="form-control"
+                id="exampleInputEmail1"
+                aria-describedby="emailHelp"
+                name="email"
+              />
               <div id="emailHelp" class="form-text">
                 We'll never share your email with anyone else.
               </div>
@@ -84,20 +70,8 @@
               <label for="phone" class="form-label">Phone</label>
               <input class="form-control" id="exampleInputPassword1" name="phone" type="phone" />
             </div>
-            <button type="submit" class="btn btn-primary w-100">
-              Register
-            </button>
+            <button type="submit" class="btn btn-primary w-100">Register</button>
           </form>
-          <div class="position-relative my-4">
-            <hr />
-            <p class="small position-absolute top-50 start-50 translate-middle bg-white px-1 px-sm-2">
-              Or register in with
-            </p>
-          </div>
-          <div class="login-width text-center">
-            <a href="#"><i class="fa fa-facebook"></i></a>
-            <a href="#"><i class="fa fa-google"></i></a>
-          </div>
         </div>
       </div>
     </div>

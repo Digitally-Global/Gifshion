@@ -1,12 +1,13 @@
 from django.db.models import SlugField
 from django.shortcuts import render, redirect
 from ecom.models import *
+from app.mail import EmailThread,WelcomeThread
 from django.urls import reverse
 from django.http import JsonResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-# from cart.cart import Cart
+import razorpay
 from ecom.models import size as Size
 from django.contrib.auth.decorators import login_required
 from colorfield.fields import ColorField
@@ -17,18 +18,21 @@ from django.shortcuts import render, redirect, get_object_or_404
 from ecom.models import Wishlist
 from ecom.models import Profile as pf
 from django.conf import settings
-from django.views.decorators.http import require_POST
-from django.utils import timezone
 from ecom.models import Currency
 from ecom.models import Payment as PayModel
 from django.views.generic import ListView
 from .forms import PayPalPaymentsForm
-from random import randint
+from django.views.decorators.csrf import csrf_exempt
+import json
 
+client = razorpay.Client(auth=("rzp_test_G54HO1qwPxfLIK", "nsmyogYOo15yxx4LpqtfEzMG"))
+
+@login_required(login_url="/myaccount/login/")
 def order_detail(request, id):
     order = get_object_or_404(Order, id=id)
     return render(request, 'checkout/order_detail.html', {'order': order})
 
+@login_required(login_url="/myaccount/login/")
 def single_checkout(request,id):
     cart = CartItem.objects.filter(user=request.user)
     cart.delete()
@@ -36,10 +40,11 @@ def single_checkout(request,id):
     cart_add(request,product.id)
     return redirect('checkout')
     
+
 def mail(request,email):
     Mail.objects.create(email=email,user=request.user)
     return redirect(request.META.get('HTTP_REFERER'))
-
+@login_required(login_url="/myaccount/login/")
 def wishlist(request):
     if request.method == 'POST':
         product_id = request.POST.get('id')
@@ -61,9 +66,12 @@ def wishlist(request):
         context = {'wishlist_items': wishlist_items}
         return render(request, 'wishlist/wishlist.html', context)
 
+@login_required(login_url="/myaccount/login/")
 class OrderListView(ListView):
-    model = Order
+    def get_queryset(self):
+        return Order.objects.filter(user=self.request.user).order_by('-order_date')
     template_name = 'payment/order_list.html' 
+    
     
 def switch_currency(request, id):
     currency=Currency.objects.get(id=id)
@@ -76,6 +84,70 @@ def switch_currency(request, id):
 def Cash(request):
     return render(request, 'payment/cash.html')
 
+@csrf_exempt
+@login_required(login_url="/myaccount/login/")
+def confirm_razor_payment(request):
+    def verify_signature(response_data):
+        return client.utility.verify_payment_signature(response_data)
+    if "razorpay_signature" in request.POST:
+        payment_id = request.POST.get("razorpay_payment_id", "")
+        provider_order_id = request.POST.get("razorpay_order_id", "")
+        signature_id = request.POST.get("razorpay_signature", "")   
+        order = Order()
+        order.razorpay_order_id = provider_order_id
+        order.user = request.user
+        total  = request.session['cart_total_amount']
+        checkout = Checkout.objects.get(id=request.session['checkout_id'])
+        if checkout.coupons:
+            discounted_price = checkout.coupons.get_discounted_value(initial_value=total)
+        else:
+            discounted_price = total
+        total=round(total,2)
+        discounted_price=round(discounted_price,2)
+        order.total_amount = round(discounted_price)
+        order.currency = 'INR'
+        order.save()
+        cart = CartItem.objects.filter(user=request.user)
+        for value in cart:
+            item = OrderItem()
+            item.order = order
+            item.product = Product.objects.get(id=value.product.id)
+            item.quantity = value.quantity
+            item.price = str(round(float(value.price)/request.session['exchange'],2))
+            item.save()
+        order.checkout=Checkout.objects.get(id=request.session['checkout_id'])
+        order.save()
+        _payment = PayModel()
+        _payment.paymentId = payment_id
+        _payment.payment_method = "RazorPay"
+        _payment.order = order
+        _payment.data = json.dumps(request.POST)
+        _payment.save()
+        if verify_signature(request.POST):
+            order.paid = True
+            order.save()
+            EmailThread(order,Currency.objects.get(code=order.currency).icon).start()
+            cart=CartItem.objects.filter(user=request.user)
+            cart.delete()
+            return redirect('successful')
+        else:
+            return render(request, "payment_failed.html")
+    else:
+        payment_id = json.loads(request.POST.get("error[metadata]")).get("payment_id")
+        provider_order_id = json.loads(request.POST.get("error[metadata]")).get(
+            "order_id"
+        )
+        order = Order.objects.get(razorpay_order_id=provider_order_id)
+        _payment = PayModel()
+        _payment.paymentId = payment_id
+        _payment.payment_method = "RazorPay"
+        _payment.order = order
+        _payment.data = json.dumps(request.POST)
+        order.save()
+        _payment.save()
+        return render(request, "payment_failed.html")
+
+@login_required(login_url="/myaccount/login/")
 def confirm_order(request):
     if request.GET.get('paymentId') and request.GET["token"] and  request.GET["PayerID"]:
         payment = Payment.find(request.GET['paymentId'])
@@ -104,16 +176,19 @@ def confirm_order(request):
             pay.order=order
             pay.payment_method="Paypal"
             pay.save()
-            send_mail(order)
+            EmailThread(order,Currency.objects.get(code=order.currency).icon).start()
             cart.delete()
             return redirect('successful')
 
+@login_required(login_url="/myaccount/login/")
 def confirm_order_payment(request):
     if request.method == 'GET' and request.GET.get('paymentId') and request.GET["token"] and  request.GET["PayerID"]:
         return render(request, 'Payment/confirm.html')
 
+@login_required(login_url="/myaccount/login/")
 def create_payment(request,id):
     checkout = Checkout.objects.get(id=id)
+    request.session['checkout_id']=checkout.id
     cart = CartItem.objects.filter(user=request.user)
     total  = request.session['cart_total_amount']
     print(total)
@@ -135,43 +210,51 @@ def create_payment(request,id):
         sub_data['quantity']=value.quantity
         sub_data['currency']=request.session['currency_code']
         data.append(sub_data)
-    if checkout.coupons:
-        data.append(
-            {
-            "name": "Coupon Code Applied",
-            "quantity": "1",
-            "price": f"-{round(total-discounted_price,2)}",
-            "sku": "product",
-            "currency": request.session['currency_code']
-            }
-        )   
-    print(data)
-    payment = Payment({
-        "intent": "sale",
-        "payer": {
-            "payment_method": "paypal"
-        },
-        "transactions": [{
-            "amount": {
-                "total": discounted_price,
-                "currency": request.session['currency_code'],
-            },
-            "description": "Payment for Gifsion Products",
-            "item_list": {
-                "items": data
-            }
-        }],
-        "redirect_urls": {
-            "cancel_url": request.build_absolute_uri(reverse ('cancelled')),
-            "return_url": request.build_absolute_uri(reverse ('confirm-paypal-order')),
+    if request.session['currency_code'] == 'INR':
+        DATA = {
+            "amount": round(discounted_price)*100,
+            "currency": "INR",
         }
-        })
-    if payment.create():
-        for link in payment.links:
-            if link.rel == "approval_url":
-                return redirect(link.href)
+        response = client.order.create(data=DATA)
+        return render(request,'Payment/razor-pay-confirm.html',{'response':response,'total_after_discount':round(DATA["amount"]/100)})
     else:
-        print(payment.error)
+        if checkout.coupons:
+            data.append(
+                {
+                "name": "Coupon Code Applied",
+                "quantity": "1",
+                "price": f"-{round(total-discounted_price,2)}",
+                "sku": "product",
+                "currency": request.session['currency_code']
+                }
+            )   
+        print(data)
+        payment = Payment({
+            "intent": "sale",
+            "payer": {
+                "payment_method": "paypal"
+            },
+            "transactions": [{
+                "amount": {
+                    "total": discounted_price,
+                    "currency": request.session['currency_code'],
+                },
+                "description": "Payment for Gifsion Products",
+                "item_list": {
+                    "items": data
+                }
+            }],
+            "redirect_urls": {
+                "cancel_url": request.build_absolute_uri(reverse ('cancelled')),
+                "return_url": request.build_absolute_uri(reverse ('confirm-paypal-order')),
+            }
+            })
+        if payment.create():
+            for link in payment.links:
+                if link.rel == "approval_url":
+                    return redirect(link.href)
+        else:
+            print(payment.error)
 
 def share_product(request, product_id):
     product_url = request.build_absolute_uri(reverse('product_detail', args=[product_id]))
@@ -330,6 +413,7 @@ def Pedit(request,id):
         return redirect('profile')
     else:
         return render(request, "my_account/profile_edit.html")
+    
 def My_Account(request):
     if request.method == "POST":
         username = request.POST.get('username')
@@ -339,7 +423,7 @@ def My_Account(request):
             login(request, user)
             return redirect('profile')
         else:
-            messages.error(request, 'Ivalid user and Password !')
+            messages.error(request, 'Invalid user and Password !')
             return redirect('login')
     else:
         return redirect('login')
@@ -347,6 +431,8 @@ def My_Account(request):
 def Pay(request):
     
     return render(request, 'payment/pay.html')       
+
+@login_required(login_url="/myaccount/login/")
 def checkout(request):
     if request.method == "POST":
         mobile_number = request.POST.get('mobile_number')
@@ -432,12 +518,14 @@ def Register(request):
         user.set_password(password)
         user.save()
         login(request,user)
+        WelcomeThread(user).start()
         return redirect('profile')
     else:
         return redirect('login')
     
-def Error(request):
-    return render(request,'Error/404.html')
+def request_404(request):
+    return render(request,'500.html')
+
 def category_detail(request, category_id):
     Category = sub_category.objects.get(id=category_id)
     if len(request.GET.getlist('FilterPrice')) < 2:
@@ -506,6 +594,8 @@ def Home(request):
         }
     return render(request,'main/home.html', context)
 
+
+@login_required(login_url="/myaccount/login/")
 def Profile(request):
     if request.method == "POST":
         username = request.POST.get('username')
@@ -523,7 +613,7 @@ def BASE(request):
 
 @login_required(login_url="/myaccount/login/")
 def order_page(request):
-    orders = Order.objects.filter(user=request.user).order_by('-id')  # Retrieve all orders
+    orders = Order.objects.filter(user=request.user).order_by('-order_date')  # Retrieve all orders
     # You can then loop through the orders to access individual fields
     # for order in orders:
     #     order_number = order.order_number
@@ -535,12 +625,15 @@ def order_page(request):
 
 from django.views.generic import TemplateView
 
-class PaypalReturnView(TemplateView):
-    template_name = 'paypal_success.html'
+@login_required(login_url="/myaccount/login/")
+def PaypalReturnView(request):
+    return render(request,'paypal_success.html')
 
-class PaypalCancelView(TemplateView):
-    template_name = 'paypal_cancel.html'
-
+@login_required(login_url="/myaccount/login/")
+def PaypalCancelView(request):
+    return render(request,'paypal_cancel.html')
+    
+@login_required(login_url="/myaccount/login/")
 def paypal_process(request):
     paypal_dict = {
         'business': settings.PAYPAL_RECEIVER_EMAIL,
@@ -554,3 +647,7 @@ def paypal_process(request):
     }
     form = PayPalPaymentsForm(initial=paypal_dict)
     return render(request, 'paypal_from.html', {'form': form})
+
+# send_mail(Order.objects.filter(id=85)[0],Currency.objects.get(code=Order.objects.filter(id=85)[0].currency).icon)
+
+# WelcomeThread(User.objects.filter()[3]).start()

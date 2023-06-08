@@ -2,8 +2,191 @@
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from threading import Thread
 
-def send_mail(order):
+class WelcomeThread(Thread):
+  def __init__(self, user):
+    self.user = user
+    Thread.__init__(self)
+  def run (self):
+    send_welcome_mail(self.user)
+    
+def send_welcome_mail(user):
+  port = 2525 
+  smtp_server = "smtp.mailtrap.io"
+  html = """<!-- Change values in [brackets] in the template and pass { {variables} } with API call -->
+<!-- Feel free to adjust it to your needs and delete all these comments-->
+<!-- Also adapt TXT version of this email -->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <title></title>
+  <!--[if !mso]><!-- -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!--<![endif]-->
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style type="text/css">
+    #outlook a {
+      padding: 0;
+    }
+
+    .ReadMsgBody {
+      width: 100%;
+    }
+
+    .ExternalClass {
+      width: 100%;
+    }
+
+    .ExternalClass * {
+      line-height: 100%;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+    }
+
+    table,
+    td {
+      border-collapse: collapse;
+      mso-table-lspace: 0pt;
+      mso-table-rspace: 0pt;
+    }
+
+  </style>
+  <!--[if !mso]><!-->
+  <style type="text/css">
+    @media only screen and (max-width:480px) {
+      @-ms-viewport {
+        width: 320px;
+      }
+      @viewport {
+        width: 320px;
+      }
+    }
+  </style>
+  <!--<![endif]-->
+  <!--[if mso]><xml>  <o:OfficeDocumentSettings>    <o:AllowPNG/>    <o:PixelsPerInch>96</o:PixelsPerInch>  </o:OfficeDocumentSettings></xml><![endif]-->
+  <!--[if lte mso 11]><style type="text/css">  .outlook-group-fix {    width:100% !important;  }</style><![endif]-->
+  <!--[if !mso]><!-->
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet" type="text/css">
+  <style type="text/css">
+    @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap');
+  </style>
+  <!--<![endif]-->
+  <style type="text/css">
+    @media only screen and (max-width:595px) {
+      .container {
+        width: 100% !important;
+      }
+      .button {
+        display: block !important;
+        width: auto !important;
+      }
+    }
+  </style>
+</head>
+
+<body style="font-family: 'Inter', sans-serif; background: #E5E5E5;">
+  <table width="100%" cellspacing="0" cellpadding="0" border="0" align="center" bgcolor="#F6FAFB">
+    <tbody>
+      <tr>
+        <td valign="top" align="center">
+          <table class="container" width="600" cellspacing="0" cellpadding="0" border="0">
+            <tbody>
+              <tr>
+                <td style="padding:48px 0 30px 0; text-align: center; font-size: 14px; color: #4C83EE;">
+                 <a href="https://ebe2-49-37-33-255.ngrok-free.app/media/logo.png" target="_blank" style="display: inline-block;">
+                  <img src="https://ebe2-49-37-33-255.ngrok-free.app/media/logo.png" alt="Logo" border="0" width="150"
+                    style="display: block; width: 150px; max-width: 150px; min-width: 150px;">
+                </a>
+                </td>
+              </tr>
+              <tr>
+                <td class="main-content" style="padding: 48px 30px 40px; color: #000000;" bgcolor="#ffffff">
+                  <table width="100%" cellspacing="0" cellpadding="0" border="0">
+                    <tbody>
+                      <tr>
+                        <td style="padding: 0 0 24px 0; font-size: 18px; line-height: 150%; font-weight: bold; color: #000000; letter-spacing: 0.01em;">
+                          Welcome, {{user_name}}!
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="padding: 0 0 10px 0; font-size: 14px; line-height: 150%; font-weight: 400; color: #000000; letter-spacing: 0.01em;">
+                          Thanks for choosing Gifshion! We are happy to see you on board.
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="padding: 0 0 16px 0; font-size: 14px; line-height: 150%; font-weight: 400; color: #000000; letter-spacing: 0.01em;">
+                          To get started, do this next step:
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="padding: 0 0 24px 0;">
+                          <a class="button" href="http://localhost:8000" title="Reset Password" style="width: 100%; background: #4C83EE; text-decoration: none; display: inline-block; padding: 10px 0; color: #fff; font-size: 14px; line-height: 21px; text-align: center; font-weight: bold; border-radius: 7px;">Go To Website</a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="padding: 0 0 16px;">
+                          <span style="display: block; width: 117px; border-bottom: 1px solid #8B949F;"></span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="font-size: 14px; line-height: 170%; font-weight: 400; color: #000000; letter-spacing: 0.01em;">
+                          Best regards, <br><strong>Gishion</strong>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding: 24px 0 48px; font-size: 0px;">
+                  <!--[if mso | IE]>      <table role="presentation" border="0" cellpadding="0" cellspacing="0">        <tr>          <td style="vertical-align:top;width:300px;">      <![endif]-->
+                  <div class="outlook-group-fix" style="padding: 0 0 20px 0; vertical-align: top; display: inline-block; text-align: center; width:100%;">
+                    <span style="padding: 0; font-size: 11px; line-height: 15px; font-weight: normal; color: #8B949F;">2023 Gifshion, Inc. All rights reserved
+                    </div>
+                  </div>
+                  <!--[if mso | IE]>      </td></tr></table>      <![endif]-->
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</body>
+</html>"""
+  html = html.replace("{{user_name}}",user.username)
+  sender_email = "mailtrap@example.com"
+  receiver_email = user.email
+  message = MIMEMultipart("alternative")
+  message["Subject"] = f"Welcome to Gifshion, {user.username}!"
+  message["From"] = sender_email
+  message["To"] = receiver_email
+  message.attach(MIMEText(html, "html"))
+  with smtplib.SMTP(smtp_server,port) as server:
+      server.login("37b854dadb9bcf", "a6a22f91ed1216")
+      server.sendmail(
+          sender_email, receiver_email, message.as_string()
+        )
+
+class EmailThread(Thread):
+    def __init__(self, order,icon):
+        self.order = order 
+        self.icon = icon
+        Thread.__init__(self)
+
+    def run (self):
+      send_mail(self.order,self.icon)
+
+def send_mail(order,icon):
   port = 2525 
   smtp_server = "smtp.mailtrap.io"
 
@@ -14,7 +197,7 @@ def send_mail(order):
   message["From"] = sender_email
   message["To"] = receiver_email
 
-  html = """\
+  html = """
   <!DOCTYPE html>
   <html>
 
@@ -151,16 +334,16 @@ def send_mail(order):
             style="max-width: 600px;border: 1px solid #222;border-bottom: 0;">
             <tr>
               <td align="left" valign="top" style="padding:15px;">
-                <a href="#" target="_blank" style="display: inline-block;">
-                  <img src="gifshion.png" alt="Logo" border="0" width="150"
+                <a href="https://ebe2-49-37-33-255.ngrok-free.app/media/logo.png" target="_blank" style="display: inline-block;">
+                  <img src="https://ebe2-49-37-33-255.ngrok-free.app/media/logo.png" alt="Logo" border="0" width="150"
                     style="display: block; width: 150px; max-width: 150px; min-width: 150px;">
                 </a>
               </td>
               <td align="right" valign="top" style="padding:15px;">
                 <p style="margin:0;font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;">
-                  <b>Order ID:</b> 32145698745 <br>
-                  <b>Date:</b> 05-06-23 <br>
-                  <b>Payment Status: :</b> Paid Online
+                  <b>Order ID:</b> **ORDER ID** <br>
+                  <b>Date:</b> **ORDER DATE** <br>
+                  <b>Payment Status: :</b> **ORDER STATUS**
                 </p>
               </td>
             </tr>
@@ -215,9 +398,8 @@ def send_mail(order):
               <td align="left" bgcolor="#ffffff"
                 style="padding: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
                 <p style="margin: 0;">
-                  Hi <b>Name</b>,<br>
-                  Here is a summary of your recent order. If you have any questions or concerns about your order, please
-                  <a href="#">contact us</a>.
+                  Hi <b>**NAME**</b>,<br>
+                  Here is a summary of your recent order. If you have any questions or concerns about your order, please contact us
                 </p>
               </td>
             </tr>
@@ -248,7 +430,10 @@ def send_mail(order):
                       <td align="left" valign="top"
                         style="padding-bottom: 36px; padding-left: 36px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
                         <p><strong>Delivery Address</strong></p>
-                        <p>1234 S. Broadway Ave<br>Unit 2<br>Denver, CO 80211</p>
+                        <p>**ADDRESS**</p>
+                        <p>**CITY**</p>
+                        <p>**STATE**</p>
+                        <p>**COUNTRY**</p>
                       </td>
                     </tr>
                   </table>
@@ -259,13 +444,6 @@ def send_mail(order):
                 <![endif]-->
                 <div style="display: inline-block; width: 100%; max-width: 50%; min-width: 240px; vertical-align: top;">
                   <table align="left" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 300px;">
-                    <tr>
-                      <td align="left" valign="top"
-                        style="padding-bottom: 36px; padding-left: 36px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
-                        <p><strong>Billing Address</strong></p>
-                        <p>1234 S. Broadway Ave<br>Unit 2<br>Denver, CO 80211</p>
-                      </td>
-                    </tr>
                   </table>
                 </div>
                 <!--[if (gte mso 9)|(IE)]>
@@ -327,10 +505,16 @@ def send_mail(order):
                       {item.quantity}</td>
                     <td align="left" width="25%"
                       style="padding: 6px 25px;font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
-                      {order.currency}{item.price}</td>
+                      {icon}{item.price}</td>
                   </tr>
                  """
-  html += """
+
+                
+  html += f"""
+                <tr>
+                  <td colspan="2" align="left" width="75%" style="padding: 25px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;"><strong>Total</strong></td>
+                  
+                  <td align="left" width="30%" style="padding: 25px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;"><strong>{f"{icon}{order.total_amount}"}</strong></td>
                 </table>
               </td>
             </tr>
@@ -365,6 +549,7 @@ def send_mail(order):
                 <p style="margin: 0;">If you have any questions about your bill, please get in touch with us by replying
                   to this email!
                 </p>
+                <a href="http://localhost:8000">  ©2023 Gifshion, Inc. All rights reserved</a>
               </td>
             </tr>
             <!-- end unsubscribe -->
@@ -386,7 +571,17 @@ def send_mail(order):
 
   </html>
   """
-
+  html = html.replace('**ORDER ID**',order.id)
+  html = html.replace('**ORDER DATE**',order.order_date.strftime('%d %B %Y'))
+  if order.paid:
+    html = html.replace('**ORDER STATUS**','PAID ONLINE')
+  else:
+    html = html.replace('**ORDER STATUS**','CASH ON DELIVERY')
+  html = html.replace('**NAME**',order.user.username)
+  html = html.replace('**CITY**',order.checkout.city)
+  html = html.replace('**STATE**',order.checkout.state)
+  html = html.replace('**COUNTRY**',order.checkout.country)
+  html = html.replace('**ADDRESS**',order.checkout.address)
   # convert both parts to MIMEText objects and add them to the MIMEMultipart message
   part2 = MIMEText(html, "html")
   message.attach(part2)
@@ -399,3 +594,18 @@ def send_mail(order):
       )
 
   print('Sent')
+  
+  
+  """
+</tr>
+  
+  <td colspan="2" align="left" width="75%" style="padding: 6px 25px;font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">Shipping</td>
+  
+  <td align="left" width="25%" style="padding: 6px 25px;font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">$6.00</td>
+  
+     <tr>
+                  <td colspan="2" align="left" width="75%" style="padding: 6px 25px;font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">Sales Tax</td>
+                  
+                  <td align="left" width="25%" style="padding: 6px 25px;font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">$0.00</td>
+                </tr>
+  """

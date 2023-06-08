@@ -98,10 +98,12 @@
             <div class="cart-icon">
               <a href="{% url 'cart_detail' %}" class="position-relative">
                 <i class="flaticon-shopping-bag"></i>
+                {% if user.is_authenticated%}
                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark">
                   {{request.session.cart_items}}
                   <span class="visually-hidden">unread messages</span>
                 </span>
+                {% endif %}
               </a>
             </div>
           </div>
