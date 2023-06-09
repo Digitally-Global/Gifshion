@@ -31,7 +31,7 @@
 									{% for item in order.items.all %}
 									<li class="card">
 										<div>
-											<div onclick="details('{{item.product.slug}}')">
+											<div onclick="details('{{item.product.slug}}','{{item.color.color|slice:"1:"}}','{{item.size.Num}}')">
 												<div class="card-content">
 													<img src="{{item.product.image.url}}" class="img-fluid" alt="" />
 													<h5 class="card-title">
@@ -69,8 +69,16 @@
 		form = document.getElementById('wishlist-form')
 		form.submit()
 	}
-	const details = (slug) => {
-		window.location.href = `/product/${slug}`
+	const details = (slug,color=null ,size=null) => {
+		if(size && color){
+			window.location.href = `/product/${slug}?size=${size}&color=${color}`
+		}else if(size){
+			window.location.href = `/product/${slug}?size=${size}`
+		}else if(color){
+			window.location.href = `/product/${slug}?color=${color}`
+		}else{
+			window.location.href = `/product/${slug}`
+		}
 	}
 
 </script>

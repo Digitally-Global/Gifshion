@@ -54,7 +54,7 @@
           <th colspan="4">Total</th>
           <th>
             {% with request.session.exchange as exchange %}
-            <div class="price"><span>{{ request.session.icon }} {{ cart_total_amount }}
+            <div class="price"><span>{{ request.session.icon }} {{ total_after_discount }}
 
                 {% endwith %}
           </th>

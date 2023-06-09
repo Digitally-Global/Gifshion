@@ -192,15 +192,15 @@ class Order(models.Model):
     invalid = models.BooleanField(default=False)
     
     def __str__(self):
-        return str(self.user) + str(self.order_date)
-    # Add other fields as needed
+        return f"#{self.id} on " + self.order_date.strftime("%d %b %Y")
     
 class OrderItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE,related_name="products")
     quantity = models.IntegerField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
     order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True, blank=True,related_name="items")
-    
+    color = models.ForeignKey(Color, on_delete=models.CASCADE, null=True, blank=True)
+    size = models.ForeignKey(size, on_delete=models.CASCADE, null=True, blank=True)
     
 def checkout(request):
     if request.method == 'POST':

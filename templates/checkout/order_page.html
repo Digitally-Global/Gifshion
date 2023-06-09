@@ -1,189 +1,186 @@
 {% extends 'base.html' %} {% load static %} {% block content %} {% load divide%}
 <section class="account-block py-5 my-5">
-	<div class="container">
-		<div class="col-md-12">
-			<div class="row">
-				<div class="col-md-4">
-					<div class="account-nav">
-						<nav class="nav flex-column">
-							<a class="nav-link" aria-current="page" href="{% url 'profile' %}"
-								>Profile Dashboard</a
-							>
-							<a class="nav-link active" href="{% url 'orders' %}">Orders</a>
-							<a class="nav-link" href="{% url 'wishlist' %}">Wishlist</a>
-						</nav>
-					</div>
-				</div>
+  <div class="container">
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="account-nav">
+            <nav class="nav flex-column">
+              <a class="nav-link" aria-current="page" href="{% url 'profile' %}"
+                >Profile Dashboard</a
+              >
+              <a class="nav-link active" href="{% url 'orders' %}">Orders</a>
+              <a class="nav-link" href="{% url 'wishlist' %}">Wishlist</a>
+            </nav>
+          </div>
+        </div>
 
-				<div class="col-md-8">
-					<div class="account-content-details">
-						<div class="dashboard-info products-listing">
-							<h1>Your Orders</h1>
-							{% if orders|length > 0 %}
-							<div class="container">
-								<ul class="cards">
-									{% for order in orders %}
-									<li class="card">
-										<div>
-											<h3 class="card-title"></h3>
-											<div class="card-content">
-												<div>
-													{% for item in order.items.all%}
-													<p>{{item.product|slice:":10"}}</p>
-													{% endfor %}
-												</div>
-											</div>
-										</div>
-										<div class="card-link-wrapper">
-											<a href="{% url 'order' order.id %}" class="card-link"
-												>Details</a
-											>
-										</div>
-									</li>
-									{% endfor %}
-								</ul>
-							</div>
-						</div>
-						{% else %}
-						<div class="container">
-							<div class="row">
-								<div class="col-md-12">
-									<div class="alert alert-info">
-										<p>You have Not Placed any Orders yet.</p>
-									</div>
-								</div>
-							</div>
-						</div>
-						{% endif %}
-						<div class="sing-out">
-							<a class="sing-out-btn" href="{% url 'logout' %}">SIGN OUT</a>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+        <div class="col-md-8">
+          <div class="account-content-details">
+            <div class="dashboard-info products-listing">
+              <h1>Your Orders</h1>
+              {% if orders|length > 0 %}
+              <div class="container">
+                <ul class="cards">
+                  {% for order in orders %}
+                  <li class="card">
+                    <div>
+                      <h3 class="card-title"></h3>
+                      <div>
+                        {% for item in order.items.all%}
+                        <p>{{item.product|slice:":10"}}</p>
+                        <p>{{order.currency}} {{order.total_amount}}</p>
+                        {% endfor %}
+                      </div>
+                    </div>
+                    <div class="card-link-wrapper">
+                      <a href="{% url 'order' order.id %}" class="card-link">Details</a>
+                    </div>
+                  </li>
+                  {% endfor %}
+                </ul>
+              </div>
+            </div>
+            {% else %}
+            <div class="container">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="alert alert-info">
+                    <p>You have Not Placed any Orders yet.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endif %}
+            <div class="sing-out">
+              <a class="sing-out-btn" href="{% url 'logout' %}">SIGN OUT</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
 <script>
-	const handleWishlist = () => {
-		form = document.getElementById('wishlist-form')
-		form.submit()
-	}
+  const handleWishlist = () => {
+    form = document.getElementById("wishlist-form");
+    form.submit();
+  };
 </script>
 <style>
-	:root {
-		--orange: #fd9940;
-		--darkorange: #dd7d25;
-		--platinum: #e5e5e5;
-		--black: #2b2d42;
-		--white: #fff;
-		--thumb: #edf2f4;
-	}
+  :root {
+    --orange: #fd9940;
+    --darkorange: #dd7d25;
+    --platinum: #e5e5e5;
+    --black: #2b2d42;
+    --white: #fff;
+    --thumb: #edf2f4;
+  }
 
-	* {
-		box-sizing: border-box;
-		padding: 0;
-		margin: 0;
-	}
+  * {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+  }
 
-	.container {
-		max-width: 1400px;
-		padding: 0 15px;
-		margin: 0 auto;
-	}
+  .container {
+    max-width: 1400px;
+    padding: 0 15px;
+    margin: 0 auto;
+  }
 
-	h2 {
-		font-size: 32px;
-		margin-bottom: 1em;
-	}
+  h2 {
+    font-size: 32px;
+    margin-bottom: 1em;
+  }
 
-	.cards {
-		display: grid;
-		grid-auto-columns: 100%;
-		grid-column-gap: 10px;
-		grid-auto-flow: column;
-		padding: 25px 0px;
-		list-style: none;
-		overflow-x: scroll;
-		scroll-snap-type: x mandatory;
-	}
+  .cards {
+    display: grid;
+    grid-auto-columns: 100%;
+    grid-column-gap: 10px;
+    grid-auto-flow: column;
+    padding: 25px 0px;
+    list-style: none;
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
+  }
 
-	.card {
-		display: flex;
-		flex-direction: column;
-		padding: 20px;
-		background: var(--white);
-		border-radius: 12px;
-		box-shadow: 0 5px 15px rgba(0, 0, 0, 15%);
-		scroll-snap-align: start;
-		transition: all 0.2s;
-	}
+  .card {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    background: var(--white);
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 15%);
+    scroll-snap-align: start;
+    transition: all 0.2s;
+  }
 
-	.card .card-title {
-		font-size: 20px;
-	}
+  .card .card-title {
+    font-size: 20px;
+  }
 
-	.card .card-content {
-		margin: 20px 0;
-		max-width: 85%;
-	}
+  .card .card-content {
+    margin: 20px 0;
+    max-width: 85%;
+  }
 
-	.card .card-link-wrapper {
-		margin-top: auto;
-	}
+  .card .card-link-wrapper {
+    margin-top: auto;
+  }
 
-	.card .card-link {
-		display: inline-block;
-		text-decoration: none;
-		color: white;
-		background: var(--orange);
-		padding: 6px 12px;
-		border-radius: 8px;
-		transition: background 0.2s;
-	}
+  .card .card-link {
+    display: inline-block;
+    text-decoration: none;
+    color: white;
+    background: var(--orange);
+    padding: 6px 12px;
+    border-radius: 8px;
+    transition: background 0.2s;
+  }
 
-	.card:hover .card-link {
-		background: var(--darkorange);
-	}
+  .card:hover .card-link {
+    background: var(--darkorange);
+  }
 
-	.cards::-webkit-scrollbar {
-		height: 12px;
-	}
+  .cards::-webkit-scrollbar {
+    height: 12px;
+  }
 
-	.cards::-webkit-scrollbar-thumb,
-	.cards::-webkit-scrollbar-track {
-		border-radius: 92px;
-	}
+  .cards::-webkit-scrollbar-thumb,
+  .cards::-webkit-scrollbar-track {
+    border-radius: 92px;
+  }
 
-	.cards::-webkit-scrollbar-thumb {
-		background: var(--darkorange);
-	}
+  .cards::-webkit-scrollbar-thumb {
+    background: var(--darkorange);
+  }
 
-	.cards::-webkit-scrollbar-track {
-		background: var(--thumb);
-	}
+  .cards::-webkit-scrollbar-track {
+    background: var(--thumb);
+  }
 
-	@media (min-width: 500px) {
-		.cards {
-			grid-auto-columns: calc(50% - 10px);
-			grid-column-gap: 20px;
-		}
-	}
+  @media (min-width: 500px) {
+    .cards {
+      grid-auto-columns: calc(50% - 10px);
+      grid-column-gap: 20px;
+    }
+  }
 
-	@media (min-width: 700px) {
-		.cards {
-			grid-auto-columns: calc(calc(100% / 3) - 20px);
-			grid-column-gap: 30px;
-		}
-	}
+  @media (min-width: 700px) {
+    .cards {
+      grid-auto-columns: calc(calc(100% / 3) - 20px);
+      grid-column-gap: 30px;
+    }
+  }
 
-	@media (min-width: 1100px) {
-		.cards {
-			grid-auto-columns: calc(25% - 30px);
-			grid-column-gap: 40px;
-		}
-	}
+  @media (min-width: 1100px) {
+    .cards {
+      grid-auto-columns: calc(25% - 30px);
+      grid-column-gap: 40px;
+    }
+  }
 </style>
 
 {% endblock %}

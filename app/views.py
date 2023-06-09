@@ -114,6 +114,8 @@ def confirm_razor_payment(request):
             item.product = Product.objects.get(id=value.product.id)
             item.quantity = value.quantity
             item.price = str(round(float(value.price)/request.session['exchange'],2))
+            item.color = value.color
+            item.size = value.size
             item.save()
         order.checkout=Checkout.objects.get(id=request.session['checkout_id'])
         order.save()
@@ -183,7 +185,9 @@ def confirm_order(request):
 @login_required(login_url="/myaccount/login/")
 def confirm_order_payment(request):
     if request.method == 'GET' and request.GET.get('paymentId') and request.GET["token"] and  request.GET["PayerID"]:
-        return render(request, 'Payment/confirm.html')
+        payment = Payment.find(request.GET['paymentId'])
+        total = payment.transactions[0].amount.total
+        return render(request, 'Payment/confirm.html',{'total_after_discount':total})
 
 @login_required(login_url="/myaccount/login/")
 def create_payment(request,id):
@@ -245,7 +249,7 @@ def create_payment(request,id):
                 }
             }],
             "redirect_urls": {
-                "cancel_url": request.build_absolute_uri(reverse ('cancelled')),
+                "cancel_url": request.build_absolute_uri(reverse ('checkout')),
                 "return_url": request.build_absolute_uri(reverse ('confirm-paypal-order')),
             }
             })
@@ -643,7 +647,7 @@ def paypal_process(request):
         'currency_code': 'USD',
         'notify url': request.build_absolute_uri(reverse ( 'paypal-ipn' )),
         'return': request.build_absolute_uri(reverse ('successful' )) ,
-        'cancel return': request.build_absolute_uri(reverse ('cancelled')),
+        'cancel return': request.build_absolute_uri(reverse ('checkout')),
     }
     form = PayPalPaymentsForm(initial=paypal_dict)
     return render(request, 'paypal_from.html', {'form': form})
