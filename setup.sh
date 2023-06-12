@@ -6,7 +6,9 @@
 # run shell commands 
 echo "Setting Up the Project" 
 pip install -r requirements.txt
+python manage.py makemigrations
 python manage.py makemigrations ecom
 python manage.py migrate ecom
+python manage.py migrate
 python seed.py 
 python manage.py runserver
