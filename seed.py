@@ -62,15 +62,15 @@ def created_categories():
     if main_category.objects.filter( name = 'Best Seller').exists():
       print(colored("[+] Categories Already Exists", "yellow"))
     else:
-      main_category.objects.create(
+      main_cat = main_category.objects.create(
         name="Best Seller",
         category = category.objects.get(name = 'Best Seller')
       )
-      sub_category.objects.create(
-      name="Best Seller",
-      main_category = main_category.objects.get(name = 'Best Seller')
-    )
-    print(colored("[+] Categories Created", "green"))
+      sub_cate = sub_category.objects.create(
+        name="Best Seller",
+        main_categories=main_cat
+      )
+      print(colored("[+] Categories Created", "green"))
   except Exception as e:
     print(colored(f"[!] Error Creating Categories: {e}", "red"))
 
