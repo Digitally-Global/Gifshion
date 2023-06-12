@@ -76,16 +76,15 @@ def created_categories():
 
 def create_currency():
   try:
-    currency = Currency.objects.all()
-    if len(currency) == 0:
+    if len(Currency.objects.filter()) == 0:
       for currency in CURRENCIES:
-        currency = Currency()
-        currency.name = currency["name"]
-        currency.icon = currency["icon"]
-        currency.code = currency["code"]
-        currency.exchange_rate = currency["exchange_rate"]
-        currency.save()
-        print(colored(f"[+] Currency Created: {currency.name}", "green"))
+        _currency = Currency()
+        _currency.name = currency["name"]
+        _currency.icon = currency["icon"]
+        _currency.code = currency["code"]
+        _currency.exchange_rate = currency["exchange_rate"]
+        _currency.save()
+        print(colored(f"[+] Currency Created: {currency["name"]}", "green"))
       print(colored("[+] Currency Created", "green"))
     else:
       print(colored("[+] Currency Already Exists", "yellow"))
