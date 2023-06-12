@@ -84,7 +84,7 @@ def create_currency():
         _currency.code = currency["code"]
         _currency.exchange_rate = currency["exchange_rate"]
         _currency.save()
-        print(colored(f"[+] Currency Created: {currency["name"]}", "green"))
+        print(colored(f"[+] Currency Created ", "green"))
       print(colored("[+] Currency Created", "green"))
     else:
       print(colored("[+] Currency Already Exists", "yellow"))
