@@ -112,6 +112,8 @@ def confirm_razor_payment(request):
             item = OrderItem()
             item.order = order
             item.product = Product.objects.get(id=value.product.id)
+            item.product.stock -= 1
+            item.product.save()
             item.quantity = value.quantity
             item.price = str(round(float(value.price)/request.session['exchange'],2))
             item.color = value.color
@@ -422,7 +424,8 @@ def My_Account(request):
     if request.method == "POST":
         username = request.POST.get('username')
         password = request.POST.get('password')
-        user = authenticate(request, username = username, password = password)
+        user = User.objects.get(email=username)
+        user = authenticate(request, username = user.username, password = password)
         if user is not None:
             login(request, user)
             return redirect('profile')
@@ -581,7 +584,7 @@ def Home(request):
     product = Product.objects.filter(section__name = "By Concern")
     Rakhi = Product.objects.filter(section__name = "Rakhi Special")
     BestSeller = Product.objects.filter(section__name="BestSeller")
-    Products = Product.objects.all().order_by('-id')
+    Products = Product.objects.filter(stock__gte=0).order_by('-id')
     sections = Section.objects.exclude(name="BestSeller")
 
     context = {

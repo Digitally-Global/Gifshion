@@ -76,8 +76,7 @@ class Section(models.Model):
     def __str__(self):
         return self.name
 class Product(models.Model):
-    total_quantity = models.IntegerField()
-    Availability = models.IntegerField()
+    stock = models.IntegerField(default=0,null=True,blank=True)
     image = models.ImageField(upload_to='product_images')
     price = models.IntegerField()
     Discount = models.IntegerField()

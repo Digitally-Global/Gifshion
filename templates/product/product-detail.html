@@ -25,15 +25,20 @@
         <div class="product-gallery">
           <div class="product-wishlist-more">
             {% if request.user.is_authenticated %}
-            <a href="{% url 'wishlist' %}"><i class="flaticon-love"></i></a>
+              <div class="wishlist-icon">
+                 {% for i in product %}
+                <form action="{% url 'wishlist' %}" method="POST" id="wishlist-form">
+                  {% csrf_token %}
+                  <input type="text" hidden value="add" name="action">
+                  <input type="text" value={{i.id}} name="id" hidden>
+                  <button style="all: unset; cursor:pointer"><i class="flaticon-love"></i></button>
+                  <a onclick="handleWishlist()"><i class=""></i></a>
+                </form>
+                {% endfor %}
+              </div>
 
             {% endif %}
 
-            <div class="product-share">
-
-              <a href="#"><i class="flaticon-share"></i></a>
-
-            </div>
           </div>
 
 
@@ -235,7 +240,12 @@
     {% endif %}
 </section>
 <!-- Products Slider -->
-
+<script>
+    const handleWishlist = () => {
+      form = document.getElementById('wishlist-form')
+      form.submit()
+    }
+  </script>
 <script>
   function selectSize(id) {
     let elements = document.getElementsByClassName('size-select')

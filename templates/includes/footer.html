@@ -2,13 +2,13 @@
   {% load static %}
   <div class="container">
     <div class="row">
-      <div class="col-2">
+      <div class="col-2" id="all-products">
         <h4>Shop</h4>
         <ul>
           <li><a href="{% url 'Home' %}">All Products</a></li>
         </ul>
       </div>
-      <div class="col-2">
+      <div class="col-2" id="account">
         <h4>My Account</h4>
         <ul>
           <li><a href="{% url 'profile' %}">My Profile</a></li>
@@ -19,7 +19,7 @@
       </div>
       <div class="col-2">
       </div>
-      <div class="col-4">
+      <div class="col-4" id="newsletter">
         <h4>Sign Up for our NEWSLETTER!</h4>
         <div class="footer-newsletter">
           <label>Your Email Id*</label>
@@ -92,10 +92,29 @@
             <div class="m-icon"><i class="flaticon-next"></i></div>
           </a>
           <ul class="h-sub-menu">
-            <li><a href="{% url 'profile' %}">My Profile</a></li>
+            
             <li><a href="{% url 'orders' %}">My Orders</a></li>
           </ul>
         </li>
+        <li class="h-sub-menu">
+          <li><a href="{% url 'cart' %}">Cart</a></li>
+        </li>
+        <li class="h-sub-menu">
+            <div class="price-swticher">
+              <div class="dropdown">
+                <a class="btn btn-sm btn-light dropdown-toggle" type="button" id="dropdownMenuButton1"
+                  data-bs-toggle="dropdown" aria-expanded="false">
+                  {{request.session.icon}} {{request.session.currency_code}}
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                  {% for currency in currencies%}
+                  <li><a class="dropdown-item" href="{% url 'change_currency' currency.id%}">{{currency.icon}}
+                      {{currency.code}}</a></li>
+                  {% endfor %}
+                </ul>
+              </div>
+            </div>
+          </li>
       </ul>
     </div>
     <div class="h-bottom">
@@ -134,4 +153,18 @@
   } else {
     form.addEventListener("submit", processForm);
   }
-</script>
+  var width = window.innerWidth ||
+    document.documentElement.clientWidth ||
+    document.body.clientWidth;
+  if (width < 760) {
+    document.getElementById('account').classList.add('col-4')
+    document.getElementById('all-products').classList.add('col-4')
+  }
+  </script>
+<style>
+  @media(max-width:760px){
+    #newsletter{
+      display: none;
+    }
+  }
+</style>

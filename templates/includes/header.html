@@ -37,7 +37,7 @@
 
           </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4" id="right-icons">
           <div class="main-logo text-center">
             <a href="/">
               <img src="{% static './assets/images/Asset 1@300x (1).png' %}" style="max-width:135px;" class="img-fluid"
@@ -45,8 +45,8 @@
             </a>
           </div>
         </div>
-        <div class="col-md-4">
-          <div class="navbar-right d-flex justify-content-end align-items-center h-100">
+        <div class="col-md-4" >
+          <div class="navbar-right d-flex justify-content-end align-items-center h-100" id="top-icons">
             <a href="{% url 'product-listing' %}">
               <img src="{% static './assets/images/search.png' %}" class="m-2">
             </a>
@@ -161,7 +161,26 @@
 </header>
 
 <style>
-    .owl-dots{
-      display:flex
+  @media (max-width: 1200px){
+    .product-details-page .owl-dots{
+      display: flex !important;
     }
+  }
+  @media(max-width: 768px){
+    .slider-area{
+      margin-top:180px !important;
+    }
+    .owl-dots{
+      display: flex !important;
+    }
+  }
 </style>
+
+<script>
+  var width = window.innerWidth ||
+    document.documentElement.clientWidth ||
+    document.body.clientWidth;
+  if (width < 768) {
+    document.getElementById("top-icons").classList.add("d-none");
+  }
+</script>

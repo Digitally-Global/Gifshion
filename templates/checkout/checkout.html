@@ -58,11 +58,10 @@
               <div class="col-md-6">
                 <label for="validationPhnumber" class="form-label">Mobile Number</label>
                 <input
-                  type="tel"
+                  type="number"
                   class="form-control"
                   name="mobile_number"
                   id="validationPhnumber"
-                  value=""
                   required
                 />
                 <div class="valid-feedback">Looks good!</div>
@@ -70,11 +69,10 @@
               <div class="col-md-6">
                 <label for="validationEmail" class="form-label">Email</label>
                 <input
-                  type="tel"
+                  type="email"
                   class="form-control"
                   name="email"
                   id="validationEmail"
-                  value=""
                   required
                 />
                 <div class="valid-feedback">Looks good!</div>
@@ -86,7 +84,6 @@
                   class="form-control"
                   name="fname"
                   id="validationCustom01"
-                  value=""
                   required
                 />
                 <div class="valid-feedback">Looks good!</div>
@@ -98,7 +95,6 @@
                   class="form-control"
                   name="lname"
                   id="validationCustom02"
-                  value=""
                   required
                 />
                 <div class="valid-feedback">Looks good!</div>
@@ -107,7 +103,7 @@
               <div class="col-md-6">
                 <label for="validationCustom05" class="form-label">Zip</label>
                 <input
-                  type="text"
+                  type="number"
                   class="form-control"
                   name="zip"
                   id="validationCustom05"
@@ -178,15 +174,11 @@
               <div class="col-12">
                 {% if request.session.currency_code == "INR"%}
                 <div id="paypal-button-container">
-                  <button class="cart-btn" type="button" onclick="handleSubmit(event)">
-                    Razor Pay
-                  </button>
+                  <button class="cart-btn" type="submit">Razor Pay</button>
                 </div>
                 {% else %}
                 <div id="paypal-button-container">
-                  <button class="cart-btn" type="button" onclick="handleSubmit(event)">
-                    PayPal
-                  </button>
+                  <button class="cart-btn" type="submit">PayPal</button>
                 </div>
                 {% endif %}
               </div>
@@ -352,9 +344,37 @@
 <script>
   function handleSubmit(e) {
     e.preventDefault();
-    $("#cover-spin").show(0);
-    let form = document.getElementById("checkout-form");
-    form.submit();
+    // Example starter JavaScript for disabling form submissions if there are invalid fields
+    (function () {
+      "use strict";
+
+      // Fetch all the forms we want to apply custom Bootstrap validation styles to
+      var forms = document.querySelectorAll(".needs-validation");
+
+      // Loop over them and prevent submission
+      Array.prototype.slice.call(forms).forEach(function (form) {
+        form.addEventListener(
+          "submit",
+          function (event) {
+            if (!form.checkValidity()) {
+              event.preventDefault();
+              event.stopPropagation();
+            }
+            var phoneno = /^\d{10}$/;
+            if (!document.getElementById("validationPhnumber").value.match(phoneno)) {
+              event.preventDefault();
+              event.stopPropagation();
+              return false;
+            }
+            form.classList.add("was-validated");
+            $("#cover-spin").show(0);
+            let form = document.getElementById("checkout-form");
+            form.submit();
+          },
+          false
+        );
+      });
+    })();
   }
 </script>
 

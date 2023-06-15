@@ -29,7 +29,7 @@
                   <thead>
                     <tr>
                       <th>S.no</th>
-                      <th>image</th>
+                      <th id="image-head">image</th>
                       <th>Name</th>
                       <th>Price</th>
                       <th>Remove</th>
@@ -39,7 +39,7 @@
                     {% for item in wishlist_items %}
                     <tr>
                       <td>{{ forloop.counter }}</td>
-                      <td><img style="height: 50px" src="{{item.product.image.url}}"></td>
+                      <td id="image-body"><img style="height: 50px" src="{{item.product.image.url}}"></td>
                       <td>
                         <a href="{{item.product.get_absolute_url}}">
                           {{item.product.name}}
@@ -49,7 +49,7 @@
                         {% with request.session.exchange as exchange %}
                         <div class="price"><span>{{ request.session.icon }}
                             {{ item.product.price|discount:item.product.Discount|divide:exchange }}
-                            <del>{{item.product.price|divide:exchange}}</del></span></div>
+                            <del id="del">{{item.product.price|divide:exchange}}</del></span></div>
 
                         {% endwith %}
                       </td>
@@ -102,5 +102,19 @@
     form.submit()
   }
 </script>
+
+<style>
+  @media(max-width:500px){
+    #image-head{
+      display: none;
+    }
+    #image-body{
+      display: none;
+    }
+    #del{
+      display: none;
+    }
+  }
+</style>
 
 {% endblock %}

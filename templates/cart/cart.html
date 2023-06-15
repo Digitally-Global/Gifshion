@@ -22,7 +22,7 @@
       </thead>
       <tbody>
         {% for value in cart %}
-        <tr>
+        <tr class="overflow-s">
           <td>{{ forloop.counter }}</td>
           <td><img style="height: 50px" src="{{value.product.image.url}}"></td>
           <td>
@@ -135,6 +135,18 @@
     .special-flex{
       display: flex;
       gap:2px;
+    }
+    .overflow-s{
+      overflow-x: scroll;
+      overflow:hidden
+      width:100px;
+    }
+    @media(max-width:768px){
+      .table{
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+      }
     }
   </style>
 
