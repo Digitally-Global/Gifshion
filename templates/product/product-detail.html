@@ -95,7 +95,7 @@
             {% endwith %}
             <p>(incl. of all taxes)</p>
           </div>
-
+          {% if i|display_none %}
           {% if not i.color.all|length == 0%}
           {% if not request.GET.color %}
           <p class="mb-1 mt-3">Select Color</p>
@@ -169,6 +169,9 @@
               bag</a>
           </div>
         </div>
+        {%else%}
+        <h4 style="color: red;">Currently Unavailable</h4>
+        {% endif %}
         {% endfor %}
       </div>
     </div>

@@ -1,4 +1,7 @@
+from typing import Any
 from django.contrib import admin
+from django.db.models.query import QuerySet
+from django.http.request import HttpRequest
 from .models import *
 
 class colors(admin.TabularInline):    
@@ -7,9 +10,13 @@ class sizes(admin.TabularInline):
     model = size
 class Productsimageurls(admin.TabularInline):
     model = Productsimageurl 
-
+    
+         
+class Stock_Admin(admin.TabularInline):
+    model = Product_Stock
+    
 class ProductAdmin(admin.ModelAdmin):
-    inlines = [sizes,Productsimageurls,colors ]
+    inlines = [sizes,Productsimageurls,colors,Stock_Admin] 
 
 admin.site.register(Product,ProductAdmin)
 admin.site.register(Slider)

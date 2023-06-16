@@ -95,7 +95,7 @@
         </div>
 
         <div class="owl-carousel products-slider">
-          {% for i in section.product_set.all%}
+          {% for i in section.product_set.all|filter_stock%}
           <div class="product-item">
             <div class="product-box">
               <div class="product-images">

@@ -53,6 +53,7 @@
               class="row g-3 needs-validation"
               id="checkout-form"
               novalidate
+              onsubmit="handleSubmit(event)"
             >
               {% csrf_token %}
               <div class="col-md-6">
@@ -342,39 +343,14 @@
   }
 </style>
 <script>
-  function handleSubmit(e) {
-    e.preventDefault();
-    // Example starter JavaScript for disabling form submissions if there are invalid fields
-    (function () {
-      "use strict";
-
-      // Fetch all the forms we want to apply custom Bootstrap validation styles to
-      var forms = document.querySelectorAll(".needs-validation");
-
-      // Loop over them and prevent submission
-      Array.prototype.slice.call(forms).forEach(function (form) {
-        form.addEventListener(
-          "submit",
-          function (event) {
-            if (!form.checkValidity()) {
-              event.preventDefault();
-              event.stopPropagation();
-            }
-            var phoneno = /^\d{10}$/;
-            if (!document.getElementById("validationPhnumber").value.match(phoneno)) {
-              event.preventDefault();
-              event.stopPropagation();
-              return false;
-            }
-            form.classList.add("was-validated");
-            $("#cover-spin").show(0);
-            let form = document.getElementById("checkout-form");
-            form.submit();
-          },
-          false
-        );
-      });
-    })();
+  function handleSubmit(event) {
+    let elements = document.querySelectorAll(".form-control:invalid");
+    if (elements.length > 1) {
+      elements[0].focus();
+    } else {
+      $("#cover-spin").show(0);
+    }
+    console.log(elements);
   }
 </script>
 

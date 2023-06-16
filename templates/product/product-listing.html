@@ -1,7 +1,6 @@
-{% extends 'base.html' %}
-{% load static %}
-{% block content %}
-{% load divide %}{% load sellprice %}
+{% extends 'base.html' %} {% load static %} {% block content %} {% load divide %}
+
+<p>{% load sellprice%}</p>
 
 <!-- Products Listing Banner -->
 <!-- Products Listing -->
@@ -12,61 +11,61 @@
         <div class="col-md-12 pb-4">
           <div class="products-filter d-flex justify-content-end">
             <form method="GET" class="form-search">
-              <input type="text" placeholder="Search.." name="search">
+              <input type="text" placeholder="Search.." name="search" />
               <button type="submit" class="btn"><i class="fa fa-search"></i></button>
             </form>
           </div>
         </div>
-        {% if not product|length == 0%}
-        {% for i in product %}
-
+        {% if not product|length == 0%} {% for i in product|filter_stock %}
 
         <div class="col-md-4 col-6">
           <div class="product-item">
             <div class="product-box">
               <div class="product-images">
-                <a href="{{i.get_absolute_url}}"><img class="img-fluid" src="{{i.image.url}}" alt="" /></a>
+                <a href="{{i.get_absolute_url}}"
+                  ><img class="img-fluid" src="{{i.image.url}}" alt=""
+                /></a>
               </div>
               <div class="product-meta d-flex justify-content-between py-2">
                 <span class="category">{{i.category}}</span>
                 <span class="rating">{{i.rate}}<i class="fa fa-star"></i></span>
               </div>
               <a href="{{i.get_absolute_url}}">
-                <h4 class="title">
-                  {{i.nam }}
-                </h4>
+                <h4 class="title">{{i.nam }}</h4>
               </a>
-              <p>
-                {{i.Product_information}}
-              </p>
+              <p>{{i.Product_information}}</p>
               {% comment %} {{request.session.exchange}} {% endcomment %}
-              {% with request.session.exchange as exchange %}
-              <div class="price"><span>{{ request.session.icon }} {{ i.price|divide:exchange|discount:i.Discount }}
-                  <del>{{i.price|divide:exchange}}</del></span></div>
 
+              <p>{% with request.session.exchange as exchange %}</p>
+              <div class="price">
+                <span
+                  >{{ request.session.icon }} {{ i.price|divide:exchange|discount:i.Discount }}
+                  <del>{{i.price|divide:exchange}}</del></span
+                >
+              </div>
             </div>
             <div class="product-bottom">
               <div class="wishlist-icon">
                 <form action="{% url 'wishlist' %}" method="POST" id="wishlist-form">
                   {% csrf_token %}
-                  <input type="text" hidden value="add" name="action">
-                  <input type="text" value={{i.id}} name="id" hidden>
-                  <button style="all: unset; cursor:pointer"><i class="flaticon-love"></i></button>
+                  <input type="text" hidden value="add" name="action" />
+                  <input type="text" value="{{i.id}}" name="id" hidden />
+                  <button style="all: unset; cursor: pointer"><i class="flaticon-love"></i></button>
                   <!-- <a onclick="handleWishlist()"><i class="flaticon-love"></i></a> -->
                 </form>
               </div>
               {% if not i.color.all and i.size%}
 
-              <a class="add-cart" href="{% url 'cart_add' i.id %}"><i class="flaticon-shopping-bag"></i>add to bag</a>
+              <a class="add-cart" href="{% url 'cart_add' i.id %}"
+                ><i class="flaticon-shopping-bag"></i>add to bag</a
+              >
               {% endif %}
             </div>
             {% endwith %}
           </div>
         </div>
 
-        {% endfor %}
-        {% else %}
-        {% if no_search %}
+        {% endfor %} {% else %} {% if no_search %}
         <h1 class="text-center">No Products Found!</h1>
         {% endif %}{% endif %}
       </div>
@@ -74,20 +73,20 @@
   </div>
 </section>
 <style>
-  input[type=range] {
+  input[type="range"] {
     -webkit-appearance: none;
     width: 100%;
   }
 
-  input[type=range]::-webkit-slider-runnable-track {
+  input[type="range"]::-webkit-slider-runnable-track {
     width: 1000px;
     height: 5px;
-    background: #FCBE00;
+    background: #fcbe00;
     border: none;
     border-radius: 3px;
   }
 
-  input[type=range]::-webkit-slider-thumb {
+  input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
     border: none;
     height: 16px;
@@ -97,17 +96,17 @@
     margin-top: -5px;
   }
 
-  input[type=range]:focus {
+  input[type="range"]:focus {
     outline: none;
   }
 
-  input[type=range]:focus::-webkit-slider-runnable-track {
-    background: #FCBE00;
+  input[type="range"]:focus::-webkit-slider-runnable-track {
+    background: #fcbe00;
   }
 
   button {
     width: auto !important;
-    height: auto ! important;
+    height: auto !important;
   }
 
   .form-search {
@@ -115,7 +114,7 @@
     width: 200%;
   }
 
-  .form-search input[type=text] {
+  .form-search input[type="text"] {
     float: right;
     padding: 6px;
     margin-top: 8px;
@@ -134,7 +133,6 @@
     border: none;
     cursor: pointer;
   }
-
 
   .form-search .search-container button:hover {
     background: #ccc;

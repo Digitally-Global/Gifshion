@@ -23,6 +23,7 @@
       <tbody>
         {% for value in cart %}
         <tr class="overflow-s">
+         
           <td>{{ forloop.counter }}</td>
           <td><img style="height: 50px" src="{{value.product.image.url}}"></td>
           <td>
@@ -31,7 +32,9 @@
             </a>
           </td>
           <td>{% with request.session.exchange as exchange %}
-
+            {% if value|unavailable%}
+              <p style="color: red">Currently Unavailable</p>
+{% endif %}
             <div class="price"><span>{{ request.session.icon }} {{ value.price|divide:exchange }}
 
                 {% endwith %}
@@ -73,9 +76,9 @@
           </td>
          
                   </span>
-        </tr>
-        {% endfor %}
-      </tbody>
+                </tr>
+                {% endfor %}
+              </tbody>
       <tfoot>
         <tr>
           <th colspan="4">Total</th>
@@ -96,7 +99,9 @@
       {% if cart_total_amount is 0 %}
       <a href="{% url 'cart_detail' %}" class="btn btn-danger">Checkout</a>
       {% else %}
-      <a href="{% url 'checkout' %}" class="btn btn-danger">Checkout</a>
+      <button {% if cart|check_corr %} disabled {% endif %} onclick="window.location.href='{% url 'checkout' %}'" class="btn btn-danger">
+        Checkout
+      </button>
       {% endif %}
     </div>
     <!-- <div class="coupon rounded-3 bg-white p-3 pb-2">

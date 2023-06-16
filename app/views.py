@@ -112,12 +112,30 @@ def confirm_razor_payment(request):
             item = OrderItem()
             item.order = order
             item.product = Product.objects.get(id=value.product.id)
-            item.product.stock -= 1
             item.product.save()
             item.quantity = value.quantity
             item.price = str(round(float(value.price)/request.session['exchange'],2))
             item.color = value.color
             item.size = value.size
+            if item.size and item.color: 
+                for stock in item.product.product_stock_set.all():
+                    if stock.Color == item.color and stock.Size == item.size:
+                        stock.stock -= item.quantity
+                        stock.save()
+            elif item.size:
+                for stock in item.product.product_stock_set.all():
+                    if stock.Size == item.size:
+                        stock.stock -= item.quantity
+                        stock.save()
+            elif item.color:
+                for stock in item.product.product_stock_set.all():
+                    print('Stock',stock)
+                    if stock.Color == item.color:
+                        stock.stock -= item.quantity
+                        stock.save()
+            else:
+                item.product.stock -= item.quantity
+                item.product.save()
             item.save()
         order.checkout=Checkout.objects.get(id=request.session['checkout_id'])
         order.save()
@@ -168,8 +186,31 @@ def confirm_order(request):
                 item.order = order
                 item.product = Product.objects.get(id=value.product.id)
                 item.quantity = value.quantity
+                item.color = value.color
+                item.size = value.size
                 item.price = str(round(float(value.price)/request.session['exchange'],2))
-                item.save()
+                print(item.color,item.size,"Hello Woerls ")
+                if item.size and item.color: 
+                    for stock in item.product.product_stock_set.all():
+                        if stock.Color == item.color and stock.Size == item.size:
+                            stock.stock -= item.quantity
+                            stock.save()
+                elif item.size:
+                    for stock in item.product.product_stock_set.all():
+                        if stock.Size == item.size:
+                            stock.stock -= item.quantity
+                            stock.save()
+                elif item.color:
+                    for stock in item.product.product_stock_set.all():
+                        print('Stock',stock)
+                        if stock.Color == item.color:
+                            stock.stock -= item.quantity
+                            stock.save()
+                else:
+                    item.product.stock -= item.quantity
+                item.product.save()
+            item.save()
+            item.save()
             order.paid=True 
             order.checkout=Checkout.objects.get(id=request.session['checkout_id'])
             order.save()
@@ -576,16 +617,32 @@ def Product_Detail(request, slug):
     return render(request,'product/product-detail.html', context)
 
 def Home(request):
+    def get_inStock(dataset):
+        inStock = []
+        for data in dataset:
+            if int(data.stock) > 0:
+                inStock.append(data)
+            else:
+                if data.product_stock_set.all().exists():
+                    for stock in data.product_stock_set.all():
+                        if int(stock.stock) > 0:
+                            inStock.append(data)
+                            break
+        return inStock
+    
+
+            
     slider = Slider.objects.all().order_by('-id')[0:3]
     banner = banner_area.objects.all().order_by('-id')[0:3]
     h1_banner = h1banner.objects.all().order_by('-id')[0:3]
     h2_banner = h2banner.objects.all().order_by('-id')[0:3]
     Category = category.objects.all().order_by('-id')[0:3]
-    product = Product.objects.filter(section__name = "By Concern")
-    Rakhi = Product.objects.filter(section__name = "Rakhi Special")
-    BestSeller = Product.objects.filter(section__name="BestSeller")
-    Products = Product.objects.filter(stock__gte=0).order_by('-id')
+    product = get_inStock(Product.objects.filter(section__name = "By Concern"))
+    Rakhi =get_inStock(Product.objects.filter(section__name = "Rakhi Special"))
+    BestSeller = get_inStock(Product.objects.filter(section__name="BestSeller"))
+    Products = get_inStock(Product.objects.filter().order_by('-id'))
     sections = Section.objects.exclude(name="BestSeller")
+    print(sections)
 
     context = {
         'banner' : banner,

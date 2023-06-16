@@ -76,7 +76,7 @@ class Section(models.Model):
     def __str__(self):
         return self.name
 class Product(models.Model):
-    stock = models.IntegerField(default=0,null=True,blank=True)
+    stock = models.IntegerField(default=0)
     image = models.ImageField(upload_to='product_images')
     price = models.IntegerField()
     Discount = models.IntegerField()
@@ -97,6 +97,17 @@ class Product(models.Model):
 
     class Meta:
         db_table = "ecom_Product"
+
+class Product_Stock(models.Model):
+    Product = models.ForeignKey(Product,on_delete=models.CASCADE)
+    Color = models.ForeignKey('Color',on_delete=models.CASCADE,null=True,blank=True)
+    Size = models.ForeignKey('size',on_delete=models.CASCADE,null=True,blank=True)
+    stock = models.IntegerField(default=0)
+    
+    def __str__(self):
+        return self.Product.name 
+
+# make a signal to create a stock object when a new color object is create 
 
 def create_slug(instance, new_slug=None):
     slug = slugify(instance.name)
@@ -125,10 +136,20 @@ class Color(models.Model):
     product = models.ForeignKey(Product,on_delete=models.CASCADE,related_name="color")
     color = ColorField(default='#FF0000')
     code = models.CharField(max_length=10)
+    
+    def __str__(self):
+        return self.code + self.product.name
 
 class size(models.Model):
     product = models.ForeignKey(Product,on_delete=models.CASCADE)
     Num = models.CharField(max_length=10)    
+    width = models.CharField(max_length=10,null=True,blank=True)
+    height = models.CharField(max_length=10,null=True,blank=True)
+    length = models.CharField(max_length=10,null=True,blank=True)
+    weight = models.CharField(max_length=10,null=True,blank=True)
+    
+    def __str__(self):
+        return self.Num + self.product.name
     
 
 class Productsimageurl(models.Model):
