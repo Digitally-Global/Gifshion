@@ -13,10 +13,11 @@ app_name = 'paypalrestsdk'
 urlpatterns = [
     path('404', views.request_404, name='404'),
     path('admin/', admin.site.urls),
+    path('otp-confrim',views.cash_confrim,name='cash_confrim'),
     #Error
     path('checkout', views.checkout, name='checkout'),
     path('execute/<int:id>', views.create_payment, name='create_payment'),
-    path('cash/', views.Cash, name='cash'),
+    path('cash/', views.Cash, name='cash_on_delivery'),
     path('share-product/<int:product_id>/', views.share_product, name='share_product'),
 #     cart
     path('cart/add/<int:id>/', views.cart_add, name='cart_add'),

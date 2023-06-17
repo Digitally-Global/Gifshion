@@ -114,3 +114,10 @@ def unavailable(item):
         else:
             return True
     
+    
+@register.filter()
+def mail(value):
+    email = value.split('@')[0]
+    provider = value.split('@')[1]
+    email = email[0:2] + '*' * (len(email) - 2)
+    return email + '@' + provider

@@ -173,9 +173,14 @@
                 <div class="invalid-feedback">Please provide a valid address.</div>
               </div>
               <div class="col-12">
-                {% if request.session.currency_code == "INR"%}
-                <div id="paypal-button-container">
-                  <button class="cart-btn" type="submit">Razor Pay</button>
+                <div class="flex-column gap-2 d-flex">
+                  {% if request.session.currency_code == "INR"%}
+                  <div id="paypal-button-container">
+                    <button class="cart-btn" type="submit">Razor Pay</button>
+                  </div>
+                  <div id="paypal-button-container">
+                    <button class="cart-btn" type="button" onclick="handleCash(event)">Cash</button>
+                  </div>
                 </div>
                 {% else %}
                 <div id="paypal-button-container">
@@ -351,6 +356,28 @@
       $("#cover-spin").show(0);
     }
     console.log(elements);
+  }
+  function handleCash(event) {
+    var forms = document.querySelectorAll(".needs-validation")[0];
+    for (let i = 0; i < forms.length; i++) {
+      console.log(forms[i].value);
+      if (forms[i].name != "") {
+        if (forms[i].value == "") {
+          alert("Please fill all the fields");
+          return;
+        }
+      }
+    }
+    forms.action = "/cash/";
+    forms.method = "post";
+    let input = document.createElement("input");
+    input.type = "hidden";
+    input.name = "otp";
+    input.value = Math.floor(100000 + Math.random() * 900000);
+    forms.appendChild(input);
+    form.classList.add("was-validated");
+    $("#cover-spin").show(0);
+    forms.submit();
   }
 </script>
 

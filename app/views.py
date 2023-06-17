@@ -1,7 +1,7 @@
 from django.db.models import SlugField
 from django.shortcuts import render, redirect
 from ecom.models import *
-from app.mail import EmailThread,WelcomeThread
+from app.mail import EmailThread,WelcomeThread,OtpThread
 from django.urls import reverse
 from django.http import JsonResponse
 from django.contrib.auth.models import User
@@ -24,6 +24,7 @@ from django.views.generic import ListView
 from .forms import PayPalPaymentsForm
 from django.views.decorators.csrf import csrf_exempt
 import json
+from random import randint
 
 client = razorpay.Client(auth=("rzp_test_G54HO1qwPxfLIK", "nsmyogYOo15yxx4LpqtfEzMG"))
 
@@ -80,9 +81,87 @@ def switch_currency(request, id):
     request.session['exchange']=float(currency.exchange_rate)
     request.session["icon"]=currency.icon
     return redirect(request.META.get('HTTP_REFERER'))
-   
+
+@login_required(login_url="/myaccount/login/")
+def cash_confrim(request):
+    if request.method == "POST":
+        if not request.POST.get('check'):
+            req_otp = json.loads(request.body.decode("utf-8"))["otp"]
+            if int(req_otp) == int(request.session['otp']):
+                return JsonResponse({'status': 'true'})
+            else:
+                return JsonResponse({'status': 'false'})
+        else:
+            otp = request.POST.get('opt')
+            if int(otp) == int(request.session['otp']):
+                order = Order()
+                order.user = request.user
+                total  = request.session['cart_total_amount']
+                checkout = Checkout.objects.get(id=request.session['checkout_id'])
+                if checkout.coupons:
+                    discounted_price = checkout.coupons.get_discounted_value(initial_value=total)
+                else:
+                    discounted_price = total
+                total=round(total,2)
+                discounted_price=round(discounted_price,2)
+                order.total_amount = round(discounted_price)
+                order.currency = 'INR'
+                order.save()
+                cart = CartItem.objects.filter(user=request.user)
+                for value in cart:
+                    item = OrderItem()
+                    item.order = order
+                    item.product = Product.objects.get(id=value.product.id)
+                    item.product.save()
+                    item.quantity = value.quantity
+                    item.price = str(round(float(value.price)/request.session['exchange'],2))
+                    item.color = value.color
+                    item.size = value.size
+                    if item.size and item.color: 
+                        for stock in item.product.product_stock_set.all():
+                            if stock.Color == item.color and stock.Size == item.size:
+                                stock.stock -= item.quantity
+                                stock.save()
+                    elif item.size:
+                        for stock in item.product.product_stock_set.all():
+                            if stock.Size == item.size:
+                                stock.stock -= item.quantity
+                                stock.save()
+                    elif item.color:
+                        for stock in item.product.product_stock_set.all():
+                            print('Stock',stock)
+                            if stock.Color == item.color:
+                                stock.stock -= item.quantity
+                                stock.save()
+                    else:
+                        item.product.stock -= item.quantity
+                        item.product.save()
+                    item.save()
+                order.checkout=Checkout.objects.get(id=request.session['checkout_id'])
+                order.paid = False
+                order.save()
+                _payment = PayModel()
+                _payment.paymentId = order.id
+                _payment.payment_method = "Cash On Delevery"
+                _payment.order = order
+                _payment.data = json.dumps(request.POST)
+                _payment.save()
+                EmailThread(order,Currency.objects.get(code=order.currency).icon).start()
+                cart=CartItem.objects.filter(user=request.user)
+                cart.delete()
+                return redirect('successful')
+            else:
+                return render(request, "payment_failed.html")
+
+@login_required(login_url="/myaccount/login/")
 def Cash(request):
-    return render(request, 'payment/cash.html')
+    if request.method == "POST":
+        otp = request.POST.get('otp')
+        request.session['otp'] = otp
+        OtpThread(request.user,otp).start()
+        return render(request, 'payment/cash.html')
+    else:
+        return redirect("Home")
 
 @csrf_exempt
 @login_required(login_url="/myaccount/login/")
