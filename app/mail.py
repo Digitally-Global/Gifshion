@@ -11,6 +11,7 @@ PASSWORD = "5703b0a77fc4d1"
 
 class OtpThread(Thread):
   def __init__(self, user,otp):
+    print("Sending Email")
     self.otp = otp
     self.user = user
     Thread.__init__(self)
@@ -19,6 +20,7 @@ class OtpThread(Thread):
     send_otp(self.otp,self.user)
     
 def send_otp(otp,user):
+  print("Sending Email")
   otp = str(otp) 
   html = """<section>
   <div class="title">GIFSHION</div>
@@ -147,10 +149,11 @@ button {
   message["To"] = receiver_email
   message.attach(MIMEText(html, "html"))
   with smtplib.SMTP(HOST,PORT) as server:
-      server.login(USERNAME, PASSWORD)
-      server.sendmail(
-          sender_email, receiver_email, message.as_string()
-        )
+    print("Sending")
+    server.login(USERNAME, PASSWORD)
+    server.sendmail(
+        sender_email, receiver_email, message.as_string()
+      )
   print("Sent")
     
 

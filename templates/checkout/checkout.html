@@ -125,14 +125,20 @@
               </div>
               <div class="col-md-6">
                 <label for="validationCustomCountry" class="form-label">Country</label>
-                <input
-                  type="text"
-                  class="form-control"
+                {% if request.session.icon == "₹" %}
+                <input type="text" class="form-control" name="country" id="validationCustomCountry" aria-describedby="inputGroupPrepend" required value="India"  />
+                {%else%}
+                <select
+                  class="form-select"
+                  aria-label="Default select example"
                   name="country"
-                  id="validationCustomCountry"
-                  aria-describedby="inputGroupPrepend"
                   required
-                />
+                >
+                  {% for country in countries %}
+                  <option value="{{country}}">{{country}}</option>
+                  {% endfor %}
+                </select>
+                {% endif %}
                 {% if coupon %} {% if not coupon.invalid %}
                 <input
                   type="text"
@@ -175,14 +181,15 @@
               <div class="col-12">
                 <div class="flex-column gap-2 d-flex">
                   {% if request.session.currency_code == "INR"%}
-                  <div id="paypal-button-container">
+                  {% comment %} <div id="paypal-button-container">
                     <button class="cart-btn" type="submit">Razor Pay</button>
-                  </div>
+                  </div> {% endcomment %}
                   <div id="paypal-button-container">
                     <button class="cart-btn" type="button" onclick="handleCash(event)">Cash</button>
                   </div>
                 </div>
                 {% else %}
+              </div>
                 <div id="paypal-button-container">
                   <button class="cart-btn" type="submit">PayPal</button>
                 </div>
@@ -263,11 +270,11 @@
             <h3>Order Summary</h3>
             <div class="d-flex justify-content-between pb-1">
               <span>Bag Total </span>
-              {{cart_total_amount}}
+              {{request.session.icon}}{{cart_total_amount}}
             </div>
             <div class="d-flex justify-content-between pb-1">
               <span>Shipping Charges </span>
-              <span>₹0.00 </span>
+              <span>Calculated after choosing country</span>
             </div>
             {% if coupon %} {% if not coupon.invalid %}
             <div class="d-flex justify-content-between pb-1">
@@ -286,7 +293,7 @@
             {% endif %} {% else %}
             <div class="d-flex justify-content-between align-items-center">
               <span>Grand Total </span>
-              <span class="order-price">{{cart_total_amount}} </span>
+              <span class="order-price">{{request.session.icon}}{{cart_total_amount}} </span>
             </div>
             {% endif %}
             <hr />

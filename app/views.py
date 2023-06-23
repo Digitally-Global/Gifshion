@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 import razorpay
+import csv
 from ecom.models import size as Size
 from django.contrib.auth.decorators import login_required
 from colorfield.fields import ColorField
@@ -25,6 +26,7 @@ from .forms import PayPalPaymentsForm
 from django.views.decorators.csrf import csrf_exempt
 import json
 from random import randint
+from .get_rate import *
 
 client = razorpay.Client(auth=("rzp_test_G54HO1qwPxfLIK", "nsmyogYOo15yxx4LpqtfEzMG"))
 
@@ -326,6 +328,7 @@ def create_payment(request,id):
     discounted_price=round(discounted_price,2)
     print(total,discounted_price)
     data = []
+    weights = 0
     if len(cart) == 0:
         return redirect('cart')
     for value in cart:
@@ -333,6 +336,7 @@ def create_payment(request,id):
         sub_data['name'] = value.product.name
         sub_data['quantity'] = value.quantity
         sub_data['price'] = str(round(float(value.price)/request.session['exchange'],2))
+        weights += float(value.size.weight)*value.quantity
         sub_data['quantity']=value.quantity
         sub_data['currency']=request.session['currency_code']
         data.append(sub_data)
@@ -354,7 +358,19 @@ def create_payment(request,id):
                 "currency": request.session['currency_code']
                 }
             )   
-        print(data)
+        print("Weight"+str(weights))
+        shipping_cost = getRate(checkout.country,weights)
+        shipping_cost = round(shipping_cost/request.session['exchange'],2)
+        print("Shipping"+str(shipping_cost))
+        data.append(
+            {
+            "name": "Shipping Cost",
+            "quantity": "1",
+            "price": f"{shipping_cost}",
+            "sku": "product",
+            "currency": request.session['currency_code']
+            }
+        )
         payment = Payment({
             "intent": "sale",
             "payer": {
@@ -362,7 +378,7 @@ def create_payment(request,id):
             },
             "transactions": [{
                 "amount": {
-                    "total": discounted_price,
+                    "total": round(discounted_price+shipping_cost,2),
                     "currency": request.session['currency_code'],
                 },
                 "description": "Payment for Gifsion Products",
@@ -616,6 +632,14 @@ def checkout(request):
             }
             messages.error(request, "Invalid Coupon Code")
     else : context = {}
+    countries = []
+    with open('countries.csv', 'r') as file:
+        reader = csv.reader(file)
+        for row in reader:
+            for countr in row:
+                if countr != "":
+                    countries.append(countr)
+    context["countries"] = countries
     return render(request, "checkout/checkout.html",context)
 def filter_data(request):
     return None
