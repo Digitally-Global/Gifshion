@@ -1,6 +1,7 @@
 from django.db.models import SlugField
 from django.shortcuts import render, redirect
 from ecom.models import *
+from app.BlueDart import *
 from app.mail import EmailThread,WelcomeThread,OtpThread
 from django.urls import reverse
 from django.http import JsonResponse
@@ -142,6 +143,8 @@ def cash_confrim(request):
                 order.checkout=Checkout.objects.get(id=request.session['checkout_id'])
                 order.paid = False
                 order.save()
+                client = BlueDart(order,order.checkout,request.user)
+                response = client.create_waybill()
                 _payment = PayModel()
                 _payment.paymentId = order.id
                 _payment.payment_method = "Cash On Delevery"
@@ -151,19 +154,20 @@ def cash_confrim(request):
                 EmailThread(order,Currency.objects.get(code=order.currency).icon).start()
                 cart=CartItem.objects.filter(user=request.user)
                 cart.delete()
+                request.session.pop('checkout_id')
                 return redirect('successful')
             else:
                 return render(request, "payment_failed.html")
 
 @login_required(login_url="/myaccount/login/")
 def Cash(request):
-    if request.method == "POST":
-        otp = request.POST.get('otp')
-        request.session['otp'] = otp
-        OtpThread(request.user,otp).start()
-        return render(request, 'payment/cash.html')
+    if not request.POST.get('otp'):
+        otp = randint(100000, 999999) 
     else:
-        return redirect("Home")
+        otp = request.POST.get('otp')
+    request.session['otp'] = otp
+    OtpThread(request.user,otp).start()
+    return render(request, 'payment/cash.html')
 
 @csrf_exempt
 @login_required(login_url="/myaccount/login/")
@@ -230,6 +234,8 @@ def confirm_razor_payment(request):
             order.paid = True
             order.save()
             EmailThread(order,Currency.objects.get(code=order.currency).icon).start()
+            client = BlueDart(order,order.checkout,request.user)
+            client.create_waybill()
             cart=CartItem.objects.filter(user=request.user)
             cart.delete()
             return redirect('successful')
@@ -610,6 +616,10 @@ def checkout(request):
         
         checkout.save()
         request.session['checkout_id'] = checkout.id
+        if request.POST.get('type'):
+            print("cash on delivery")
+            print(request.session.get("checkout_id"))
+            return redirect("cash_on_delivery")
         return redirect('create_payment',checkout.id)
     if request.GET.get("coupon_code"):
         if Coupon.objects.filter(code=request.GET.get("coupon_code")).exists():

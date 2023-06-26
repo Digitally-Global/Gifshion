@@ -184,9 +184,8 @@ class Payment(models.Model):
     
 class Tracking(models.Model):
     tracking_number = models.CharField(max_length=50)
+    data = models.TextField(null=True)
     tracking_date = models.DateTimeField(auto_now_add=True)
-    tracking_status = models.CharField(max_length=50)
-    link = models.CharField(max_length=100) 
     
 class Order(models.Model):
     id = ShortUUIDField(

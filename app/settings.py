@@ -215,3 +215,5 @@ SITE_URL = "https://b5c8-49-37-33-255.ngrok-free.app/"
 
 client = razorpay.Client(auth=("rzp_test_Zst0lERAYg5HKw","yT4pY8zanoSIFeAqdHkdNcvI"))
 client.set_app_details({"title" : "Gifshion", "version" : "0.0.1"})
+
+CSRF_TRUSTED_ORIGINS = ['https://f153-49-37-9-57.ngrok-free.app']

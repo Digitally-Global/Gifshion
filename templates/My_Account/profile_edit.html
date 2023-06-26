@@ -1,6 +1,4 @@
-{% extends 'base.html' %}
-{% load static %}
-{% block content %}
+{% extends 'base.html' %} {% load static %} {% block content %}
 <!-- End Header Area -->
 <section class="account-block py-5 my-5">
   <div class="container">
@@ -9,7 +7,9 @@
         <div class="col-md-4">
           <div class="account-nav">
             <nav class="nav flex-column">
-              <a class="nav-link active" aria-current="page" href="{% url 'profile' %}">Profile Dashboard</a>
+              <a class="nav-link active" aria-current="page" href="{% url 'profile' %}"
+                >Profile Dashboard</a
+              >
               <a class="nav-link" href="{% url 'orders' %}">Orders</a>
               <a class="nav-link" href="{% url 'wishlist' %}">Wishlist</a>
             </nav>
@@ -19,40 +19,49 @@
           <div class="account-content-details">
             <div class="account-title d-flex justify-content-between">
               <h4>Contact Information</h4>
-
             </div>
             <div class="dashboard-info">
               <div class="row">
-
                 <form action="{% url 'Pedit' user.id %}" method="post">
                   {% csrf_token %}
                   <div class="mb-3">
-
                     <label for="exampleInputname" class="form-label">Full Name</label>
-                    <input class="form-control" id="exampleInputname" name="username" value="{{user.username}}">
+                    <input
+                      class="form-control"
+                      id="exampleInputname"
+                      name="username"
+                      value="{{user.username}}"
+                    />
                   </div>
                   <div class="mb-3">
-
                     <label for="exampleInputname" class="form-label">Email</label>
-                    <input class="form-control" id="exampleInputname" name="email" value={{user.email}}>
+                    <input
+                      class="form-control"
+                      id="exampleInputname"
+                      name="email"
+                      value="{{user.email}}"
+                    />
                   </div>
                   <div class="mb-3">
-
                     <label for="exampleInputname" class="form-label">Phone Number</label>
-                    <input class="form-control" id="exampleInputname" name="phone" value={{user.profile.phone}}>
+                    <input
+                      class="form-control"
+                      id="exampleInputname"
+                      name="phone"
+                      value="{{user.profile.phone}}"
+                    />
                   </div>
                   <div class="mb-3">
-
-                    <label for="exampleInputname" class="form-label" style={ font-size:3px; }>New Password <p>Leave
-                        blank if you dont want to change</p> </label>
+                    <label for="exampleInputname" class="form-label" style="{" font-size:3px; }
+                      >New Password
+                      <p>Leave blank if you dont want to change</p>
+                    </label>
                     <input class="form-control" id="exampleInputname" name="password" />
                   </div>
                   <div class="text-center">
                     <button type="submit" class="btn btn-danger">Save</button>
                   </div>
                 </form>
-
-
               </div>
               <a class="sign-out-btn" href="{% url 'logout' %}">SIGN OUT</a>
             </div>

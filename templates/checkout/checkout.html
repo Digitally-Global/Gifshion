@@ -185,7 +185,9 @@
                     <button class="cart-btn" type="submit">Razor Pay</button>
                   </div> {% endcomment %}
                   <div id="paypal-button-container">
-                    <button class="cart-btn" type="button" onclick="handleCash(event)">Cash</button>
+                    {% comment %} onclick="handleCash(event)" {% endcomment %}
+                    <input name="type" hidden value="cash"/> 
+                    <button class="cart-btn" type="submit" >Cash</button>
                   </div>
                 </div>
                 {% else %}

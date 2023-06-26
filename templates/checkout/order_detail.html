@@ -46,6 +46,11 @@
 								</ul>
 								<h1>Payment Details </h1>
 								<h5>Payment Method - {{order.payment_set.all.0.payment_method }}</h5>
+								{% if order.payment_set.all.0.payment_method == "Cash On Delevery" %}
+										<h5>Courier - BlueDart</h5>
+										<h5>Waybill No - {{order.tracking.tracking_number}}</h5>
+										<button class="btn btn-success" onclick="window.location.href = 'https://www.bluedart.com/web/guest/home?p_p_id=com_liferay_login_web_portlet_LoginPortlet&p_p_lifecycle=0&_com_liferay_login_web_portlet_LoginPortlet_redirect=%2Fgroup%2Fblue-dart%2Fbook-a-shipment'">Track Order</button>
+								{% endif %}
 								<h1>Delivery Details </h1>
 								<h5>{{order.checkout.address}}</h5>
 								<h5>{{order.checkout.city}}</h5>

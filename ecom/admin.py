@@ -20,6 +20,7 @@ class ProductAdmin(admin.ModelAdmin):
 
 admin.site.register(Product,ProductAdmin)
 admin.site.register(Slider)
+admin.site.register(Tracking)
 
   
 
@@ -47,6 +48,7 @@ class ItemInline(admin.StackedInline):
     model=OrderItem
 class PaymentInline(admin.StackedInline):
     model = Payment
+    
 class OrderAdmin(admin.ModelAdmin):
     inlines = [ItemInline,PaymentInline]
     def has_change_permission(self, request, obj=None):

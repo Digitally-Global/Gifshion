@@ -4,7 +4,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from threading import Thread
 
-PORT = 25
+PORT = 2525
 HOST = "sandbox.smtp.mailtrap.io"
 USERNAME = "44b56349d5df35"
 PASSWORD = "5703b0a77fc4d1"
