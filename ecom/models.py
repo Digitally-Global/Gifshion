@@ -142,13 +142,15 @@ class Color(models.Model):
 
 class size(models.Model):
     product = models.ForeignKey(Product,on_delete=models.CASCADE)
-    Num = models.CharField(max_length=10)    
+    Num = models.CharField(max_length=10,null=True,blank=True)    
     width = models.CharField(max_length=10,null=True,blank=True)
     height = models.CharField(max_length=10,null=True,blank=True)
     length = models.CharField(max_length=10,null=True,blank=True)
     weight = models.CharField(max_length=10,null=True,blank=True)
     
     def __str__(self):
+        if self.Num == None:
+            return self.product.name
         return self.Num + self.product.name
     
 

@@ -47,7 +47,7 @@ def single_checkout(request,id):
 
 def mail(request,email):
     Mail.objects.create(email=email,user=request.user)
-    return redirect(request.META.get('HTTP_REFERER'))
+    return redirect('Home')
 @login_required(login_url="/myaccount/login/")
 def wishlist(request):
     if request.method == 'POST':
@@ -566,13 +566,17 @@ def My_Account(request):
     if request.method == "POST":
         username = request.POST.get('username')
         password = request.POST.get('password')
-        user = User.objects.get(email=username)
-        user = authenticate(request, username = user.username, password = password)
-        if user is not None:
-            login(request, user)
-            return redirect('profile')
-        else:
-            messages.error(request, 'Invalid user and Password !')
+        try:
+            user = User.objects.get(email=username)
+            user = authenticate(request, username = user.username, password = password)
+            if user is not None:
+                login(request, user)
+                return redirect('profile')
+            else:
+                messages.error(request, 'Invalid user and Password !')
+                return redirect('login')
+        except:
+            messages.error(request, 'Email Does not Exist !')
             return redirect('login')
     else:
         return redirect('login')
@@ -689,6 +693,7 @@ def request_404(request):
 
 def category_detail(request, category_id):
     Category = sub_category.objects.get(id=category_id)
+    cat_ = category.objects.all()
     if len(request.GET.getlist('FilterPrice')) < 2:
         products = Product.objects.filter(sub_category=Category)
         print(products)
@@ -699,7 +704,7 @@ def category_detail(request, category_id):
         if filters[1] == "":
             filters[1] = 1000000
         products = Product.objects.filter(sub_category=Category,price__gte=int(filters[0]),price__lte=int(filters[1]))
-    return render(request, 'product/category_detail.html', { 'products': products , 'category':Category})
+    return render(request, 'product/category_detail.html', { 'products': products , 'Category':cat_,'category':Category})
  
 def Product_listing(request):
     try:

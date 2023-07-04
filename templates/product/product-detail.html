@@ -127,13 +127,19 @@
           {% endif %}
           {% if not i.size_set.all|length == 0%}
           {% if not request.GET.size %}
+                 {% if  i.size_set.all.0.Num  %}
           <p class="mb-1 mt-3">Select Size</p>
+          {%endif%}
           {% else %}
+           {% if  i.size_set.all.0.Num  %}
           <p class="mb-1 mt-3">Size</p>
+          {%endif%}
           {% endif %}
+          <!-- get the first item -->
           <div class="d-flex justify-content-between">
             <div class="product-variations">
               <ul class="nav">
+                 {% if  i.size_set.all.0.Num  %}
                 {% if not request.GET.size %}
                 {% for size in i.size_set.all|slice:":1" %}
                 <li><a class="active size-select" href="#" id="{{size.id}}" onclick="selectSize(`{{size.id}}`)">
@@ -149,6 +155,7 @@
                     {{request.GET.size}}</a></li>
                 {% endif %}
               </ul>
+              {%endif%}
             </div>
             {%endif %}
           </div>

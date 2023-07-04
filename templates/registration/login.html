@@ -18,15 +18,15 @@
           <form action="{% url 'handlemy_account' %}" method="post">
             {% csrf_token %}
             <div class="mb-3">
-              <label for="username" class="form-label">Email address</label>
-              <input type="username" class="form-control" id="username" name="username" />
+              <label for="email" class="form-label">Email address</label>
+              <input type="email" class="form-control" id="username" name="username" required />
               <div id="emailHelp" class="form-text">
                 We'll never share your email with anyone else.
               </div>
             </div>
             <div class="mb-3">
               <label for="exampleInputPassword1" class="form-label">Password</label>
-              <input type="password" class="form-control" id="" name="password" />
+              <input type="password" class="form-control" id="" name="password" required />
             </div>
             <button type="submit" class="btn btn-primary w-100">Login</button>
             <div class="login-action md-10 fix">
@@ -48,7 +48,7 @@
             {% csrf_token %}
             <div class="mb-3">
               <label for="exampleInputname" class="form-label">Full Name</label>
-              <input class="form-control" id="exampleInputname" name="username" />
+              <input class="form-control" id="exampleInputname" name="username" required />
             </div>
             <div class="mb-3">
               <label for="exampleInputEmail1" class="form-label">Email address</label>
@@ -57,6 +57,7 @@
                 id="exampleInputEmail1"
                 aria-describedby="emailHelp"
                 name="email"
+                required
               />
               <div id="emailHelp" class="form-text">
                 We'll never share your email with anyone else.
@@ -64,11 +65,17 @@
             </div>
             <div class="mb-3">
               <label for="exampleInputPassword1" class="form-label">Password</label>
-              <input class="form-control" id="exampleInputPassword1" name="password" />
+              <input class="form-control" id="exampleInputPassword1" name="password" required />
             </div>
             <div class="mb-3">
               <label for="phone" class="form-label">Phone</label>
-              <input class="form-control" id="exampleInputPassword1" name="phone" type="phone" />
+              <input
+                class="form-control"
+                id="exampleInputPassword1"
+                name="phone"
+                type="phone"
+                required
+              />
             </div>
             <button type="submit" class="btn btn-primary w-100">Register</button>
           </form>

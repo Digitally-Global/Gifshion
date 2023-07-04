@@ -7,10 +7,10 @@ import requests
 def simplemiddleware(get_response):
     def middleware(request):
         try:
-            # if request.session.get('exchange'):
-            #     raise Exception("exchange rate already set")
-            print(request.session["currency_code"])
-            raise Exception("exchange rate already set") 
+            if request.session["currency_code"]:
+                print(request.session["currency_code"])
+            else:
+                raise Exception("exchange rate already set") 
         except:
             def get_location():
                 x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')

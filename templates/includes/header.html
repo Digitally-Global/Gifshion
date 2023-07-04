@@ -67,17 +67,6 @@
             {% if user.is_authenticated %}
             <div class="user-icon mx-3">
               <a href="{% url 'logout' %}"></i>Logout</a>
-              {% if messages %}
-              {% for message in messages %}
-              {% if messages.tag == 'error' %}
-              <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                {{message}}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
-                <span aria-hidden="true">&times;</span>
-              </div>
-              {% endif %}
-              {% endfor %}
-              {% endif %}
             </div>
             {% else %}
             <div class="user-icon mx-3">
@@ -159,6 +148,28 @@
     </div>
   </div>
 </header>
+<div>
+    {% comment %} {% if messages %}
+              {% for message in messages %}
+              {% if messages.tags == 'success' %}
+              <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <button class="btn" type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              {%else%}
+              <div class="p-3">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{message}}
+                <button class="btn" type="button"  data-dismiss="alert" aria-label="Close" id="alert">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div>
+              {% endif %}
+              {% endfor %}
+              {% endif %} {% endcomment %}
+</div>
 
 <style>
   @media (max-width: 1200px){
@@ -183,4 +194,5 @@
   if (width < 768) {
     document.getElementById("top-icons").classList.add("d-none");
   }
+  $('.alert').alert()
 </script>
