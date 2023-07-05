@@ -1,0 +1,106 @@
+@font-face {
+  font-family: "flaticon_mycollection";
+  src: url("./flaticon_mycollection.ttf?3c720c49f3e237e939b2cd19b34ce46a") format("truetype"), url("./flaticon_mycollection.woff?3c720c49f3e237e939b2cd19b34ce46a") format("woff"), url("./flaticon_mycollection.woff2?3c720c49f3e237e939b2cd19b34ce46a") format("woff2"), url("./flaticon_mycollection.eot?3c720c49f3e237e939b2cd19b34ce46a#iefix") format("embedded-opentype"), url("./flaticon_mycollection.svg?3c720c49f3e237e939b2cd19b34ce46a#flaticon_mycollection") format("svg");
+}
+i[class^=flaticon-]:before, i[class*=" flaticon-"]:before {
+  font-family: flaticon_mycollection !important;
+  font-style: normal;
+  font-weight: normal !important;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.flaticon-next:before {
+  content: "\f101";
+}
+
+.flaticon-facebook:before {
+  content: "\f102";
+}
+
+.flaticon-twitter:before {
+  content: "\f103";
+}
+
+.flaticon-instagram:before {
+  content: "\f104";
+}
+
+.flaticon-youtube:before {
+  content: "\f105";
+}
+
+.flaticon-close:before {
+  content: "\f106";
+}
+
+.flaticon-home:before {
+  content: "\f107";
+}
+
+.flaticon-loupe:before {
+  content: "\f108";
+}
+
+.flaticon-menu:before {
+  content: "\f109";
+}
+
+.flaticon-shopping-bag:before {
+  content: "\f10a";
+}
+
+.flaticon-user:before {
+  content: "\f10b";
+}
+
+.flaticon-left:before {
+  content: "\f10c";
+}
+
+.flaticon-download-arrow:before {
+  content: "\f10d";
+}
+
+.flaticon-file:before {
+  content: "\f10e";
+}
+
+.flaticon-shopping:before {
+  content: "\f10f";
+}
+
+.flaticon-user-1:before {
+  content: "\f110";
+}
+
+.flaticon-love:before {
+  content: "\f111";
+}
+
+.flaticon-van:before {
+  content: "\f112";
+}
+
+.flaticon-phone-call:before {
+  content: "\f113";
+}
+
+.flaticon-email:before {
+  content: "\f114";
+}
+
+.flaticon-whatsapp:before {
+  content: "\f115";
+}
+
+.flaticon-share:before {
+  content: "\f116";
+}
+
+.flaticon-heart:before {
+  content: "\f117";
+}/*# sourceMappingURL=flaticon_mycollection.css.map */

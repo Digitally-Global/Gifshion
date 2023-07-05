@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-6)luf6o*#hhonf%y4nf_^-lp_g_$@pxe#e)vw7c@^*kk@fp80#'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -65,7 +65,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     'ecom.middleware.simplemiddleware'
+   
     
 ]
 
@@ -215,5 +218,8 @@ SITE_URL = "https://b5c8-49-37-33-255.ngrok-free.app/"
 
 client = razorpay.Client(auth=("rzp_test_Zst0lERAYg5HKw","yT4pY8zanoSIFeAqdHkdNcvI"))
 client.set_app_details({"title" : "Gifshion", "version" : "0.0.1"})
+
+
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 CSRF_TRUSTED_ORIGINS = ['https://4e1e-49-37-9-57.ngrok-free.app']
