@@ -5,10 +5,11 @@
 # It will install all the dependencies and run the server
 # run shell commands 
 echo "Setting Up the Project" 
-pip install -r requirements.txt
-python manage.py makemigrations
-python manage.py makemigrations ecom
-python manage.py migrate ecom
-python manage.py migrate
-python seed.py 
-python manage.py runserver
+sudo pip3 install django
+sudo pip3 install -r requirements.txt
+python3 manage.py makemigrations
+python3 manage.py makemigrations ecom
+python3 manage.py migrate ecom
+python3 manage.py migrate
+python3 seed.py 
+python3 manage.py runserver 0:8000
