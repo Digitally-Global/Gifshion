@@ -6,6 +6,8 @@ __pycache__/
 # C extensions
 *.so
 
+
+./ecom/migrations/*
 # Distribution / packaging
 .Python
 build/
