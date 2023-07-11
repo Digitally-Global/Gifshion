@@ -35,13 +35,10 @@
             <a href="{{social.facebook}}"><i class="flaticon-facebook"></i></a>
           </li>
           <li>
-            <a href="{{social.twitter}}"><i class="flaticon-twitter"></i></a>
-          </li>
-          <li>
             <a href="{{social.instagram}}"><i class="flaticon-instagram"></i></a>
           </li>
         </ul>
-        <p class="text-center">©2023 GIFshion</p>
+        <p class="text-center">©2023 Gifshion</p>
       </div>
     </div>
   </div>
@@ -84,9 +81,37 @@
             <div class="m-icon"><i class="fa fa-home"></i></div>
           </a>
         </li>
-        {% for nav in categories%}
-        <li><a href="{% url 'category' nav.id%}">{{nav}}</a></li>
-        {% endfor %}
+          {% for category in Category%}
+       <li class="h-sub-menu">
+            <div class="price-swticher">
+              <div class="dropdown">
+                <a class="btn btn-sm btn-light dropdown-toggle" type="button" id="dropdownMenuButton1"
+                  data-bs-toggle="dropdown" aria-expanded="false">
+                  {{category}}
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                  {% for subcategory in category.main_category_set.all %}
+                  <li class="h-sub-menu">
+            <div class="price-swticher">
+              <div class="dropdown">
+                <a class="btn btn-sm btn-light dropdown-toggle" type="button" id="dropdownMenuButton2"
+                  data-bs-toggle="dropdown" aria-expanded="false">
+                  {{subcategory}}
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+                  {% for subcategory in category.main_category_set.all %}
+                  <li><a class="dropdown-item" href="">{{subcategory}}</a></li>
+                  {% endfor %}
+                </ul>
+              </div>
+            </div>
+          </li>
+                  {% endfor %}
+                </ul>
+              </div>
+            </div>
+          </li>
+          {%endfor%}
         <li class="dropdown">
           <a href="{% url 'profile' %}">My Account
             <div class="m-icon"><i class="flaticon-next"></i></div>
@@ -123,13 +148,10 @@
           <a href="{{social.facebook}}"><i class="flaticon-facebook"></i></a>
         </li>
         <li>
-          <a href="{{social.twitter}}"><i class="flaticon-twitter"></i></a>
-        </li>
-        <li>
           <a href="{{social.instagram}}"><i class="flaticon-instagram"></i></a>
         </li>
       </ul>
-      <p class="text-center">©2023 GIFshion</p>
+      <p class="text-center">©2023 Gifshion</p>
     </div>
   </div>
 </div>
