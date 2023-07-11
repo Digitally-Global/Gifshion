@@ -1,0 +1,9 @@
+input[required]:after {
+  content: " *";
+  color: red;
+}
+
+label.required:after {
+  content: " *" !important;
+  color: red !important;
+}

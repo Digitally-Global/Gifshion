@@ -74,7 +74,7 @@ def wishlist(request):
 class OrderListView(ListView):
     def get_queryset(self):
         return Order.objects.filter(user=self.request.user).order_by('-order_date')
-    template_name = 'payment/order_list.html' 
+    template_name = 'Payment/order_list.html' 
     
     
 def switch_currency(request, id):
@@ -167,7 +167,7 @@ def Cash(request):
         otp = request.POST.get('otp')
     request.session['otp'] = otp
     OtpThread(request.user,otp).start()
-    return render(request, 'payment/cash.html')
+    return render(request, 'Payment/cash.html')
 
 @csrf_exempt
 @login_required(login_url="/myaccount/login/")
@@ -560,7 +560,7 @@ def Pedit(request,id):
         login(request,user)
         return redirect('profile')
     else:
-        return render(request, "my_account/profile_edit.html")
+        return render(request, "My_account/profile_edit.html")
     
 def My_Account(request):
     if request.method == "POST":
@@ -583,7 +583,7 @@ def My_Account(request):
  
 def Pay(request):
     
-    return render(request, 'payment/pay.html')       
+    return render(request, 'Payment/pay.html')       
 
 @login_required(login_url="/myaccount/login/")
 def checkout(request):
@@ -750,11 +750,11 @@ def Home(request):
     
 
             
-    slider = Slider.objects.all().order_by('-id')[0:3]
+    slider = Slider.objects.all().order_by('-id')
     banner = banner_area.objects.all().order_by('-id')[0:3]
     h1_banner = h1banner.objects.all().order_by('-id')[0:3]
     h2_banner = h2banner.objects.all().order_by('-id')[0:3]
-    Category = category.objects.all().order_by('-id')[0:3]
+    Category = category.objects.all().order_by('-id')
     product = get_inStock(Product.objects.filter(section__name = "By Concern"))
     Rakhi =get_inStock(Product.objects.filter(section__name = "Rakhi Special"))
     BestSeller = get_inStock(Product.objects.filter(section__name="BestSeller"))
@@ -774,7 +774,7 @@ def Home(request):
         'Products':Products,
         'sections' : sections
         }
-    return render(request,'main/home.html', context)
+    return render(request,'Main/home.html', context)
 
 
 @login_required(login_url="/myaccount/login/")
@@ -789,7 +789,7 @@ def Profile(request):
         return redirect('profile',user)
     
     Category = category.objects.all().order_by('-id')[0:3]
-    return render(request,'my_account/profile.html')
+    return render(request,'My_Account/profile.html')
 def BASE(request):
     return render(request,'base.html')
 

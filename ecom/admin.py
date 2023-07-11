@@ -16,6 +16,10 @@ class Stock_Admin(admin.TabularInline):
     model = Product_Stock
     
 class ProductAdmin(admin.ModelAdmin):
+    class Media:
+        css = {
+            'all': ('assets/css/admin.css',)
+        }
     inlines = [sizes,Productsimageurls,colors,Stock_Admin] 
 
 admin.site.register(Product,ProductAdmin)
