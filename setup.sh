@@ -5,8 +5,8 @@
 # It will install all the dependencies and run the server
 # run shell commands 
 echo "Setting Up the Project" 
-sudo pip3 install django
-sudo pip3 install -r requirements.txt
+pip3 install django
+pip3 install -r requirements.txt
 python3 manage.py makemigrations
 python3 manage.py makemigrations ecom
 python3 manage.py migrate ecom
