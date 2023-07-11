@@ -852,3 +852,6 @@ def tc(request):
     return render(request,'Main/tc.html')
 def why_us(request):
     return render(request,'Main/why.html')
+
+def render_register(request):
+    return render(request,'registration/register.html')

@@ -1,0 +1,61 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+<!-- Login Page -->
+<section class="login-page-block my-5 py-5">
+  <div class="container">
+    {% if messages %} {% for message in messages %} {% if message.tags == 'error'%}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      {{message}}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endif %} {% endfor %} {% endif %}
+    <div class="login-block bg-mode shadow rounded-3 overflow-hidden">
+      <div class="row">
+        <div class="p-5 p-sm-6">
+          <div class="login-title text-center">
+            <h2>Create new account</h2>
+          </div>
+          <form action="{% url 'handleregister' %}" method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+              <label for="exampleInputname" class="form-label">Full Name</label>
+              <input class="form-control" id="exampleInputname" name="username" required />
+            </div>
+            <div class="mb-3">
+              <label for="exampleInputEmail1" class="form-label">Email address</label>
+              <input
+                class="form-control"
+                id="exampleInputEmail1"
+                aria-describedby="emailHelp"
+                name="email"
+                required
+              />
+              <div id="emailHelp" class="form-text">
+                We'll never share your email with anyone else.
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="exampleInputPassword1" class="form-label">Password</label>
+              <input class="form-control" id="exampleInputPassword1" name="password" required />
+            </div>
+            <div class="mb-3">
+              <label for="phone" class="form-label">Phone</label>
+              <input
+                class="form-control"
+                id="exampleInputPassword1"
+                name="phone"
+                type="phone"
+                required
+              />
+            </div>
+            <p>
+              Already have an account? <a href="{% url 'login' %}">Login</a>
+            </p>
+              <button type="submit" class="btn btn-primary w-100">Register</button>
+            </p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

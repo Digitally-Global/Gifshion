@@ -10,9 +10,8 @@
     {% endif %} {% endfor %} {% endif %}
     <div class="login-block bg-mode shadow rounded-3 overflow-hidden">
       <div class="row">
-        <div class="col-md-6 p-5 p-sm-6">
-          <div class="login-title">
-            <h4>Have an account ?</h4>
+        <div class="p-5 p-sm-6">
+          <div class="login-title text-center">
             <h2>Sign in</h2>
           </div>
           <form action="{% url 'handlemy_account' %}" method="post">
@@ -28,6 +27,7 @@
               <label for="exampleInputPassword1" class="form-label">Password</label>
               <input type="password" class="form-control" id="" name="password" required />
             </div>
+            <p>Don't have an account? <a href="{% url 'register' %}">Register</a></p>
             <button type="submit" class="btn btn-primary w-100">Login</button>
             <div class="login-action md-10 fix">
               {% comment %}
@@ -36,48 +36,6 @@
               </span>
               {% endcomment %}
             </div>
-          </form>
-        </div>
-        <div class="col-md-6 p-5 p-sm-6">
-          <div class="login-title">
-            <h4>Don't have an account ?</h4>
-
-            <h2>Create new account</h2>
-          </div>
-          <form action="{% url 'handleregister' %}" method="post">
-            {% csrf_token %}
-            <div class="mb-3">
-              <label for="exampleInputname" class="form-label">Full Name</label>
-              <input class="form-control" id="exampleInputname" name="username" required />
-            </div>
-            <div class="mb-3">
-              <label for="exampleInputEmail1" class="form-label">Email address</label>
-              <input
-                class="form-control"
-                id="exampleInputEmail1"
-                aria-describedby="emailHelp"
-                name="email"
-                required
-              />
-              <div id="emailHelp" class="form-text">
-                We'll never share your email with anyone else.
-              </div>
-            </div>
-            <div class="mb-3">
-              <label for="exampleInputPassword1" class="form-label">Password</label>
-              <input class="form-control" id="exampleInputPassword1" name="password" required />
-            </div>
-            <div class="mb-3">
-              <label for="phone" class="form-label">Phone</label>
-              <input
-                class="form-control"
-                id="exampleInputPassword1"
-                name="phone"
-                type="phone"
-                required
-              />
-            </div>
-            <button type="submit" class="btn btn-primary w-100">Register</button>
           </form>
         </div>
       </div>
