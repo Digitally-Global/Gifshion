@@ -54,6 +54,20 @@ urlpatterns = [
     path('payment', views.paypal_process, name='paypal-form'),
     path("paypal-confirm-order",views.confirm_order_payment, name="confirm-paypal-order"),
     path("confirm_order", views.confirm_order, name="confirm_order"),
-    path('confirm_razor_payment',views.confirm_razor_payment, name="confirm_razor_payment")
+    path('confirm_razor_payment',views.confirm_razor_payment, name="confirm_razor_payment"),
+    path('about-us',views.about_us,name="about-us"),
+    path('cancel',views.cancel,name="cancel"),
+    path('why_us',views.why_us,name="why_us"),
+    path('terms',views.tc,name="tc"),
+    path('refund',views.refund,name="refund"),
+    path('privacy_policy',views.pp,name="pp"),
+    path('midnight_delivery',views.midnight_delivery,name="midnight_delivery"),
+    path('exchange',views.exchange,name="exchange"),
+
+
+
+
+
+
     
 ]+static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

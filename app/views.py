@@ -833,3 +833,22 @@ def paypal_process(request):
 # send_mail(Order.objects.filter(id=85)[0],Currency.objects.get(code=Order.objects.filter(id=85)[0].currency).icon)
 
 # WelcomeThread(User.objects.filter()[3]).start()
+
+def about_us(request):
+    return render(request,'Main/about-us.html')
+
+def cancel(request):
+    return render(request,'Main/cancel.html')
+def exchange(request):
+    return render(request,'Main/exchange.html')
+def midnight_delivery(request):
+    return render(request,'Main/midnight.html')
+
+def pp(request):
+    return render(request,'Main/pp.html')
+def refund(request):
+    return render(request,'Main/refund.html')
+def tc(request):
+    return render(request,'Main/tc.html')
+def why_us(request):
+    return render(request,'Main/why.html')
