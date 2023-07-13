@@ -25,7 +25,7 @@ class ProductAdmin(admin.ModelAdmin):
         qs = super().get_queryset(request)
         if request.user.is_superuser:
             return qs
-        return None
+        return qs.filter(seller=request.user)
     inlines = [sizes,Productsimageurls,colors,Stock_Admin] 
 
 admin.site.register(Product,ProductAdmin)
