@@ -21,6 +21,11 @@ class ProductAdmin(admin.ModelAdmin):
         css = {
             'all': ('assets/css/admin.css',)
         }
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        if request.user.is_superuser:
+            return qs
+        return None
     inlines = [sizes,Productsimageurls,colors,Stock_Admin] 
 
 admin.site.register(Product,ProductAdmin)
@@ -79,6 +84,6 @@ class PaymentAdmin(admin.ModelAdmin):
             return qs
         return None
 admin.site.register(Checkout,PaymentAdmin)
-admin.site.register(Payment,PaymentAdmin)
+admin.site.register(Payment)
 admin.site.register(Order,OrderAdmin)
 admin.site.register(Notification)
