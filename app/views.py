@@ -855,3 +855,4 @@ def why_us(request):
 
 def render_register(request):
     return render(request,'registration/register.html')
+

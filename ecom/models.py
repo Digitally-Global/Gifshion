@@ -86,6 +86,7 @@ class Product(models.Model):
     Tags = models.CharField(max_length=100)
     Description = RichTextField()
     section = models.ForeignKey(Section,on_delete=models.DO_NOTHING)
+    seller = models.ForeignKey(User,on_delete=models.CASCADE,blank=True,null=True)
     
     slug = models.SlugField(default='', max_length=500, null=True, blank=True)
     
@@ -266,3 +267,9 @@ def mail_sender(sender, instance, *args, **kwargs):
         send_mail(instance)
     pre_save.connect(mail_sender, Order)
 pre_save.connect(mail_sender, Order)
+
+class Seller(models.Model):
+    name = models.TextField()
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    def __str__(self):
+        return self.name 
