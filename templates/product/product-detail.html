@@ -66,7 +66,7 @@
       <div class="col-md-6">
         {% for i in product %}
         <div class="products-details">
-          <h1>{{i.name}}</h1>
+          <h1 style="font-family: ARIAL ROUNDED MT BOLD, Helvetica, sans-serif;">{{i.name}}</h1>
           <div class="review-share d-flex justify-content-between">
             <div>
               <p>
@@ -78,20 +78,25 @@
               </p>
             </div>
           </div>
-
+          
           <div class="short-dec">
             <div class="ori-cunt pb-2">Country of Origin: India</div>
             <p>
               {{i.Product_information|safe}}
             </p>
           </div>
+          <img src ="{% static './assets/images/whatsapp.png'  %}" height="50" size="50" onclick="openWhatsApp()"> 
 
           <div class="product-price">
             <span class="p-text">Price</span>
             {% with request.session.exchange as exchange %}
+            {% if  i.Discount == 0 %}
             <div class="price"><span>{{ request.session.icon }} {{ i.price|divide:exchange|discount:i.Discount }}
-                <del>{{i.price|divide:exchange}}</del></span></div>
-
+              </span></div>
+            {% else %}
+             <div class="price"><span>{{ request.session.icon }} {{ i.price|divide:exchange|discount:i.Discount }}
+                <del>{{i.price|divide:exchange}}</del> <b style="color:red">({{i.Discount}}% OFF)</b></span></div>
+            {%endif %}
             {% endwith %}
             <p>(incl. of all taxes)</p>
           </div>
@@ -352,5 +357,14 @@
     border: 4px solid #000000
   }
 </style>
+<script>
+//user-defined function to open and share web content on WhatsApp
+function openWhatsApp() {
+  const link = encodeURIComponent(window.location.href)
+  const description = encodeURIComponent('Check out this product!')
+	window.open(`whatsapp://send?text=${description}  ${link}`);
+    }
+</script>
+
 
 {% endblock %}

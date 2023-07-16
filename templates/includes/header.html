@@ -46,7 +46,7 @@
           </div>
         </div>
         <div class="col-md-4" >
-          <div class="navbar-right d-flex justify-content-end align-items-center h-100" id="top-icons">
+          <div class="navbar-right d-flex justify-content-end align-items-center h-100" >
             {% comment %} <a href="{% url 'product-listing' %}"> {% endcomment %}
             <a>
             <!-- The Modal -->
@@ -75,7 +75,8 @@
             </div>
               <img src="{% static './assets/images/search.png' %}" class="m-2" id="myBtn">
             </a>
-            <div class="price-swticher">
+            
+            <div class="price-swticher top-icons"  >
               <div class="dropdown">
                 <a class="btn btn-sm btn-light dropdown-toggle" type="button" id="dropdownMenuButton1"
                   data-bs-toggle="dropdown" aria-expanded="false">
@@ -90,11 +91,11 @@
               </div>
             </div>
             {% if user.is_authenticated %}
-            <div class="user-icon mx-3">
+            <div class="user-icon mx-3 top-icons" >
               <a href="{% url 'logout' %}"></i>Logout</a>
             </div>
             {% else %}
-            <div class="user-icon mx-3">
+            <div class="user-icon mx-3 top-icons">
               <a href="{% url 'login' %}"> login</a>
               {% if messages %}
               {% for message in messages %}
@@ -109,7 +110,7 @@
               {% endif %}
             </div>
             {% endif %}
-            <div class="cart-icon">
+            <div class="cart-icon top-icons">
               <a href="{% url 'cart_detail' %}" class="position-relative">
                 <i class="flaticon-shopping-bag"></i>
                 {% if user.is_authenticated%}
@@ -223,7 +224,9 @@
     document.documentElement.clientWidth ||
     document.body.clientWidth;
   if (width < 768) {
-    document.getElementById("top-icons").classList.add("d-none");
+    for(i=0;i<document.getElementsByClassName("top-icons").length;i++){
+    document.getElementsByClassName("top-icons")[i].classList.add("d-none");
+    }
   }
   $('.alert').alert()
 </script>

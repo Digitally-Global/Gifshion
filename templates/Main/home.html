@@ -47,7 +47,7 @@
             {% with request.session.exchange as exchange %}
             {% if not i.Discount == 0 %}
             <div class="price"><span>{{ request.session.icon }} {{ i.price|divide:exchange|discount:i.Discount }}
-                <del>{{i.price|divide:exchange}}</del></span></div>
+                <del>{{i.price|divide:exchange}}</del> <b style="color:red">({{i.Discount}}% OFF)</b></span></div>
             {% else %}
             <div class="price"><span>{{ request.session.icon }} {{i.price|divide:exchange}}</span></div>
             {% endif %}
@@ -117,7 +117,7 @@
 
               {% if not i.Discount == 0 %}
               <div class="price"><span>{{ request.session.icon }} {{ i.price|divide:exchange|discount:i.Discount }}
-                  <del>{{i.price|divide:exchange}}</del></span></div>
+                  <del>{{i.price|divide:exchange}}</del> <b style="color:red">({{i.Discount}}% OFF)</b></span></div>
               {% else %}
               <div class="price"><span>{{ request.session.icon }} {{i.price|divide:exchange}}</span></div>
               {% endif %}
