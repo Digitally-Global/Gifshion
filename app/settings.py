@@ -223,3 +223,9 @@ client.set_app_details({"title" : "Gifshion", "version" : "0.0.1"})
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 CSRF_TRUSTED_ORIGINS = ['https://4e1e-49-37-9-57.ngrok-free.app']
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = "smtp-relay.sendinblue.com"
+EMAIL_PORT = 587
+EMAIL_HOST_USER =  "ccegifshion24x7@gmail.com"
+EMAIL_HOST_PASSWORD = "KQ0xEVwPsfFgdqI9"

@@ -28,6 +28,7 @@
               <input type="password" class="form-control" id="" name="password" required />
             </div>
             <p>Don't have an account? <a href="{% url 'register' %}">Register</a></p>
+            <a href="{% url 'password_reset' %}"><i>Forgot Password?</i></a>
             <button type="submit" class="btn btn-primary w-100">Login</button>
             <div class="login-action md-10 fix">
               {% comment %}
