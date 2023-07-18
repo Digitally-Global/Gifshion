@@ -18,7 +18,7 @@ class Currency(models.Model):
 
 class Profile(models.Model):
     user = models.OneToOneField(User,on_delete=models.CASCADE)
-    phone = models.IntegerField()
+    phone = models.BigIntegerField()
     
     def __str__(self):
         return self.user.username
