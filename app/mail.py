@@ -284,8 +284,8 @@ def send_welcome_mail(user):
             <tbody>
               <tr>
                 <td style="padding:48px 0 30px 0; text-align: center; font-size: 14px; color: #4C83EE;">
-                 <a href="https://a378-49-37-9-57.ngrok-free.app/static/assets/images/Asset%201%40300x%20(1).png" target="_blank" style="display: inline-block;">
-                  <img src="https://a378-49-37-9-57.ngrok-free.app/static/assets/images/Asset%201%40300x%20(1).png" alt="Logo" border="0" width="150"
+                 <a href="https://gifshion.com/static/assets/images/Asset%201%40300x%20(1).png" target="_blank" style="display: inline-block;">
+                  <img src="https://gifshion.com/static/assets/images/Asset%201%40300x%20(1).png" alt="Logo" border="0" width="150"
                     style="display: block; width: 150px; max-width: 150px; min-width: 150px;">
                 </a>
                 </td>
@@ -311,7 +311,7 @@ def send_welcome_mail(user):
                       </tr>
                       <tr>
                         <td style="padding: 0 0 24px 0;">
-                          <a class="button" href="http://localhost:8000" title="Reset Password" style="width: 100%; background: #4C83EE; text-decoration: none; display: inline-block; padding: 10px 0; color: #fff; font-size: 14px; line-height: 21px; text-align: center; font-weight: bold; border-radius: 7px;">Go To Website</a>
+                          <a class="button" href="http://gifshion.com" title="Reset Password" style="width: 100%; background: #4C83EE; text-decoration: none; display: inline-block; padding: 10px 0; color: #fff; font-size: 14px; line-height: 21px; text-align: center; font-weight: bold; border-radius: 7px;">Go To Website</a>
                         </td>
                       </tr>
                       <tr>
@@ -321,7 +321,7 @@ def send_welcome_mail(user):
                       </tr>
                       <tr>
                         <td style="font-size: 14px; line-height: 170%; font-weight: 400; color: #000000; letter-spacing: 0.01em;">
-                          Best regards, <br><strong>Gishion</strong>
+                          Best regards, <br><strong>Gifshion</strong>
                         </td>
                       </tr>
                     </tbody>
@@ -514,8 +514,8 @@ def send_mail(order,icon):
             style="max-width: 600px;border: 1px solid #222;border-bottom: 0;">
             <tr>
               <td align="left" valign="top" style="padding:15px;">
-                <a href="https://ebe2-49-37-33-255.ngrok-free.app/media/logo.png" target="_blank" style="display: inline-block;">
-                  <img src="https://ebe2-49-37-33-255.ngrok-free.app/media/logo.png" alt="Logo" border="0" width="150"
+                <a href="https://gifshion.com/media/logo.png" target="_blank" style="display: inline-block;">
+                  <img src="https://gifshion.com/media/logo.png" alt="Logo" border="0" width="150"
                     style="display: block; width: 150px; max-width: 150px; min-width: 150px;">
                 </a>
               </td>
@@ -729,7 +729,7 @@ def send_mail(order,icon):
                 <p style="margin: 0;">If you have any questions about your bill, please get in touch with us by replying
                   to this email!
                 </p>
-                <a href="http://localhost:8000">  ©2023 Gifshion, Inc. All rights reserved</a>
+                <a href="https://gifshion.com">  ©2023 Gifshion, Inc. All rights reserved</a>
               </td>
             </tr>
             <!-- end unsubscribe -->
