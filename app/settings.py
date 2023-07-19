@@ -115,7 +115,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'gifshion',
         'USER': 'gifshion',
-        'PASSWORD': 'Gifshion@123',
+        'PASSWORD': 'Gifshion123',
         'HOST': 'localhost',
         'PORT': '',
     }
