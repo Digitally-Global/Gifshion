@@ -31,11 +31,11 @@ class Wishlist(models.Model):
         return self.user.username + ' ' + self.product.name
         
 class Checkout(models.Model):
-    mobile_number = models.IntegerField()
+    mobile_number = models.CharField()
     email = models.CharField(max_length=100)
     fname = models.CharField(max_length=100)
     lname = models.CharField(max_length=100)
-    zip = models.IntegerField()
+    zip = models.CharField()
     city = models.CharField(max_length=50)
     country = models.CharField(max_length=50)
     state = models.CharField(max_length=50)
