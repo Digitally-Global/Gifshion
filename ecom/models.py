@@ -31,7 +31,7 @@ class Wishlist(models.Model):
         return self.user.username + ' ' + self.product.name
         
 class Checkout(models.Model):
-    mobile_number = models.CharField()
+    mobile_number = models.CharField(max_length=10)
     email = models.CharField(max_length=100)
     fname = models.CharField(max_length=100)
     lname = models.CharField(max_length=100)
