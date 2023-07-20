@@ -110,8 +110,8 @@ def send_otp(otp,user):
             <tbody>
               <tr>
                 <td style="padding:48px 0 30px 0; text-align: center; font-size: 14px; color: #4C83EE;">
-                 <a href="https://a378-49-37-9-57.ngrok-free.app/static/assets/images/Asset%201%40300x%20(1).png" target="_blank" style="display: inline-block;">
-                  <img src="https://a378-49-37-9-57.ngrok-free.app/static/assets/images/Asset%201%40300x%20(1).png" alt="Logo" border="0" width="150"
+                 <a href="https://gifshion.com/static/assets/images/Asset%201%40300x%20(1).png" target="_blank" style="display: inline-block;">
+                  <img src="https://gifshion.com/static/assets/images/Asset%201%40300x%20(1).png" alt="Logo" border="0" width="150"
                     style="display: block; width: 150px; max-width: 150px; min-width: 150px;">
                 </a>
                 </td>
