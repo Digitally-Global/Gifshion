@@ -104,23 +104,23 @@ WSGI_APPLICATION = 'app.wsgi.application'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 # if not DEBUG:
-#     DATABASES = {
-#         'default': {
-#             'ENGINE': 'django.db.backends.postgresql',
-#             'NAME': 'gifshion',
-#             'USER': 'gifshion',
-#             'PASSWORD': 'gifshion123',
-#             'HOST': 'my-database.c9hrhzydvbtk.ap-south-1.rds.amazonaws.com',
-#             'PORT': '5432',
-#         }
-#     }
-# else:
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'gifshion',
+        'USER': 'gifshion',
+        'PASSWORD': 'gifshion123',
+        'HOST': 'my-database.c9hrhzydvbtk.ap-south-1.rds.amazonaws.com',
+        'PORT': '5432',
     }
 }
+# else:
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
 # DATABASES = {
 #     'default': {
