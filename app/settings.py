@@ -115,9 +115,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'gifshion',
         'USER': 'gifshion',
-        'PASSWORD': 'Gifshion123',
-        'HOST': 'localhost',
-        'PORT': '',
+        'PASSWORD': 'gifshion123',
+        'HOST': 'my-database.c9hrhzydvbtk.ap-south-1.rds.amazonaws.com',
+        'PORT': '5432',
     }
 }
 
