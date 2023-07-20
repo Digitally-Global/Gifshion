@@ -35,7 +35,7 @@ class Checkout(models.Model):
     email = models.CharField(max_length=100)
     fname = models.CharField(max_length=100)
     lname = models.CharField(max_length=100)
-    zip = models.CharField()
+    zip = models.CharField(max_length=20)
     city = models.CharField(max_length=50)
     country = models.CharField(max_length=50)
     state = models.CharField(max_length=50)

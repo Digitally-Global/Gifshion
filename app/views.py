@@ -414,10 +414,10 @@ def cart_add(request, id):
         color = None
     else:
         color = Color.objects.get(color=str((request.GET['color']).upper()))
-    if not request.GET.get('size'): 
-        size = None
-    else:
+    try:
         size = Size.objects.get(Num=request.GET['size'],product=Product.objects.get(id=id))
+    except:
+        size = Size.objects.filter(product=Product.objects.get(id=id))[0]
     product = Product.objects.get(id=id)
     if color and size:
         if CartItem.objects.filter(user=request.user, product=product,color=color,size=size).exists():
@@ -450,10 +450,10 @@ def cart_add(request, id):
 def item_clear(request, id):
     product = Product.objects.get(id=id)
     color = None
-    size = None
+    size = Size.objects.filter(product=product)[0]
     if request.GET.get('color') != "": 
         color = Color.objects.get(color=str((request.GET['color']).upper()),product=product)
-    if request.GET.get('size') != "": 
+    if request.GET.get('size') != "" and request.GET.get('size') != "None": 
         size = Size.objects.get(Num=request.GET['size'],product=product)
     if color and size:
         cart = CartItem.objects.get(user=request.user, product=product,color=color,size=size)
@@ -471,10 +471,10 @@ def item_clear(request, id):
 def item_increment(request, id):
     product = Product.objects.get(id=id)
     color = None
-    size = None
+    size = Size.objects.filter(product=product)[0]
     if request.GET.get('color') != "": 
         color = Color.objects.get(color=str((request.GET['color']).upper()),product=product)
-    if request.GET.get('size') != "": 
+    if request.GET.get('size') != "" and request.GET.get('size') != "None": 
         size = Size.objects.get(Num=request.GET['size'],product=product)
     if color and size:
         cart = CartItem.objects.get(user=request.user, product=product,color=color,size=size)
@@ -492,10 +492,10 @@ def item_increment(request, id):
 def item_decrement(request, id):
     product = Product.objects.get(id=id)
     color = None
-    size = None
+    size = Size.objects.filter(product=product)[0]
     if request.GET.get('color') != "": 
         color = Color.objects.get(color=str((request.GET['color']).upper()),product=product)
-    if request.GET.get('size') != "": 
+    if request.GET.get('size') != "" and request.GET.get('size') != "None": 
         size = Size.objects.get(Num=request.GET['size'],product=product)
     if color and size:
         cart = CartItem.objects.get(user=request.user, product=product,color=color,size=size)

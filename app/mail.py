@@ -22,6 +22,7 @@ class OtpThread(Thread):
 def send_otp(otp,user):
   print("Sending Email")
   otp = str(otp) 
+  print(otp)
   html = """<!-- Change values in [brackets] in the template and pass { {variables} } with API call -->
 <!-- Feel free to adjust it to your needs and delete all these comments-->
 <!-- Also adapt TXT version of this email -->
