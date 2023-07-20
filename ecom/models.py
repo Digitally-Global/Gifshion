@@ -186,7 +186,7 @@ class Payment(models.Model):
     order = models.ForeignKey('Order', on_delete=models.CASCADE, null=True, blank=True)
     
 class Tracking(models.Model):
-    tracking_number = models.CharField(max_length=50)
+    tracking_number = models.TextField()
     data = models.TextField(null=True)
     tracking_date = models.DateTimeField(auto_now_add=True)
     
