@@ -77,14 +77,6 @@
   </section>
   {%endif%}
 
-  <!-- Home banner -->
-  <section class="home-banner py-5">
-    {% for i in h2_banner %}
-    <div class="container text-center">
-      <a href="#"><img class="img-fluid" src="{{i.image.url}}" alt="" /></a>
-    </div>
-    {% endfor %}
-  </section>
   {% for section in sections %}
   {% if not section.product_set.all|length == 0%}
   <section class="featurd-products-area">
