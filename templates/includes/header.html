@@ -24,7 +24,36 @@
           <div class="hamburger-icon">
             <i class="flaticon-menu"></i>
           </div>
-          <div class="search-icon mx-3"></div>
+          <div class="search-icon mx-3" id="myBtn">
+                <a href="#"><i class="flaticon-loupe"></i></a>
+
+                <div id="myModal" class="modal">
+                  <!-- Modal content -->
+                  <div class="modal-content">
+                    <span class="close">&times;</span>
+                    {% comment %} add grid system {% endcomment %}
+                    <h4 class="text-center">Search</h4>
+                    <hr />
+                    <div class="container contt">
+                      <form action="{% url 'product-listing' %}" method="GET">
+                        <div class="row">
+                          <div class="col-md-10">
+                            <input
+                              type="text"
+                              name="search"
+                              class="form-control"
+                              placeholder="Search"
+                            />
+                          </div>
+                          <div class="col-md-2">
+                            <button type="submit" class="btn btn-primary">Search</button>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
         </div>
         <div class="main-logo text-center">
           <a href="{% url 'Home' %}"
