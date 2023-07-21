@@ -758,7 +758,6 @@ def Home(request):
     product = get_inStock(Product.objects.filter(section__name = "By Concern"))
     Rakhi =get_inStock(Product.objects.filter(section__name = "Rakhi Special"))
     BestSeller = get_inStock(Product.objects.filter(section__name="BestSeller"))
-    Products = get_inStock(Product.objects.filter().order_by('-id'))
     sections = Section.objects.exclude(name="BestSeller")
     print(sections)
 
@@ -771,7 +770,6 @@ def Home(request):
         'Product' : product,
         'Rakhi' : Rakhi,
         'BestSeller':BestSeller,
-        'Products':Products,
         'sections' : sections
         }
     return render(request,'Main/home.html', context)
