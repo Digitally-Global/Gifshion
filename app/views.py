@@ -754,7 +754,7 @@ def Home(request):
     banner = banner_area.objects.all().order_by('-id')[0:3]
     h1_banner = h1banner.objects.all().order_by('-id')[0:3]
     h2_banner = h2banner.objects.all().order_by('-id')[0:3]
-    Category = category.objects.all().order_by('-id')
+    Category = category.objects.all().order_by('id')
     product = get_inStock(Product.objects.filter(section__name = "By Concern"))
     Rakhi =get_inStock(Product.objects.filter(section__name = "Rakhi Special"))
     BestSeller = get_inStock(Product.objects.filter(section__name="BestSeller"))

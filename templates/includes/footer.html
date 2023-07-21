@@ -17,26 +17,20 @@
               <li><a href="#">E-Gift Card</a></li>
             </ul>
           </div> {% endcomment %}
-          {% comment %} <div class="col-6 col-md-2 mb-3">
-            <h4>CUSTOMER CARE</h4>
-            <ul>
-              <li><a href="#">Contact Us</a></li>
-              <li><a href="#">News &amp; Media</a></li>
-              <li><a href="#">Delivery and Returns</a></li>
-              <li><a href="#">FAQs</a></li>
-              <li><a href="#">Privacy Policy</a></li>
-              <li><a href="#">Terms of Use</a></li>
-            </ul>
-          </div> {% endcomment %}
           <div class="col-6 col-md-2 mb-3">
-            <h4>CUSTOMER CARE</h4>
+            <h4>QUICK LINKS</h4>
             <ul>
               <li><a href="{% url 'about-us' %}">About Us</a></li>
-              <li><a href="{% url 'cancel' %}">Cancellation Policy</a></li>
-              <li><a href="{% url 'why_us' %}">Why Us?</a></li>
               <li><a href="{% url 'tc' %}">Terms And Conditions</a></li>
-              <li><a href="{% url 'refund' %}">Refund Policy</a></li>
               <li><a href="{% url 'pp' %}">Privacy Policy</a></li>
+              <li><a href="{% url 'why_us' %}">Why Us?</a></li>
+            </ul>
+          </div>
+          <div class="col-6 col-md-2 mb-3">
+            <h4>FAQ'S</h4>
+            <ul>
+              <li><a href="{% url 'cancel' %}">Cancellation Policy</a></li>
+              <li><a href="{% url 'refund' %}">Refund Policy</a></li>
               <li><a href="{% url 'midnight_delivery' %}">Midnight Delivery Policy</a></li>
               <li><a href="{% url 'exchange' %}">Exchange Policy</a></li>
             </ul>
@@ -80,7 +74,7 @@
                   <h6>{{social.phone}}</h6>
                 </div>
                  <div class="d-flex gap-1" style="align-items:center; ">
-                  <img src="{% static './assets/images/mail.png'%}" width="40px"/>
+                  <img src="{% static './assets/images/mail.png'%}" width="60px"/>
                    <h6>{{social.email}}</h6>
                   </div>
                 </ul>
@@ -118,6 +112,10 @@
       <li class="w-50"><a href="{% url 'login' %}">Sign in</a></li>
       <li class="w-50"><a href="{% url 'register' %}">Register</a></li>
     </ul>
+    {% else %}
+    <ul class="d-flex">
+      <li class="w-50"><a href="{% url 'profile' %}">My Account</a></li>
+    </ul>
     {% endif %}
     <div class="h-menu">
       <ul>
@@ -128,50 +126,24 @@
         </li>
           {% for category in Category%}
                 <li class="dropdown">
-                  <a class="btn btn-sm btn-light dropdown-toggle dropdown-btn" type="button" id="dropdownMenuButton1"
-                    data-bs-toggle="dropdown" aria-expanded="false">
-                    {{category.name}}
+                  <a class="btn btn-sm btn-light dropdown-toggle dropdown-btn" type="button" 
+                    aria-expanded="false">
+                    {{category.name}}</a>
                      <div class="dropdown-container">
-                     {% for cat in category.main_category_set.all %}
-                      <div class="col-md-3">
-                        <div class="mega-menu-block">
-                          <h4>{{cat.name}}</h4>
-                          <ul>
+                       <ul>
+                       {% for cat in category.main_category_set.all %}
                             {% for scat in cat.sub_category_set.all %}
-                            <li><a href="/category/{{scat.id}}/">{{scat.name}}</a></li>
-                            {% endfor %}
+                                <li><a href="/category/{{scat.id}}/">{{scat.name}}</a></li>
+                                {% endfor %}
+                                {% endfor %}
                           </ul>
-                        </div>
-                      </div>
-                  </a>
-                 
-                      {% endfor %}
                     </div>
+                   
                 </li>
               {% endfor %}
               <ul>
-        <li class="dropdown">
-          <a href="{% url 'profile' %}">My Account
-          </a>
-        </li>
-        <li class="h-sub-menu">
-            <div class="price-swticher">
-              <div class="dropdown">
-                <a class="btn btn-sm btn-light dropdown-toggle" type="button" id="dropdownMenuButton1"
-                  data-bs-toggle="dropdown" aria-expanded="false">
-                  {{request.session.icon}} {{request.session.currency_code}}
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                  {% for currency in currencies%}
-                  <li><a class="dropdown-item" href="{% url 'change_currency' currency.id%}">{{currency.icon}}
-                      {{currency.code}}</a></li>
-                  {% endfor %}
-                </ul>
-              </div>
-            </div>
-          </li>
-      </ul>
     </div>
+    <hr>
     <div class="h-bottom">
       <ul class="nav justify-content-center footer-social">
         <li>
@@ -213,6 +185,7 @@
   }
   var dropdown = document.getElementsByClassName("dropdown-btn");
 var i;
+var dropdown2 = document.getElementsByClassName("dropdown-btn-2");
 
 for (i = 0; i < dropdown.length; i++) {
   dropdown[i].addEventListener("click", function() {
@@ -224,6 +197,7 @@ for (i = 0; i < dropdown.length; i++) {
       dropdownContent.style.display = "block";
     }
   });
+
 }
   </script>
 <style>
@@ -234,7 +208,6 @@ for (i = 0; i < dropdown.length; i++) {
   }
   .dropdown-container {
   display: none;
-  background-color: #262626;
-  padding-left: 8px;
+  padding-left: 20px;
 }
 </style>
