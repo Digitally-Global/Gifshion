@@ -1,304 +1,383 @@
-<header>
-
-  {% load static %}
+{% load static %}
+<header id="header">
   {% if not notification|length == 0%}
   <div class="header-promo p-2">
     <div id="promoslide" class="carousel slide" data-bs-ride="carousel">
       <div class="carousel-inner">
         {% for alert in notification|slice:":1" %}
         <div class="carousel-item active">
-          <p class="m-0 text-center">
-            {{alert.announcement}}
-          </p>
+          <p class="m-0 text-center">{{alert.announcement}}</p>
         </div>
-        {% endfor %}
-         {% for alert in notification|slice:"1:" %}
+        {% endfor %} {% for alert in notification|slice:"1:" %}
         <div class="carousel-item">
-          <p class="m-0 text-center">
-            {{alert.announcement}}
-          </p>
+          <p class="m-0 text-center">{{alert.announcement}}</p>
         </div>
         {% endfor %}
-    </div>
-  </div>
-</div>
-{% endif %}
-  <div class="main-bar">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-4">
-          <div class="navbar-left d-flex align-items-center h-100">
-            <div class="hamburger-icon">
-              <i class="flaticon-menu"></i>
-            </div>
-            <div class="search-icon mx-3">
-              <i class="flaticon-search"></i>
-            </div>
-
-          </div>
-        </div>
-        <div class="col-md-4" id="right-icons">
-          <div class="main-logo text-center">
-            <a href="/">
-              <img src="{% static './assets/images/Asset 1@300x (1).png' %}" style="max-width:135px;" class="img-fluid"
-                alt="Gifshion">
-            </a>
-          </div>
-        </div>
-        <div class="col-md-4" >
-          <div class="navbar-right d-flex justify-content-end align-items-center h-100" >
-            {% comment %} <a href="{% url 'product-listing' %}"> {% endcomment %}
-            <a>
-            <!-- The Modal -->
-            <div id="myModal" class="modal">
-
-              <!-- Modal content -->
-              <div class="modal-content">
-                <span class="close">&times;</span>
-                {% comment %} add grid system {% endcomment %}
-                <h4 class="text-center">Search</h4>
-                <hr/>
-                <div class="container contt" >
-                  <form action="{% url 'product-listing' %}" method="GET">
-                    <div class="row" >
-                      <div class="col-md-10">
-                        <input type="text" name="search" class="form-control" placeholder="Search">
-                      </div>
-                      <div class="col-md-2">
-                        <button type="submit" class="btn btn-primary">Search</button>
-                      </div>
-                    </div>
-                  </form>
-              </div>
-            </div>
-
-            </div>
-              <img src="{% static './assets/images/search.png' %}" class="m-2" id="myBtn">
-            </a>
-            
-            <div class="price-swticher top-icons"  >
-              <div class="dropdown">
-                <a class="btn btn-sm btn-light dropdown-toggle" type="button" id="dropdownMenuButton1"
-                  data-bs-toggle="dropdown" aria-expanded="false">
-                  {{request.session.icon}} {{request.session.currency_code}}
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                  {% for currency in currencies%}
-                  <li><a class="dropdown-item" href="{% url 'change_currency' currency.id%}">{{currency.icon}}
-                      {{currency.code}}</a></li>
-                  {% endfor %}
-                </ul>
-              </div>
-            </div>
-            {% if user.is_authenticated %}
-            <div class="user-icon mx-3 top-icons" >
-              <a href="{% url 'logout' %}"></i>Logout</a>
-            </div>
-            {% else %}
-            <div class="user-icon mx-3 top-icons">
-              <a href="{% url 'login' %}"> login</a>
-              {% if messages %}
-              {% for message in messages %}
-              {% if messages.tag == 'error' %}
-              <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                {{message}}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
-                <span aria-hidden="true">&times;</span>
-              </div>
-              {% endif %}
-              {% endfor %}
-              {% endif %}
-            </div>
-            {% endif %}
-            <div class="cart-icon top-icons">
-              <a href="{% url 'cart_detail' %}" class="position-relative">
-                <i class="flaticon-shopping-bag"></i>
-                {% if user.is_authenticated%}
-                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark">
-                  {{request.session.cart_items}}
-                  <span class="visually-hidden">unread messages</span>
-                </span>
-                {% endif %}
-              </a>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   </div>
-
-  <div class="navbar main-manu p-0">
-    <div class="container">
-
-      <ul class="nav nav-manu justify-content-center w-100">
-
-        {% for mcat in Category %}
-        <li class="nav-item">
-
-          <a class="nav-link" aria-current="page" href="#">{{mcat.name}}</a>
-          <div class="mega-menu py-5">
-            <div class="container">
-              <div class="row">
-                <div class="col-md-10 offset-md-1">
-                  <div class="row">
-                    {% for cat in mcat.main_category_set.all %}
-                    <div class="col-md-3">
-                      <div class="mega-menu-block">
-                        <h4>{{cat.name}}</h4>
-                        <ul>
-                          {% for scat in cat.sub_category_set.all %}
-                          <li><a href="/category/{{scat.id}}/">{{scat.name}}</a></li>
-                          {% endfor %}
-                        </ul>
+  {% endif %}
+  <div class="main-header mobile-header">
+    <div class="main-bar">
+      <div class="container px-4 d-flex justify-content-between align-items-center">
+        <div class="navbar-left d-flex align-items-center">
+          <div class="hamburger-icon">
+            <i class="flaticon-menu"></i>
+          </div>
+          <div class="search-icon mx-3"></div>
+        </div>
+        <div class="main-logo text-center">
+          <a href="{% url 'Home' %}"
+            ><img class="img-fluid" alt="Gifshion" src={%static './assets/images/Logo.png'%}
+            width="100" /></a
+          >
+        </div>
+        <div class="navbar-right d-flex justify-content-end align-items-center h-100">
+           <div class="user-icon mx-3">
+                {% if user.is_authenticated%}
+                <a class="user-block" href="{% url 'profile' %}"><i class="flaticon-user"></i></a>
+                {%else%}
+                <a class="user-block" href="{% url 'login' %}"><i class="flaticon-user"></i></a>
+                {% endif %}
+                <ul class="user-dropdown">
+                   {% if not user.is_authenticated%}
+                  <li>
+                    <a href="{% url 'login'%}"><i class="flaticon-download-arrow"></i>Sign in</a>
+                  </li>
+                  <li>
+                    <a href="{% url 'register'%}"><i class="flaticon-file"></i>Register</a>
+                  </li>
+                  {% endif %}
+                  {% if user.is_authenticated%}
+                  <li>
+                    <a href="{% url 'cart'%}"><i class="flaticon-shopping"></i>My Cart</a>
+                  </li>
+                  <li>
+                    <a href="{% url 'profile' %}"><i class="flaticon-user-1"></i>My Account</a>
+                  </li>
+                  <li>
+                    <a href="{% url 'wishlist' %}"><i class="flaticon-love"></i>My WishList</a>
+                  </li>
+                  <li>
+                    <a href="{% url 'logout' %}"></i>Logout</a>
+                  </li>
+                  {% endif %}
+                </ul>
+              </div>
+          <div class="cart-icon">
+                {% if user.is_authenticated%}
+                <a href="{% url 'cart_detail' %}" class="position-relative">
+                  <i class="flaticon-shopping-bag"></i>
+                  <span
+                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark"
+                  >
+                    {{request.session.cart_items}}
+                    <span class="visually-hidden">unread messages</span>
+                  </span>
+                </a>
+                {% endif %}
+              </div>
+        </div>
+      </div>
+    </div>{% comment %}
+     <nav class="navbar main-manu p-0">
+      <div class="container">
+        <ul class="nav nav-manu justify-content-center w-100">
+          {% for mcat in Category %}
+          <li class="nav-item">
+            <a class="nav-link" aria-current="page" href="#">{{mcat.name}}</a>
+            <div class="mega-menu py-5">
+              <div class="container">
+                <div class="row">
+                  <div class="col-md-10 offset-md-1">
+                    <div class="row">
+                      {% for cat in mcat.main_category_set.all %}
+                      <div class="col-md-3">
+                        <div class="mega-menu-block">
+                          <h4>{{cat.name}}</h4>
+                          <ul>
+                            {% for scat in cat.sub_category_set.all %}
+                            <li><a href="/category/{{scat.id}}/">{{scat.name}}</a></li>
+                            {% endfor %}
+                          </ul>
+                        </div>
                       </div>
+                      {% endfor %}
                     </div>
-                    {% endfor %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </nav>
+    {% endcomment %}
+  </div>
+  <div class="main-header">
+    <div class="main-bar">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="navbar-left d-flex align-items-center h-100">
+              <div class="hamburger-icon">
+                <i class="flaticon-menu"></i>
+              </div>
+              <div class="search-icon mx-3" id="myBtn">
+                <a href="#"><i class="flaticon-loupe"></i></a>
 
-
-
+                <div id="myModal" class="modal">
+                  <!-- Modal content -->
+                  <div class="modal-content">
+                    <span class="close">&times;</span>
+                    {% comment %} add grid system {% endcomment %}
+                    <h4 class="text-center">Search</h4>
+                    <hr />
+                    <div class="container contt">
+                      <form action="{% url 'product-listing' %}" method="GET">
+                        <div class="row">
+                          <div class="col-md-10">
+                            <input
+                              type="text"
+                              name="search"
+                              class="form-control"
+                              placeholder="Search"
+                            />
+                          </div>
+                          <div class="col-md-2">
+                            <button type="submit" class="btn btn-primary">Search</button>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-
-
-
-        </li>
-
-
-        {% endfor %}
-
-      </ul>
-
+          <div class="col-md-4">
+            <div class="main-logo text-center">
+              <a href="{% url 'Home' %}"
+                ><img src={%static 'assets/images/Logo.png'%} style="max-width:135px;"
+                class="img-fluid" alt="Gifshion" /></a
+              >
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="navbar-right d-flex justify-content-end align-items-center h-100">
+              {% comment %}
+              <div class="price-swticher">
+                <select name="" id="">
+                  {% for currency in currencies%}
+                  <option value="inr">
+                    <a class="dropdown-item" href="{% url 'change_currency' currency.id%}"
+                      >{{currency.icon}} {{currency.code}}</a
+                    >
+                  </option>
+                  {% endfor %}
+                </select>
+              </div>
+              {% endcomment %}
+              <div class="price-swticher">
+                <div class="dropdown">
+                  <a
+                    class="btn btn-sm btn-light dropdown-toggle"
+                    type="button"
+                    id="dropdownMenuButton1"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    {{request.session.icon}} {{request.session.currency_code}}
+                  </a>
+                  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    {% for currency in currencies%}
+                    <li>
+                      <a class="dropdown-item" href="{% url 'change_currency' currency.id%}"
+                        >{{currency.icon}} {{currency.code}}</a
+                      >
+                    </li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              </div>
+              <div class="user-icon mx-3">
+                {% if user.is_authenticated%}
+                <a class="user-block" href="{% url 'profile' %}"><i class="flaticon-user"></i></a>
+                {%else%}
+                <a class="user-block" href="{% url 'login' %}"><i class="flaticon-user"></i></a>
+                {% endif %}
+                <ul class="user-dropdown">
+                   {% if not user.is_authenticated%}
+                  <li>
+                    <a href="{% url 'login'%}"><i class="flaticon-download-arrow"></i>Sign in</a>
+                  </li>
+                  <li>
+                    <a href="{% url 'register'%}"><i class="flaticon-file"></i>Register</a>
+                  </li>
+                  {% endif %}
+                  {% if user.is_authenticated%}
+                  <li>
+                    <a href="{% url 'cart'%}"><i class="flaticon-shopping"></i>My Cart</a>
+                  </li>
+                  <li>
+                    <a href="{% url 'profile' %}"><i class="flaticon-user-1"></i>My Account</a>
+                  </li>
+                  <li>
+                    <a href="{% url 'wishlist' %}"><i class="flaticon-love"></i>My WishList</a>
+                  </li>
+                  <li>
+                    <a href="{% url 'logout' %}"></i>Logout</a>
+                  </li>
+                  {% endif %}
+                </ul>
+              </div>
+              <div class="cart-icon">
+                {% if user.is_authenticated%}
+                <a href="{% url 'cart_detail' %}" class="position-relative">
+                  <i class="flaticon-shopping-bag"></i>
+                  <span
+                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark"
+                  >
+                    {{request.session.cart_items}}
+                    <span class="visually-hidden">unread messages</span>
+                  </span>
+                </a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+    <nav class="navbar main-manu p-0">
+      <div class="container">
+        <ul class="nav nav-manu justify-content-center w-100">
+          {% for mcat in Category %}
+          <li class="nav-item">
+            <a class="nav-link" aria-current="page" href="#">{{mcat.name}}</a>
+            <div class="mega-menu py-5">
+              <div class="container">
+                <div class="row">
+                  <div class="col-md-10 offset-md-1">
+                    <div class="row">
+                      {% for cat in mcat.main_category_set.all %}
+                      <div class="col-md-3">
+                        <div class="mega-menu-block">
+                          <h4>{{cat.name}}</h4>
+                          <ul>
+                            {% for scat in cat.sub_category_set.all %}
+                            <li><a href="/category/{{scat.id}}/">{{scat.name}}</a></li>
+                            {% endfor %}
+                          </ul>
+                        </div>
+                      </div>
+                      {% endfor %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </nav>
   </div>
 </header>
-<div>
-    {% comment %} {% if messages %}
-              {% for message in messages %}
-              {% if messages.tags == 'success' %}
-              <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <button class="btn" type="button" class="close" data-dismiss="alert" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              {%else%}
-              <div class="p-3">
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                {{message}}
-                <button class="btn" type="button"  data-dismiss="alert" aria-label="Close" id="alert">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div>
-              {% endif %}
-              {% endfor %}
-              {% endif %} {% endcomment %}
-</div>
+{% comment %} {% endcomment %}
 
 <style>
-  @media (max-width: 1200px){
-    .product-details-page .owl-dots{
+  @media (max-width: 1200px) {
+    .product-details-page .owl-dots {
       display: flex !important;
     }
   }
-  @media(max-width: 768px){
-    .slider-area{
-      margin-top:180px !important;
+  @media (max-width: 768px) {
+    .slider-area {
+      margin-top: 180px !important;
     }
-    .owl-dots{
+    .owl-dots {
       display: flex !important;
     }
   }
-  .contt{
+  .contt {
     display: flex !important;
-    justify-content: center !important;;
+    justify-content: center !important;
     align-items: center !important;
-    overflow:scroll;
+    overflow: scroll;
   }
 </style>
 
-<script>
-  var width = window.innerWidth ||
-    document.documentElement.clientWidth ||
-    document.body.clientWidth;
-  if (width < 768) {
-    for(i=0;i<document.getElementsByClassName("top-icons").length;i++){
-    document.getElementsByClassName("top-icons")[i].classList.add("d-none");
-    }
-  }
-  $('.alert').alert()
-</script>
 
 <script>
-// Get the modal
-var modal = document.getElementById("myModal");
+  // Get the modal
+  var modal = document.getElementById("myModal");
 
-// Get the button that opens the modal
-var btn = document.getElementById("myBtn");
+  // Get the button that opens the modal
+  var btn = document.getElementById("myBtn");
 
-// Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
+  // Get the <span> element that closes the modal
+  var span = document.getElementsByClassName("close")[0];
 
-// When the user clicks the button, open the modal 
-btn.onclick = function() {
-  modal.style.display = "block";
-}
+  // When the user clicks the button, open the modal
+  btn.onclick = function () {
+    modal.style.display = "block";
+  };
 
-// When the user clicks on <span> (x), close the modal
-span.onclick = function() {
-  modal.style.display = "none";
-}
-
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-  if (event.target == modal) {
+  // When the user clicks on <span> (x), close the modal
+  span.onclick = function () {
     modal.style.display = "none";
-  }
-}
+  };
+
+  // When the user clicks anywhere outside of the modal, close it
+  window.onclick = function (event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  };
 </script>
 
 <style>
-  .owl-dots{
+  .owl-dots {
     display: none !important;
   }
   /* The Modal (background) */
-.modal {
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
-  padding-top: 100px; /* Location of the box */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0,0,0); /* Fallback color */
-  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-}
+  .modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0, 0, 0); /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+  }
 
-/* Modal Content */
-.modal-content {
-  background-color: #fefefe;
-  margin: auto;
-  padding: 20px;
-  border: 1px solid #888;
-  width: 80%;
-}
+  /* Modal Content */
+  .modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+  }
 
-/* The Close Button */
-.close {
-  color: #aaaaaa;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-}
+  /* The Close Button */
+  .close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
 
-.close:hover,
-.close:focus {
-  color: #000;
-  text-decoration: none;
-  cursor: pointer;
-}
+  .close:hover,
+  .close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+  }
 </style>

@@ -75,76 +75,20 @@
             </ul>
             <hr/>
             <ul class="nav justify-content-center footer-social">
-              <li>
-                <h4>CONTACT US</h4> 
-                <div class="d-flex gap-5" style="align-items:center; ">
+                <div class="d-flex gap-1" style="align-items:center; ">
                   <img src="{% static './assets/images/call-icon-call.svg'%}" width="40px"/>
                   <h6>{{social.phone}}</h6>
                 </div>
-                 <div class="d-flex gap-5" style="align-items:center; ">
+                 <div class="d-flex gap-1" style="align-items:center; ">
                   <img src="{% static './assets/images/mail.png'%}" width="40px"/>
-                  <h6>{{social.email}}</h6>
-                </div>
-              </li>
-            </ul>
-            <p class="text-center copyright">©2023 Gifshion</p>
+                   <h6>{{social.email}}</h6>
+                  </div>
+                </ul>
+                <p class="text-center copyright">©2023 Gifshion</p>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-    </footer>
-
-{% comment %} <footer class="py-5">
-  {% load static %}
-  <div class="container">
-    <div class="row">
-      <div class="col-2" id="all-products">
-        <ul>
-          <li><a href="{% url 'about-us' %}">About Us</a></li>
-          <li><a href="{% url 'cancel' %}">Cancellation Policy</a></li>
-          <li><a href="{% url 'why_us' %}">Why Us?</a></li>
-          <li><a href="{% url 'tc' %}">Terms And Conditions</a></li>
-          <li><a href="{% url 'refund' %}">Refund Policy</a></li>
-          <li><a href="{% url 'pp' %}">Privacy Policy</a></li>
-          <li><a href="{% url 'midnight_delivery' %}">Midnight Delivery Policy</a></li>
-          <li><a href="{% url 'exchange' %}">Exchange Policy</a></li>
-        </ul>
-      </div>
-      <div class="col-2" id="account">
-        <h4>My Account</h4>
-        <ul>
-          <li><a href="{% url 'profile' %}">My Profile</a></li>
-          <li><a href="{% url 'orders' %}">My Orders</a></li>
-        </ul>
-      </div>
-      <div class="col-2">
-      </div>
-      <div class="col-2">
-      </div>
-      <div class="col-4" id="newsletter">
-        <h4>Sign Up for our NEWSLETTER!</h4>
-        <div class="footer-newsletter">
-          <label>Your Email Id*</label>
-          <form id="form">
-            <input type="email" id="email" placeholder="Enter your email" name="email" required="" /><button
-              type="submit">SUSBCRIBE</button>
-          </form>
-        </div>
-      </div>
-      <div class="col-md-12 mt-3">
-        <ul class="nav justify-content-center footer-social">
-          <li>
-            <a href="{{social.facebook}}"><i class="flaticon-facebook"></i></a>
-          </li>
-          <li>
-            <a href="{{social.instagram}}"><i class="flaticon-instagram"></i></a>
-          </li>
-        </ul>
-        <p class="text-center">©2023 Gifshion</p>
-      </div>
-    </div>
-  </div>
-
-</footer> {% endcomment %}
+        </footer>
 
 <div class="hemburger-menu-block">
   <div class="hemburger-menu">
@@ -183,47 +127,32 @@
           </a>
         </li>
           {% for category in Category%}
-       <li class="h-sub-menu">
-            <div class="price-swticher">
-              <div class="dropdown">
-                <a class="btn btn-sm btn-light dropdown-toggle" type="button" id="dropdownMenuButton1"
-                  data-bs-toggle="dropdown" aria-expanded="false">
-                  {{category}}
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                  {% for subcategory in category.main_category_set.all %}
-                  <li class="h-sub-menu">
-            <div class="price-swticher">
-              <div class="dropdown">
-                <a class="btn btn-sm btn-light dropdown-toggle" type="button" id="dropdownMenuButton2"
-                  data-bs-toggle="dropdown" aria-expanded="false">
-                  {{subcategory}}
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
-                  {% for subcategory in category.main_category_set.all %}
-                  <li><a class="dropdown-item" href="">{{subcategory}}</a></li>
-                  {% endfor %}
-                </ul>
-              </div>
-            </div>
-          </li>
-                  {% endfor %}
-                </ul>
-              </div>
-            </div>
-          </li>
-          {%endfor%}
+                <li class="dropdown">
+                  <a class="btn btn-sm btn-light dropdown-toggle dropdown-btn" type="button" id="dropdownMenuButton1"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                    {{category.name}}
+                     <div class="dropdown-container">
+                     {% for cat in category.main_category_set.all %}
+                      <div class="col-md-3">
+                        <div class="mega-menu-block">
+                          <h4>{{cat.name}}</h4>
+                          <ul>
+                            {% for scat in cat.sub_category_set.all %}
+                            <li><a href="/category/{{scat.id}}/">{{scat.name}}</a></li>
+                            {% endfor %}
+                          </ul>
+                        </div>
+                      </div>
+                  </a>
+                 
+                      {% endfor %}
+                    </div>
+                </li>
+              {% endfor %}
+              <ul>
         <li class="dropdown">
           <a href="{% url 'profile' %}">My Account
-            <div class="m-icon"><i class="flaticon-next"></i></div>
           </a>
-          <ul class="h-sub-menu">
-            
-            <li><a href="{% url 'orders' %}">My Orders</a></li>
-          </ul>
-        </li>
-        <li class="h-sub-menu">
-          <li><a href="{% url 'cart' %}">Cart</a></li>
         </li>
         <li class="h-sub-menu">
             <div class="price-swticher">
@@ -282,6 +211,20 @@
     document.getElementById('account').classList.add('col-4')
     document.getElementById('all-products').classList.add('col-4')
   }
+  var dropdown = document.getElementsByClassName("dropdown-btn");
+var i;
+
+for (i = 0; i < dropdown.length; i++) {
+  dropdown[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var dropdownContent = this.nextElementSibling;
+    if (dropdownContent.style.display === "block") {
+      dropdownContent.style.display = "none";
+    } else {
+      dropdownContent.style.display = "block";
+    }
+  });
+}
   </script>
 <style>
   @media(max-width:760px){
@@ -289,4 +232,9 @@
       display: none;
     }
   }
+  .dropdown-container {
+  display: none;
+  background-color: #262626;
+  padding-left: 8px;
+}
 </style>
