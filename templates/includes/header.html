@@ -153,10 +153,10 @@
               <div class="hamburger-icon">
                 <i class="flaticon-menu"></i>
               </div>
-              <div class="search-icon mx-3" id="myBtn">
+               <div class="search-icon mx-3" id="myBtn2">
                 <a href="#"><i class="flaticon-loupe"></i></a>
 
-                <div id="myModal" class="modal">
+                <div id="myModal2" class="modal">
                   <!-- Modal content -->
                   <div class="modal-content">
                     <span class="close">&times;</span>
@@ -314,6 +314,18 @@
     </nav>
   </div>
 </header>
+<div class="p-2">
+{% for message in messages %}
+<div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+  {{message}}
+  <button
+    type="button"
+    class="btn-close"
+    data-bs-dismiss="alert"
+    aria-label="Close"
+  ></button>
+{% endfor %}
+</div>
 {% comment %} {% endcomment %}
 
 <style>
@@ -342,29 +354,52 @@
 <script>
   // Get the modal
   var modal = document.getElementById("myModal");
+  var modal2 = document.getElementById("myModal2");
 
   // Get the button that opens the modal
   var btn = document.getElementById("myBtn");
+  var btn2 = document.getElementById("myBtn2");
 
   // Get the <span> element that closes the modal
   var span = document.getElementsByClassName("close")[0];
+  var span2 = document.getElementsByClassName("close")[1];
 
   // When the user clicks the button, open the modal
   btn.onclick = function () {
     modal.style.display = "block";
+    modal.classList.remove("d-none");
+  };
+    btn2.onclick = function () {
+      modal2.style.display = "block";
+      modal2.classList.remove("d-none");
   };
 
   // When the user clicks on <span> (x), close the modal
-  span.onclick = function () {
-    modal.style.display = "none";
+  span.onclick = function (event) {
+     modal2.style.display = "";
+  };
+  span2.onclick = function () {
+     modal2.style.display = "";
+  };
+
+  window.onclick = function (event) {
+    if (event.target == modal2) {
+      modal2.style.display = "none";
+    }
+
+     if (event.target == modal) {
+      modal.style.display = "none";
+    }
+
+    
   };
 
   // When the user clicks anywhere outside of the modal, close it
-  window.onclick = function (event) {
-    if (event.target == modal) {
-      modal.style.display = "none";
-    }
-  };
+  {% comment %} window.onclick = function (event) {
+    modal.style.display = "none";
+      modal2.style.display = "none";
+    
+  }; {% endcomment %}
 </script>
 
 <style>
