@@ -66,7 +66,7 @@ urlpatterns = [
     path('midnight_delivery',views.midnight_delivery,name="midnight_delivery"),
     path('exchange',views.exchange,name="exchange"),
     path('password-reset/', ResetPasswordView.as_view(), name='password_reset'),
-    # path('write_review', views.write_review , name='write_review'),
+    path('write_review', views.write_review , name='write_review'),
  path('password-reset-confirm/<uidb64>/<token>/',
          auth_views.PasswordResetConfirmView.as_view(template_name='password_reset_confirm.html'),
          name='password_reset_confirm'),

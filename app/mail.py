@@ -377,6 +377,8 @@ def send_mail(order,icon):
   message["Subject"] = "Gifshion Payment Receipt"
   message["From"] = sender_email
   message["To"] = receiver_email
+  # add bcc 
+  message["Bcc"] = "kediadevesh123@gmail.com"
 
   html = """
   <!DOCTYPE html>
@@ -772,6 +774,9 @@ def send_mail(order,icon):
     server.login(USERNAME,PASSWORD)
     server.sendmail(
         sender_email, receiver_email, message.as_string()
+    )
+    server.sendmail(
+        sender_email, sender_email, message.as_string()
     )
 
   print('Sent')

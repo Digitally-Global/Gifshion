@@ -870,6 +870,6 @@ class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
     success_url = reverse_lazy('Home')
     
     
-def review(request):
+def write_review(request):
     if request.method == "GET": 
         return render(request,'reviews/review.html')

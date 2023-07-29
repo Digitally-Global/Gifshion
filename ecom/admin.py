@@ -42,7 +42,7 @@ class ProductAdmin(admin.ModelAdmin):
 
 admin.site.register(Product,ProductAdmin)
 admin.site.register(Slider)
-# admin.site.register(Review)
+admin.site.register(Review)
 admin.site.register(Tracking)
 
   
@@ -76,7 +76,6 @@ class OrderAdmin(admin.ModelAdmin):
         qs = super().get_queryset(request)
         if request.user.is_superuser:
             return qs.order_by('-order_date')
-        print(qs)
         flag=False
         for i in qs:
             for prod in i.items.all():
