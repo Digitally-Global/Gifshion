@@ -210,6 +210,7 @@
     </div>
   </div>
      {% for product in product %}
+     {% if not  product.review_set.all|length == 0%}
     <section class="review-block mb-5">
       <div class="container">
         <h4 class="review-title mb-2">Reviews</h4>
@@ -229,6 +230,7 @@
         </div>
       </div>
     </section>
+    {% endif %}
     {% endfor %}
   <div class="product-package my-4">
     {% if similar_products|length > 0 %}
