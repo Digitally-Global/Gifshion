@@ -5,6 +5,17 @@ import datetime
 from django.http.request import HttpRequest
 from .models import *
 
+from django.contrib.auth.admin import UserAdmin
+
+class CustomUserAdmin(UserAdmin):
+    # Add the fields you want to search in the User model
+    search_fields = ('username', 'email', 'first_name', 'last_name')
+
+admin.site.unregister(User)
+
+# Register the CustomUserAdmin
+admin.site.register(User, CustomUserAdmin)
+
 class colors(admin.TabularInline):    
     model = Color
 class sizes(admin.TabularInline):
@@ -31,7 +42,7 @@ class ProductAdmin(admin.ModelAdmin):
 
 admin.site.register(Product,ProductAdmin)
 admin.site.register(Slider)
-admin.site.register(Review)
+# admin.site.register(Review)
 admin.site.register(Tracking)
 
   
