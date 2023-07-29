@@ -38,9 +38,14 @@ class BlueDart(Thread):
       weight = 0.0
       count = 0 
       for item in self.order.items.all():
+         if (item.product.sub_category.hand_delivery):
+            continue
          weight += float(item.size.weight)*int(item.quantity)
          count += int(item.quantity) 
+         # total =
       weight = round(weight,1)
+      if weight == 0.0: 
+         return 
       print("creating waybill")
       today = date.today()
       today = today.strftime("%Y-%m-%dT00:00:00.000+05:00")
@@ -71,6 +76,8 @@ class BlueDart(Thread):
                   """
       for order_item in self.order.items.all():
          print(order_item)
+         if (order_item.product.sub_category.hand_delivery):
+            continue
          payload+=f"""
                      <sapi:Dimension>
                         <sapi:Breadth>{order_item.size.width}</sapi:Breadth>

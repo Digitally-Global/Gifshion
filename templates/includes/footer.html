@@ -93,7 +93,7 @@
   <div class="hemburger-menu">
     <div class="h-head d-flex justify-content-between align-items-center py-2">
       <div class="">
-        <a href="{% url 'Home' %}"><img src={% static './assets/images/Asset 1@300x (1).png' %} alt="GI Fshion"
+        <a href="{% url 'Home' %}"><img src={% static './assets/images/Asset 1@300x (1).png' %} alt="Gifshion"
             width="50px" height="20px" /></a>
       </div>
       {% comment %} <div>
@@ -126,25 +126,21 @@
       <ul>
         <li>
           <a href={% url 'Home' %}>Home
-            <div class="m-icon"><i class="fa fa-home"></i></div>
+            <div class="m-icon"></div>
           </a>
         </li>
           {% for category in Category%}
-                <li class="dropdown">
-                  <a class="btn btn-sm btn-light dropdown-toggle dropdown-btn" type="button" 
-                    aria-expanded="false">
-                    {{category.name}}</a>
-                     <div class="dropdown-container">
-                       <ul>
-                       {% for cat in category.main_category_set.all %}
+          <li>
+            <a onclick="handleClick(event)" class="sub-btn sub-cat" > {{category.name}} </a>
+         <div class="sub-menu">
+           {% for cat in category.main_category_set.all %}
                             {% for scat in cat.sub_category_set.all %}
-                                <li><a href="/category/{{scat.id}}/">{{scat.name}}</a></li>
+                            <a href="/category/{{scat.id}}/" class="sub-item">{{scat.name}}</a>
                                 {% endfor %}
                                 {% endfor %}
-                          </ul>
-                    </div>
-                   
-                </li>
+         </div>
+        </li>
+                      
               {% endfor %}
               <ul>
     </div>
@@ -188,31 +184,47 @@
     document.getElementById('account').classList.add('col-4')
     document.getElementById('all-products').classList.add('col-4')
   }
-  var dropdown = document.getElementsByClassName("dropdown-btn");
-var i;
-var dropdown2 = document.getElementsByClassName("dropdown-btn-2");
-
-for (i = 0; i < dropdown.length; i++) {
-  dropdown[i].addEventListener("click", function() {
-    this.classList.toggle("active");
-    var dropdownContent = this.nextElementSibling;
-    if (dropdownContent.style.display === "block") {
-      dropdownContent.style.display = "none";
-    } else {
-      dropdownContent.style.display = "block";
-    }
-  });
-
-}
   </script>
+
+   <script type="text/javascript">
+      function handleClick(event){
+        event.target.nextElementSibling.classList.toggle('show-thing')
+      }
+   </script>
 <style>
-  @media(max-width:760px){
-    #newsletter{
-      display: none;
-    }
-  }
-  .dropdown-container {
-  display: none;
-  padding-left: 20px;
+
+.show-thing{
+  display: block !important;
+  margin-left: 20px !important;
 }
-</style>
+
+.side-bar.active{
+ left: 0;
+}
+
+.side-bar .menu{
+ width: 100%;
+ margin-top: 30px;
+}
+
+.menu .item{
+ position: relative;
+ cursor: pointer;
+}
+
+
+.sub-menu{
+ display: none;
+}
+
+.sub-menu a{
+ padding-left: 80px;
+}
+
+ .sub-cat:after {
+   color: #444;
+   content: ' ▾';
+}
+
+
+   </style>

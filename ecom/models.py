@@ -67,8 +67,21 @@ class sub_category(models.Model):
     main_categories =models.ForeignKey('main_category', on_delete = models.CASCADE)
     name = models.CharField(max_length=255)
     banner = models.FileField(upload_to="sub_category",blank=True)
+    hand_delivery = models.BooleanField(default=False)
     def __str__(self):
         return self.name
+    
+class Review(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    title = models.CharField(max_length=100)
+    author = models.ForeignKey(User,on_delete=models.CASCADE)
+    description = models.TextField()
+    rating = models.IntegerField()
+    product = models.ForeignKey('Product',on_delete=models.CASCADE,null=True,blank=True)
+    
+    def __str__(self):
+        return self.description[:50]+"..." + " | " + self.author.username + " | " + str(self.rating)
+    
 
 class Section(models.Model):
     name = models.CharField(max_length=100)

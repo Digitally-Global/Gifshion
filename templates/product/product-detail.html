@@ -209,6 +209,27 @@
       </div>
     </div>
   </div>
+     {% for product in product %}
+    <section class="review-block mb-5">
+      <div class="container">
+        <h4 class="review-title mb-2">Reviews</h4>
+        {% for review in product.review_set.all|slice:":10" %}
+        <div class="review-item">
+          <div class="review-star">{{review.rating}} <i class="fa fa-star"></i></div>
+          <h5>{{review.title}}</h5>
+          <div class="review-meta">
+            <span class="user-name">{{review.author}}</span> |
+            <span class="date">{{review.created|date:"F d, Y"}}</span>
+          </div>
+          <p>{{review.description}}</p>
+        </div>
+        {% endfor %}
+        <div class="review-btn">
+          <a href="#">VIEW ALL 55 REVIEWS</a>
+        </div>
+      </div>
+    </section>
+    {% endfor %}
   <div class="product-package my-4">
     {% if similar_products|length > 0 %}
     <div class="container">

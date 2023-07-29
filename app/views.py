@@ -867,3 +867,8 @@ class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
                       " If you don't receive an email, " \
                       "please make sure you've entered the address you registered with, and check your spam folder."
     success_url = reverse_lazy('Home')
+    
+    
+def review(request):
+    if request.method == "GET": 
+        return render(request,'reviews/review.html')
