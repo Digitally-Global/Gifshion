@@ -709,9 +709,10 @@ def category_detail(request, category_id):
 def Product_listing(request):
     try:
         search = request.GET["search"]
-        product = Product.objects.filter(name__contains = search).order_by("-id")
+        # use non case sensitive 
+        product = Product.objects.filter(name__icontains = search).order_by("-id")
         context ={
-            'product' : product,
+            'product' : product,    
             'no_search':True
         }
     except:
