@@ -238,7 +238,7 @@ class Vendor(models.Model):
     address = models.CharField(max_length=100)
     city = models.CharField(max_length=100)
     state = models.CharField(max_length=100)
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     product = models.ManyToManyField(Product,related_name="vendor")
     
     def __str__(self):
