@@ -382,6 +382,9 @@
   .active input::-webkit-color-swatch {
     border: 4px solid #000000
   }
+  .owl-dots{
+    display: none !important;
+  }
 </style>
 <script>
 //user-defined function to open and share web content on WhatsApp
@@ -395,7 +398,7 @@ function openSupport() {
   const description = encodeURIComponent('I am willing to buy this product, please contact me!')
   // open redirect to google.com 
   // window.location.href = `https://wa.me/9830363651?text=${description}  ${link}`
-	window.open(`whatsapp://{{phone_no}}?text=${description}  ${link}`);
+	window.open(`whatsapp://send?phone={{phone_no}}&text=${description}  ${link}`);
     }
 </script>
 

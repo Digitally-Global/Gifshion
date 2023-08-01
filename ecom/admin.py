@@ -46,7 +46,7 @@ admin.site.register(Review)
 admin.site.register(Tracking)
 
   
-
+admin.site.register(Vendor)
 admin.site.register(category)
 admin.site.register(Section)
 
@@ -76,7 +76,7 @@ class OrderAdmin(admin.ModelAdmin):
     inlines = [ItemInline,PaymentInline]
     list_filter = ("delivered", )
     search_fields = ["id","order_date","user__username"]
-        
+    
     def get_queryset(self, request):
         qs = super().get_queryset(request)
         if request.user.is_superuser:
@@ -84,15 +84,13 @@ class OrderAdmin(admin.ModelAdmin):
         flag=False
         for i in qs:
             for prod in i.items.all():
-                if prod.product.seller == request.user:
+                if prod.vendor.user == request.user:
                     flag=True
             if flag==False:
                 qs = qs.exclude(id=i.id)
     
         qs = qs.order_by('-order_date')
         return qs
-    def has_change_permission(self, request, obj=None):
-        return False
     
 class PaymentAdmin(admin.ModelAdmin):
     def get_queryset(self, request):

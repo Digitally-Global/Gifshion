@@ -4,7 +4,7 @@
   <div class="custom-breadcrumbs mb-5">
     <div class="container bg-white rounded-3 shadow p-5">
       <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-3" style="margin-bottom: 20px">
           <a href="{% url 'cart_detail' %}" class="br-bacl-btn"
             ><i class="flaticon flaticon-next"></i> BACK</a
           >
@@ -46,7 +46,7 @@
       <div class="row">
         <div class="col-md-8 pe-5">
           <div class="chackout-items">
-            <h3>Add Shipping Address</h3>
+            <h4>Add Shipping Address</h4>
             <form
               action="{% url 'checkout' %}"
               method="post"
@@ -220,7 +220,7 @@
               <div class="cart-items">
                 <div class="cart-item bg-white p-3 rounded-3">
                   <div class="cart-prod-details d-flex">
-                    <div class="cart-prod-img">
+                    <div class="cart-prod-img" style="overflow:scroll">
                       <a href="#"
                         ><img src="{{value.product.image.url}}" class="img-fluid" alt=""
                       /></a>

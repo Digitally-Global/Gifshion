@@ -26,7 +26,7 @@
           </div>
           <div class="search-icon mx-3" id="myBtn">
                 <a href="#"><i class="flaticon-loupe"></i></a>
-
+          </div>
                 <div id="myModal" class="modal">
                   <!-- Modal content -->
                   <div class="modal-content">
@@ -54,7 +54,6 @@
                   </div>
                 </div>
               </div>
-        </div>
         <div class="main-logo text-center">
           <a href="{% url 'Home' %}"
             ><img class="img-fluid" alt="Gifshion" src={%static './assets/images/Logo.png'%}
@@ -155,7 +154,7 @@
               </div>
                <div class="search-icon mx-3" id="myBtn2">
                 <a href="#"><i class="flaticon-loupe"></i></a>
-
+               </div>
                 <div id="myModal2" class="modal">
                   <!-- Modal content -->
                   <div class="modal-content">
@@ -184,7 +183,6 @@
                 </div>
               </div>
             </div>
-          </div>
           <div class="col-md-4">
             <div class="main-logo text-center">
               <a href="{% url 'Home' %}"
@@ -376,7 +374,9 @@
 
   // When the user clicks on <span> (x), close the modal
   span.onclick = function (event) {
-     modal2.style.display = "";
+    modal.style.display = "none";
+    console.log(modal.style.display)
+    console.log(modal)
   };
   span2.onclick = function () {
      modal2.style.display = "";
