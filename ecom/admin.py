@@ -84,8 +84,11 @@ class OrderAdmin(admin.ModelAdmin):
         flag=False
         for i in qs:
             for prod in i.items.all():
-                if prod.vendor.user == request.user:
-                    flag=True
+                try:
+                    if prod.vendor.user == request.user:
+                        flag=True
+                except:
+                    pass
             if flag==False:
                 qs = qs.exclude(id=i.id)
     
@@ -98,7 +101,8 @@ class PaymentAdmin(admin.ModelAdmin):
         if request.user.is_superuser:
             return qs
         return None
-admin.site.register(Checkout,PaymentAdmin)
+admin.site.register(Checkout)
+# admin.site.register(PaymentAdmin)
 admin.site.register(Payment)
 admin.site.register(Order,OrderAdmin)
 admin.site.register(Notification)
