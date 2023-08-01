@@ -879,6 +879,7 @@ class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
     success_url = reverse_lazy('Home')
     
     
+@login_required(login_url="/myaccount/login/")
 def write_review(request,id):
     if request.method == "GET": 
         product = Product.objects.get(id=id)
