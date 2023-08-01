@@ -24,6 +24,7 @@ from ecom.models import Currency
 from ecom.models import Payment as PayModel
 from django.views.generic import ListView
 from .forms import PayPalPaymentsForm
+from django.db.models import Q
 from django.views.decorators.csrf import csrf_exempt
 import json
 from random import randint
@@ -715,9 +716,9 @@ def Product_listing(request):
         search = request.GET["search"]
         search = search.strip()
         if search[-1] == "S" or search[-1] == "s":
-            product = Product.objects.filter(name__icontains = search[:len(search)-2]).order_by("?")
+            product = Product.objects.filter(Q(name__icontains=search[:len(search)-2]) | Q(sub_category__name__icontains=search[:len(search)-2])).order_by("?")
         else:
-            product = Product.objects.filter(name__icontains = search).order_by("?")
+            product = Product.objects.filter(name__icontains = search,sub_category__name__icontains=search[:len(search-2)]).order_by("?")
         context ={
             'product' : product,    
             'no_search':True
