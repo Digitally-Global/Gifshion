@@ -65,13 +65,18 @@ admin.site.register(Social)
 admin.site.register(Mail)
 admin.site.register(Wishlist)
 
+
 class ItemInline(admin.StackedInline):
     model=OrderItem
+        
 class PaymentInline(admin.StackedInline):
     model = Payment
     
 class OrderAdmin(admin.ModelAdmin):
     inlines = [ItemInline,PaymentInline]
+    list_filter = ("delivered", )
+    search_fields = ["id","order_date","user__username"]
+        
     def get_queryset(self, request):
         qs = super().get_queryset(request)
         if request.user.is_superuser:

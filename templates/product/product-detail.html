@@ -73,8 +73,8 @@
                 <span>Share</span>
                 <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" target="_blank">
                   <i class="fa fa-facebook"></i></a>
-                <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}" target="_blank"><i
-                    class="fa fa-twitter"></i></a>
+                <a onclick="openWhatsApp()" style="color: #B76530; font-size: larger;font-weight: 600;"><i
+                    class="fa fa-whatsapp" ></i></a>
               </p>
             </div>
           </div>
@@ -85,7 +85,10 @@
               {{i.Product_information|safe}}
             </p>
           </div>
-          <img src ="{% static './assets/images/whatsapp.png'  %}" height="50" size="50" onclick="openWhatsApp()"> 
+          <h5>
+            Contact Us
+          </h5>
+           <img src ="{% static './assets/images/whatsapp.png'  %}" height="50" size="50" onclick="openSupport()"> 
 
           <div class="product-price">
             <span class="p-text">Price</span>
@@ -208,8 +211,11 @@
         </div> -->
       </div>
     </div>
-  </div>
-     {% for product in product %}
+    {% for product in product %}
+  </div> <div class="review-btn" style="margin-left: 50px;">
+         <a href="{% url 'write_review' product.id %}">WRITE A REVIEW</a>
+       </div>
+ 
      {% if not  product.review_set.all|length == 0%}
     <section class="review-block mb-5">
       <div class="container">
@@ -225,9 +231,6 @@
           <p>{{review.description}}</p>
         </div>
         {% endfor %}
-        <div class="review-btn">
-          <a href="#">VIEW ALL 55 REVIEWS</a>
-        </div>
       </div>
     </section>
     {% endif %}
@@ -386,6 +389,13 @@ function openWhatsApp() {
   const link = encodeURIComponent(window.location.href)
   const description = encodeURIComponent('Check out this product!')
 	window.open(`whatsapp://send?text=${description}  ${link}`);
+    }
+function openSupport() {
+  const link = encodeURIComponent(window.location.href)
+  const description = encodeURIComponent('I am willing to buy this product, please contact me!')
+  // open redirect to google.com 
+  // window.location.href = `https://wa.me/9830363651?text=${description}  ${link}`
+	window.open(`whatsapp://{{phone_no}}?text=${description}  ${link}`);
     }
 </script>
 

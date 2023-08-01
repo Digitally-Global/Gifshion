@@ -236,6 +236,7 @@ class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True, blank=True,related_name="items")
     color = models.ForeignKey(Color, on_delete=models.CASCADE, null=True, blank=True)
     size = models.ForeignKey(size, on_delete=models.CASCADE, null=True, blank=True)
+    thumbnail = models.ImageField(upload_to='product_images/', null=True, blank=True)
     
 def checkout(request):
     if request.method == 'POST':

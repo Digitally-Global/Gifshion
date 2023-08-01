@@ -28,6 +28,7 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 from random import randint
 from .get_rate import *
+import random
 
 client = razorpay.Client(auth=("rzp_test_G54HO1qwPxfLIK", "nsmyogYOo15yxx4LpqtfEzMG"))
 
@@ -120,6 +121,7 @@ def cash_confrim(request):
                     item.price = str(round(float(value.price)/request.session['exchange'],2))
                     item.color = value.color
                     item.size = value.size
+                    item.thumbnail = value.product.image
                     if item.size and item.color: 
                         for stock in item.product.product_stock_set.all():
                             if stock.Color == item.color and stock.Size == item.size:
@@ -202,6 +204,7 @@ def confirm_razor_payment(request):
             item.price = str(round(float(value.price)/request.session['exchange'],2))
             item.color = value.color
             item.size = value.size
+            item.thumbnail = value.product.image
             if item.size and item.color: 
                 for stock in item.product.product_stock_set.all():
                     if stock.Color == item.color and stock.Size == item.size:
@@ -274,6 +277,7 @@ def confirm_order(request):
                 item.product = Product.objects.get(id=value.product.id)
                 item.quantity = value.quantity
                 item.color = value.color
+                item.thumbnail = value.product.image
                 item.size = value.size
                 item.price = str(round(float(value.price)/request.session['exchange'],2))
                 print(item.color,item.size,"Hello Woerls ")
@@ -709,8 +713,11 @@ def category_detail(request, category_id):
 def Product_listing(request):
     try:
         search = request.GET["search"]
-        # use non case sensitive 
-        product = Product.objects.filter(name__icontains = search).order_by("-id")
+        search = search.strip()
+        if search[-1] == "S" or search[-1] == "s":
+            product = Product.objects.filter(name__icontains = search[:len(search)-2]).order_by("?")
+        else:
+            product = Product.objects.filter(name__icontains = search).order_by("?")
         context ={
             'product' : product,    
             'no_search':True
@@ -728,9 +735,11 @@ def Product_Detail(request, slug):
     else:
         return redirect('404')
    
+    phone = Social.objects.all()[0].phone
     context={
         'product' : product,
-        'similar_products': similar_products[:3]
+        'similar_products': similar_products[:3],
+        'phone_no':phone
     }
     
     return render(request,'product/product-detail.html', context)
@@ -870,6 +879,18 @@ class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
     success_url = reverse_lazy('Home')
     
     
-def write_review(request):
+def write_review(request,id):
     if request.method == "GET": 
-        return render(request,'reviews/review.html')
+        product = Product.objects.get(id=id)
+        return render(request,'reviews/review.html',{"product":product})
+    elif request.method == "POST":
+        review = Review()
+        if request.POST.get('review1') != " " and request.POST.get('rate') :
+            review.description = request.POST.get('review1')
+            review.rating = request.POST.get('rate')
+            review.author = request.user
+            review.product = Product.objects.get(id=id)
+            review.save()
+            return redirect(Product.objects.get(id=id).get_absolute_url())
+        else:
+            return redirect('write_review',id=id)
