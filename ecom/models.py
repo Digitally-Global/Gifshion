@@ -67,6 +67,7 @@ class sub_category(models.Model):
     main_categories =models.ForeignKey('main_category', on_delete = models.CASCADE)
     name = models.CharField(max_length=255)
     banner = models.FileField(upload_to="sub_category",blank=True)
+    mobile_banner = models.FileField(upload_to="sub_category",blank=True)
     hand_delivery = models.BooleanField(default=False)
     def __str__(self):
         return self.name
@@ -229,6 +230,19 @@ class Order(models.Model):
     def __str__(self):
         return f"#{self.id} on " + self.order_date.strftime("%d %b %Y")
     
+
+class Vendor(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    phone = models.CharField(max_length=20)
+    address = models.CharField(max_length=100)
+    city = models.CharField(max_length=100)
+    state = models.CharField(max_length=100)
+    product = models.ManyToManyField(Product,related_name="vendor")
+    
+    def __str__(self):
+        return self.name
+    
 class OrderItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE,related_name="products")
     quantity = models.IntegerField()
@@ -237,6 +251,7 @@ class OrderItem(models.Model):
     color = models.ForeignKey(Color, on_delete=models.CASCADE, null=True, blank=True)
     size = models.ForeignKey(size, on_delete=models.CASCADE, null=True, blank=True)
     thumbnail = models.ImageField(upload_to='product_images/', null=True, blank=True)
+    vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE, null=True, blank=True)
     
 def checkout(request):
     if request.method == 'POST':
