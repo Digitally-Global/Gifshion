@@ -37,7 +37,7 @@ class ProductAdmin(admin.ModelAdmin):
         qs = super().get_queryset(request)
         if request.user.is_superuser:
             return qs
-        return qs.filter(seller=request.user)
+        return qs.filter(vendor__user=request.user)
     inlines = [sizes,Productsimageurls,colors,Stock_Admin] 
 
 admin.site.register(Product,ProductAdmin)
@@ -46,7 +46,9 @@ admin.site.register(Review)
 admin.site.register(Tracking)
 
   
-admin.site.register(Vendor)
+class VendorAdmin(admin.ModelAdmin):
+    search_fields = ['user__username']
+admin.site.register(Vendor,VendorAdmin)
 admin.site.register(category)
 admin.site.register(Section)
 
@@ -88,21 +90,14 @@ class OrderAdmin(admin.ModelAdmin):
                     if prod.vendor.user == request.user:
                         flag=True
                 except:
-                    pass
+                    flag=False
             if flag==False:
                 qs = qs.exclude(id=i.id)
     
         qs = qs.order_by('-order_date')
         return qs
     
-class PaymentAdmin(admin.ModelAdmin):
-    def get_queryset(self, request):
-        qs = super().get_queryset(request)
-        if request.user.is_superuser:
-            return qs
-        return None
 admin.site.register(Checkout)
-# admin.site.register(PaymentAdmin)
 admin.site.register(Payment)
 admin.site.register(Order,OrderAdmin)
 admin.site.register(Notification)

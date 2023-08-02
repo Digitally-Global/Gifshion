@@ -123,14 +123,12 @@ def cash_confrim(request):
                     item.color = value.color
                     item.size = value.size
                     item.thumbnail = value.product.image
-                    if item.size and item.color: 
+                    if item.product.stock>0:
+                        item.product.stock -= item.quantity
+                        item.product.save()
+                    elif item.size and item.color: 
                         for stock in item.product.product_stock_set.all():
                             if stock.Color == item.color and stock.Size == item.size:
-                                stock.stock -= item.quantity
-                                stock.save()
-                    elif item.size:
-                        for stock in item.product.product_stock_set.all():
-                            if stock.Size == item.size:
                                 stock.stock -= item.quantity
                                 stock.save()
                     elif item.color:
@@ -139,9 +137,12 @@ def cash_confrim(request):
                             if stock.Color == item.color:
                                 stock.stock -= item.quantity
                                 stock.save()
-                    else:
-                        item.product.stock -= item.quantity
-                        item.product.save()
+                    elif item.size:
+                        for stock in item.product.product_stock_set.all():
+                            if stock.Size == item.size:
+                                stock.stock -= item.quantity
+                                stock.save()
+
                     item.save()
                 order.checkout=Checkout.objects.get(id=request.session['checkout_id'])
                 order.paid = False
