@@ -1,7 +1,7 @@
 {% extends 'base.html' %} {% load product_tags %} {% load static %} {% block content %}
 <section class="checkout cart-page mt-5">
   {% load divide %}
-  <div class="custom-breadcrumbs mb-5">
+  <div class="custom-breadcrumbs mb-5 stepper">
     <div class="container bg-white rounded-3 shadow p-5">
       <div class="row">
         <div class="col-md-3" style="margin-bottom: 20px">
@@ -10,7 +10,7 @@
           >
         </div>
 
-        <div class="col-md-6">
+        <div class="col-md-6 ">
           <div class="custom-breadcrumbs-area d-flex justify-content-between">
             <div class="cart-block">
               <div class="dots"></div>
@@ -43,8 +43,8 @@
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       </div>
       {% endif %} {% endfor %} {% endif %}
-      <div class="row">
-        <div class="col-md-8 pe-5">
+      <div class="row" >
+        <div class="col-md-8 pe-5" style="margin-bottom:20px">
           <div class="chackout-items">
             <h4>Add Shipping Address</h4>
             <form
@@ -255,6 +255,7 @@
           </div>
           <div class="coupon rounded-3 bg-white p-3 pb-2">
             <p class="">If you have a coupon code, please apply it below.</p>
+             <div class="input-group mb-3">
             <form class="input-group mb-3" action="{% url  'checkout' %}" method="get">
               <input
                 type="text"
@@ -265,8 +266,11 @@
                 name="coupon_code"
                 required
               />
-              <button class="btn-small btn-dark" type="submit" id="button-addon2" style="width: 100px!important;">Apply</button>
+               <button class="btn btn-dark" type="submit" id="button-addon2">
+                    Apply
+                  </button>
             </form>
+            </div>
           </div>
           <div class="order-summary rounded-3 p-3 mt-4">
             <h3>Order Summary</h3>
@@ -307,6 +311,11 @@
 </section>
 <div id="cover-spin"></div>
 <style>
+  @media (max-width: 767px) {
+    .stepper { 
+      display: none;
+    }
+  }
   #cover-spin {
     position: fixed;
     width: 100%;
