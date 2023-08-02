@@ -24,12 +24,12 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 /* init tell CSS */
 .iti__flag {
-  background-image: url("../img/flags.png");
+  background-image: url("../images/flags.png");
 }
 
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   .iti__flag {
-    background-image: url("../img//flags@2x.png");
+    background-image: url("../images/flags@2x.png");
   }
 }
 /* Header CSS */
@@ -171,8 +171,7 @@ header.fixed .main-header .nav-manu .nav-link {
   -webkit-box-shadow: 0 1px 2px rgb(82 53 40 / 16%);
   box-shadow: 0 1px 2px rgb(82 53 40 / 16%);
 }
-.cart-icon
-  span.position-absolute.top-20.translate-middle.badge.rounded-pill.bg-dark {
+.cart-icon span.position-absolute.top-20.translate-middle.badge.rounded-pill.bg-dark {
   left: 19px;
 }
 /* Header Mega Menu */
