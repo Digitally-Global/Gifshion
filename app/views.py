@@ -718,7 +718,7 @@ def Product_listing(request):
         if search[-1] == "S" or search[-1] == "s":
             product = Product.objects.filter(Q(name__icontains=search[:len(search)-2]) | Q(sub_category__name__icontains=search[:len(search)-2])).order_by("?")
         else:
-            product = Product.objects.filter(name__icontains = search,sub_category__name__icontains=search[:len(search-2)]).order_by("?")
+            product =  Product.objects.filter(Q(name__icontains=search) | Q(sub_category__name__icontains=search)).order_by("?")
         context ={
             'product' : product,    
             'no_search':True
