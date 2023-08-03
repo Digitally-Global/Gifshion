@@ -707,6 +707,7 @@ def Register(request):
         user.save()
         login(request,user)
         WelcomeThread(user).start()
+        messages.success(request, 'You Are Eligible For 10% Discount On Your First Order!! Use Code: GIFTREND10')
         return redirect('profile')
     else:
         return redirect('login')
