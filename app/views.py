@@ -710,7 +710,7 @@ def category_detail(request, category_id):
         if filters[1] == "":
             filters[1] = 1000000
         products = Product.objects.filter(sub_category=Category,price__gte=int(filters[0]),price__lte=int(filters[1]))
-    return render(request, 'product/category_detail.html', { 'products': products , 'Category':cat_,'category':Category})
+    return render(request, 'product/category_detail.html', { 'products': products ,'category':Category})
  
 def Product_listing(request):
     try:
@@ -897,3 +897,14 @@ def write_review(request,id):
             return redirect(Product.objects.get(id=id).get_absolute_url())
         else:
             return redirect('write_review',id=id)
+
+from django.http import JsonResponse
+        
+def get_shipping_rates(request,country):
+    cart = CartItem.objects.filter(user=request.user)
+    weights = 0 
+    for value in cart:
+        weights += float(value.size.weight)*value.quantity
+    print(weights)
+    print(country)
+    return JsonResponse({'rates': getRate(country,weights)})

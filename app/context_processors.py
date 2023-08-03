@@ -13,4 +13,5 @@ def categories_processor(request):
     cart_total_amount = round(cart_total_amount,2)
   else :
     cart = []
-  return {'categories': categories,'currencies':currencies,'social':social,'cart_total_amount':cart_total_amount,'cart':cart,'notification':notification}
+  Category = category.objects.all().order_by('id')
+  return {'categories': categories,'currencies':currencies,'social':social,'cart_total_amount':cart_total_amount,'cart':cart,'notification':notification,'Category':Category}
