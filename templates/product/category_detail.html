@@ -162,7 +162,7 @@
               <div class="price">
                 <span
                   >{{ request.session.icon }} {{ i.price|divide:exchange|discount:i.Discount }}
-                  <del>{{i.price|divide:exchange}}</del></span
+                  <del>{{i.price|divide:exchange}}</del> <b style="color:red">({{i.Discount}}% OFF)</b></span
                 >
               </div>
             </div>

@@ -96,21 +96,6 @@
         <a href="{% url 'Home' %}"><img src={% static './assets/images/Asset 1@300x (1).png' %} alt="Gifshion"
             width="50px" height="20px" /></a>
       </div>
-      {% comment %} <div>
-        <ul class="d-flex">
-          <li>
-            <select name="" id="">
-              <option value="inr">₹ INR</option>
-              <option value="usd">$ USD</option>
-            </select>
-          </li>
-          <li>
-            <div class="close-icon">
-              <i class="fa fa-close"></i>
-            </div>
-          </li>
-        </ul>
-      </div> {% endcomment %}
     </div>
     {% if not user.is_authenticated %}
     <ul class="d-flex">
@@ -142,9 +127,32 @@
         </li>
                       
               {% endfor %}
+                  <div class="price-swticher">
+                <div class="dropdown">
+                  <a
+                    class="btn btn-sm btn-light dropdown-toggle"
+                    type="button"
+                    id="dropdownMenuButton1"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    {{request.session.icon}} {{request.session.currency_code}}
+                  </a>
+                  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    {% for currency in currencies%}
+                    <li>
+                      <a class="dropdown-item" href="{% url 'change_currency' currency.id%}"
+                        >{{currency.icon}} {{currency.code}}</a
+                      >
+                    </li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              </div>
               <ul>
     </div>
     <hr>
+    
     <div class="h-bottom">
       <ul class="nav justify-content-center footer-social">
         <li>
@@ -154,6 +162,7 @@
           <a href="{{social.instagram}}"><i class="flaticon-instagram"></i></a>
         </li>
       </ul>
+      
       <p class="text-center">©2023 Gifshion</p>
     </div>
   </div>
