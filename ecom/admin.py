@@ -44,6 +44,7 @@ admin.site.register(Product,ProductAdmin)
 admin.site.register(Slider)
 admin.site.register(Review)
 admin.site.register(Tracking)
+admin.site.register(Profile)
 
   
 class VendorAdmin(admin.ModelAdmin):

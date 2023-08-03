@@ -617,7 +617,17 @@ def checkout(request):
         if request.POST.get('coupon_code'):
             coupon_code = request.POST.get('coupon_code')
             if Coupon.objects.filter(code=coupon_code).exists():
+                print("coupon exists")
                 coupon = Coupon.objects.get(code=coupon_code)
+                used = request.user.profile.coupons_used
+                used = used.split(",")
+                for i in used:
+                    if i == coupon_code:
+                        messages.error(request, "You have already used this coupon")
+                        return redirect("checkout")
+                used.append(coupon_code)
+                request.user.profile.coupons_used = ",".join(used)
+                request.user.profile.save()
                 discount_value = round(coupon.get_discounted_value(initial_value=request.session.get("cart_total_amount")),2)
                 checkout.coupons = coupon
             else:
@@ -634,6 +644,13 @@ def checkout(request):
     if request.GET.get("coupon_code"):
         if Coupon.objects.filter(code=request.GET.get("coupon_code")).exists():
             coupon = Coupon.objects.get(code=request.GET.get("coupon_code"))
+            used = request.user.profile.coupons_used
+            used = used.split(",")
+            print(used)
+            for i in used:
+                if i == coupon.code:
+                    messages.error(request, "You have already used this coupon")
+                    return redirect("checkout")
             discount_value = round(coupon.get_discounted_value(initial_value=request.session.get("cart_total_amount")),2)
             coupon = {
                 "code": coupon.code,
@@ -771,7 +788,6 @@ def Home(request):
     Rakhi =get_inStock(Product.objects.filter(section__name = "Rakhi Special"))
     BestSeller = get_inStock(Product.objects.filter(section__name="BestSeller"))
     sections = Section.objects.exclude(name="BestSeller")
-    print(sections)
 
     context = {
         'banner' : banner,

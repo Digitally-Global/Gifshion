@@ -23,6 +23,7 @@ class Currency(models.Model):
 class Profile(models.Model):
     user = models.OneToOneField(User,on_delete=models.CASCADE)
     phone = models.CharField(max_length=10)
+    coupons_used = models.TextField(null=True,blank=True,default="")
     
     def __str__(self):
         return self.user.username
