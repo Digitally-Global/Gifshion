@@ -138,7 +138,7 @@ def cash_confrim(request):
                                 stock.stock -= item.quantity
                                 stock.save()
                     elif item.size:
-                        for stock in item.product.product_stock_set.all():
+                        for stock in item.product.ck_set.all():
                             if stock.Size == item.size:
                                 stock.stock -= item.quantity
                                 stock.save()
@@ -905,6 +905,5 @@ def get_shipping_rates(request,country):
     weights = 0 
     for value in cart:
         weights += float(value.size.weight)*value.quantity
-    print(weights)
-    print(country)
-    return JsonResponse({'rates': getRate(country,weights)})
+    rates = f"{request.session['icon']}{round(getRate(country,weights)/float(request.session['exchange']),2)}"
+    return JsonResponse({'rates': rates})

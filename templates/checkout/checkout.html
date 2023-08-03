@@ -132,6 +132,7 @@
                   class="form-select"
                   aria-label="Default select example"
                   name="country"
+                  onchange="getRate(this.value)"
                   required
                 >
                   {% for country in countries %}
@@ -276,11 +277,13 @@
             <h3>Order Summary</h3>
             <div class="d-flex justify-content-between pb-1">
               <span>Bag Total </span>
+              <span id="price-box">
               {{request.session.icon}}{{cart_total_amount}}
+              </span>
             </div>
             <div class="d-flex justify-content-between pb-1">
-              <span>Shipping Charges </span>
-              <span>Calculated after choosing country</span>
+              <span class="ship">Shipping Charges </span>
+              <span id="rate-box" class="ship">Calculated after choosing country</span>
             </div>
             {% if coupon %} {% if not coupon.invalid %}
             <div class="d-flex justify-content-between pb-1">
@@ -294,12 +297,12 @@
             <hr />
             <div class="d-flex justify-content-between align-items-center">
               <span>Grand Total </span>
-              <span class="order-price">{{cart_total_amount|sub:coupon.discount}} </span>
+              <span class="order-price" id="total-box">{{cart_total_amount|sub:coupon.discount}} </span>
             </div>
             {% endif %} {% else %}
             <div class="d-flex justify-content-between align-items-center">
               <span>Grand Total </span>
-              <span class="order-price">{{request.session.icon}}{{cart_total_amount}} </span>
+              <span class="order-price" id="total-box">{{request.session.icon}}{{cart_total_amount}} </span>
             </div>
             {% endif %}
             <hr />
@@ -364,6 +367,11 @@
     -webkit-animation: spin 0.8s linear infinite;
     animation: spin 0.8s linear infinite;
   }
+  @media (max-width: 767px) {
+    .ship {
+      font-size: 10px;
+    }
+  }
 </style>
 <script>
   function handleSubmit(event) {
@@ -396,6 +404,22 @@
     form.classList.add("was-validated");
     $("#cover-spin").show(0);
     forms.submit();
+  }
+
+  async function getRate(country){
+    const req = await fetch('/shipping-rates/'+country)
+    const res = await req.json()
+    const rate_box = document.getElementById('rate-box')
+    rate_box.classList.remove('ship')
+    rate_box.innerHTML = res.rates
+    const total_box = document.getElementById('total-box')
+    let current = document.getElementById('price-box').innerHTML.trim()
+    current = parseFloat(current.substring(1))
+    current = (parseFloat(current)+parseFloat(res.rates.substring(1))) 
+    round = Math.pow(10,2)
+    current = Math.round(current * round) / round
+    total_box.innerHTML = current
+    total_box.innerHTML = res.rates[0]+total_box.innerHTML
   }
 </script>
 

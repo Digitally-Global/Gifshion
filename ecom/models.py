@@ -1,13 +1,17 @@
 from django.db import models
 from ckeditor.fields import RichTextField
 from django.utils.text import slugify
-from django.db.models.signals import pre_save
+from django.db.models.signals import pre_save,post_save
 from django.contrib.auth.models import User
-from app.mail import send_mail
+from app.mail import send_mail,send_out
 from django_simple_coupons.models import Coupon
 from colorfield.fields import ColorField
 from shortuuid.django_fields import ShortUUIDField
 
+# write a signal to send a mail when a product stock becomes zero 
+# @receiver(post_save, sender=Product)
+# def send_mail_when_stock_zero(sender, instance, created, **kwargs):
+    
 
 
 class Currency(models.Model):
@@ -40,7 +44,7 @@ class Checkout(models.Model):
     country = models.CharField(max_length=50)
     state = models.CharField(max_length=50)
     address = models.CharField(max_length=50)
-    coupons = models.ForeignKey(Coupon, on_delete=models.CASCADE,null=True,blank=True)
+    coupons = models.ForeignKey(Coupon, on_delete=models.PROTECT,null=True,blank=True)
     
     def __str__(self):
         return self.fname
@@ -58,13 +62,13 @@ class category(models.Model):
 #         return self.name
     
 class main_category(models.Model):
-    category  = models.ForeignKey('category', on_delete = models.CASCADE)
+    category  = models.ForeignKey('category', on_delete = models.SET_NULL,null=True)
     name = models.CharField(max_length=255)
     def __str__(self):
         return self.name
 
 class sub_category(models.Model):
-    main_categories =models.ForeignKey('main_category', on_delete = models.CASCADE)
+    main_categories =models.ForeignKey('main_category', on_delete = models.SET_NULL,null=True)
     name = models.CharField(max_length=255)
     banner = models.FileField(upload_to="sub_category",blank=True)
     mobile_banner = models.FileField(upload_to="sub_category",blank=True)
@@ -96,11 +100,11 @@ class Product(models.Model):
     Discount = models.IntegerField()
     Product_information = models.CharField(max_length=400)
     name = models.CharField(max_length=100)
-    sub_category = models.ForeignKey(sub_category,on_delete=models.CASCADE)
+    sub_category = models.ForeignKey(sub_category,on_delete=models.DO_NOTHING,null=True,blank=True)
     Tags = models.CharField(max_length=100)
     Description = RichTextField()
     section = models.ForeignKey(Section,on_delete=models.DO_NOTHING)
-    seller = models.ForeignKey(User,on_delete=models.CASCADE,blank=True,null=True)
+    seller = models.ForeignKey(User,on_delete=models.DO_NOTHING,blank=True,null=True)
     
     slug = models.SlugField(default='', max_length=500, null=True, blank=True)
     
@@ -140,6 +144,17 @@ def pre_save_post_receiver(sender, instance, *args, **kwargs):
         instance.slug = create_slug(instance)
     pre_save.connect(pre_save_post_receiver, Product)
 pre_save.connect(pre_save_post_receiver, Product)
+
+def check_stock(sender, instance, *args, **kwargs):
+    if instance.product_stock_set.exists():
+        for i in instance.product_stock_set.all():
+            if i.stock == 0:
+                print("out of stock")
+                send_out(instance)
+    elif instance.stock == 0:
+        send_out(instance)
+        print("out of stock")
+post_save.connect(check_stock, Product)
 class Coupon_Code(models.Model):
     code = models.CharField(max_length=100)
     discount = models.IntegerField()
@@ -213,13 +228,13 @@ class Order(models.Model):
         primary_key=True,
     )
     razorpay_order_id = models.CharField(max_length=100, null=True, blank=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     total_amount = models.DecimalField(max_digits=10, decimal_places=2)
-    checkout = models.OneToOneField(Checkout, on_delete=models.CASCADE, null=True, blank=True)
+    checkout = models.OneToOneField(Checkout, on_delete=models.DO_NOTHING, null=True, blank=True)
     order_date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
-    tracking = models.OneToOneField(Tracking, on_delete=models.CASCADE, null=True, blank=True)
+    tracking = models.OneToOneField(Tracking, on_delete=models.DO_NOTHING, null=True, blank=True)
     ordered = models.BooleanField(default=False)
-    coupon = models.ForeignKey(Coupon_Code, on_delete=models.CASCADE, null=True, blank=True)
+    coupon = models.ForeignKey(Coupon_Code, on_delete=models.DO_NOTHING, null=True, blank=True)
     paid = models.BooleanField(default=False)
     delivered = models.BooleanField(default=False)
     cancelled = models.BooleanField(default=False)
@@ -245,14 +260,14 @@ class Vendor(models.Model):
         return self.name
     
 class OrderItem(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE,related_name="products")
+    product = models.ForeignKey(Product, on_delete=models.DO_NOTHING,related_name="products")
     quantity = models.IntegerField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True, blank=True,related_name="items")
-    color = models.ForeignKey(Color, on_delete=models.CASCADE, null=True, blank=True)
-    size = models.ForeignKey(size, on_delete=models.CASCADE, null=True, blank=True)
+    order = models.ForeignKey(Order, on_delete=models.DO_NOTHING, null=True, blank=True,related_name="items")
+    color = models.ForeignKey(Color, on_delete=models.DO_NOTHING, null=True, blank=True)
+    size = models.ForeignKey(size, on_delete=models.DO_NOTHING, null=True, blank=True)
     thumbnail = models.ImageField(upload_to='product_images/', null=True, blank=True)
-    vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE, null=True, blank=True)
+    vendor = models.ForeignKey(Vendor, on_delete=models.DO_NOTHING, null=True, blank=True)
     
 def checkout(request):
     if request.method == 'POST':
