@@ -121,3 +121,9 @@ def mail(value):
     provider = value.split('@')[1]
     email = email[0:2] + '*' * (len(email) - 2)
     return email + '@' + provider
+
+
+@register.filter()
+def get_15(value):
+    return value.order_by('-id')[:15]
+    

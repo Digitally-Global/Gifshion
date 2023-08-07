@@ -89,7 +89,8 @@
         </div>
 
         <div class="owl-carousel products-slider">
-          {% for i in section.product_set.all|slice:":15 "%}
+
+          {% for i in section.product_set.all|get_15%}
           <div class="product-item">
             <div class="product-box">
               <div class="product-images">
