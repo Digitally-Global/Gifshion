@@ -74,6 +74,7 @@ class sub_category(models.Model):
     banner = models.FileField(upload_to="sub_category",blank=True)
     mobile_banner = models.FileField(upload_to="sub_category",blank=True)
     hand_delivery = models.BooleanField(default=False)
+    discount = models.IntegerField(default=0)
     def __str__(self):
         return self.name
     
@@ -104,7 +105,7 @@ class Product(models.Model):
     sub_category = models.ForeignKey(sub_category,on_delete=models.DO_NOTHING,null=True,blank=True)
     Tags = models.CharField(max_length=100)
     Description = RichTextField()
-    section = models.ForeignKey(Section,on_delete=models.DO_NOTHING)
+    section = models.ForeignKey(Section,on_delete=models.DO_NOTHING,blank=True,null=True)
     seller = models.ForeignKey(User,on_delete=models.DO_NOTHING,blank=True,null=True)
     
     slug = models.SlugField(default='', max_length=500, null=True, blank=True)
@@ -145,6 +146,22 @@ def pre_save_post_receiver(sender, instance, *args, **kwargs):
         instance.slug = create_slug(instance)
     pre_save.connect(pre_save_post_receiver, Product)
 pre_save.connect(pre_save_post_receiver, Product)
+
+def pre_save_post_receiver(sender, instance, *args, **kwargs):
+    if not instance.slug:
+        instance.slug = create_slug(instance)
+    pre_save.connect(pre_save_post_receiver, Product)
+pre_save.connect(pre_save_post_receiver, Product)
+
+
+def DiscountPost(sender, instance, *args, **kwargs):
+    discount = instance.discount
+    products = instance.product_set.all()
+    for product in products:
+        product.Discount = discount
+        product.save()
+    post_save.connect(DiscountPost, sub_category)
+post_save.connect(DiscountPost, sub_category)
 
 def check_stock(sender, instance, *args, **kwargs):
     if instance.product_stock_set.exists():
