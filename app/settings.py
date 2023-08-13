@@ -104,24 +104,6 @@ WSGI_APPLICATION = 'app.wsgi.application'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 # if not DEBUG:
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'gifshion',
-#         'USER': 'gifshion',
-#         'PASSWORD': 'gifshion123',
-#         'HOST': 'my-database.c9hrhzydvbtk.ap-south-1.rds.amazonaws.com',
-#         'PORT': '5432',
-#     }
-# }
-# else:
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -132,6 +114,24 @@ DATABASES = {
         'PORT': '5432',
     }
 }
+# else:
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'gifshion',
+#         'USER': 'gifshion',
+#         'PASSWORD': 'gifshion123',
+#         'HOST': 'my-database.c9hrhzydvbtk.ap-south-1.rds.amazonaws.com',
+#         'PORT': '5432',
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -244,10 +244,24 @@ client.set_app_details({"title" : "Gifshion", "version" : "0.0.1"})
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
-CSRF_TRUSTED_ORIGINS = ['https://4e1e-49-37-9-57.ngrok-free.app']
+CSRF_TRUSTED_ORIGINS = ['https://4e1e-49-37-9-57.ngrok-free.app',"https://06b6-49-37-8-194.ngrok-free.app"]
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = "smtp-relay.sendinblue.com"
 EMAIL_PORT = 587
 EMAIL_HOST_USER =  "ccegifshion24x7@gmail.com"
 EMAIL_HOST_PASSWORD = "KQ0xEVwPsfFgdqI9"
+
+
+
+
+AWS_ACCESS_KEY_ID = 'AKIATKUYPHOCNBUB3VA7'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_STORAGE_BUCKET_NAME = 'gifshion'
+AWS_S3_SIGNATURE_NAME = 's3v4',
+AWS_S3_REGION_NAME = 'ap-south-1'
+AWS_S3_FILE_OVERWRITE = False
+AWS_DEFAULT_ACL =  None
+AWS_S3_VERITY = True
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+AWS_S3_ENDPOINT_URL = 'https://production-env-gifshion.s3.ap-south-1.amazonaws.com'
