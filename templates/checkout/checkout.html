@@ -60,7 +60,7 @@
                 <label for="validationPhnumber" class="form-label">Mobile Number</label>
                 <input
                   type="number"
-                  class="form-control"
+                  class="form-control special"
                   name="mobile_number"
                   id="validationPhnumber"
                   required
@@ -71,7 +71,7 @@
                 <label for="validationEmail" class="form-label">Email</label>
                 <input
                   type="email"
-                  class="form-control"
+                  class="form-control special"
                   name="email"
                   id="validationEmail"
                   required
@@ -82,7 +82,7 @@
                 <label for="validationCustom01" class="form-label">First name</label>
                 <input
                   type="text"
-                  class="form-control"
+                  class="form-control special"
                   name="fname"
                   id="validationCustom01"
                   required
@@ -93,7 +93,7 @@
                 <label for="validationCustom02" class="form-label">Last name</label>
                 <input
                   type="text"
-                  class="form-control"
+                  class="form-control special"
                   name="lname"
                   id="validationCustom02"
                   required
@@ -105,7 +105,7 @@
                 <label for="validationCustom05" class="form-label">Zip</label>
                 <input
                   type="number"
-                  class="form-control"
+                  class="form-control special"
                   name="zip"
                   id="validationCustom05"
                   required
@@ -116,7 +116,7 @@
                 <label for="validationCustom03" class="form-label">City</label>
                 <input
                   type="text"
-                  class="form-control"
+                  class="form-control special"
                   name="city"
                   id="validationCustom03"
                   required
@@ -129,7 +129,7 @@
                 <input type="text" class="form-control" name="country" id="validationCustomCountry" aria-describedby="inputGroupPrepend" required value="India"  />
                 {%else%}
                 <select
-                  class="form-select"
+                  class="form-select special"
                   aria-label="Default select example"
                   name="country"
                   onchange="getRate(this.value)"
@@ -143,7 +143,7 @@
                 {% if coupon %} {% if not coupon.invalid %}
                 <input
                   type="text"
-                  class="form-control"
+                  class="form-control special"
                   name="coupon_code"
                   id="validationCustomCountry"
                   aria-describedby="inputGroupPrepend"
@@ -158,7 +158,7 @@
                 <label for="validationCustom04" class="form-label">State</label>
                 <input
                   type="text"
-                  class="form-control"
+                  class="form-control special"
                   name="state"
                   id="validationCustom04"
                   aria-describedby="inputGroupPrepend"
@@ -169,7 +169,7 @@
               <div class="col-12">
                 <label for="validationCustomCountry" class="form-label">Address</label>
                 <textarea
-                  class="form-control"
+                  class="form-control special"
                   name="address"
                   id="validationCustomCountry"
                   cols=""
@@ -257,7 +257,7 @@
           <div class="coupon rounded-3 bg-white p-3 pb-2">
             <p class="">If you have a coupon code, please apply it below.</p>
              <div class="input-group mb-3">
-            <form class="input-group mb-3" action="{% url  'checkout' %}" method="get">
+            <form class="input-group mb-3" action="{% url  'checkout' %}" method="get" onsubmit="handleCoupon(event)">
               <input
                 type="text"
                 class="form-control"
@@ -374,6 +374,92 @@
   }
 </style>
 <script>
+  {% comment %} check if a value preset is saved in local storage {% endcomment %}
+  if (localStorage.getItem("preset")){
+    country = localStorage.getItem("country")
+    mobile_number = localStorage.getItem("mobile_number")
+    email = localStorage.getItem("email")
+    fname = localStorage.getItem("fname")
+    lname = localStorage.getItem("lname")
+    zip = localStorage.getItem("zip")
+    city = localStorage.getItem("city")
+    state = localStorage.getItem("state")
+    address = localStorage.getItem("address")
+
+    let elements = document.getElementsByClassName("special")
+    for(i=0;i<9;i++){
+      let element = elements[i]
+      if (element.name == "country"){
+        element.value = country
+      }
+      else if (element.name == "mobile_number"){
+        element.value = mobile_number
+      }
+      else if (element.name == "email"){
+        element.value = email
+      }
+      else if (element.name == "fname"){
+        element.value = fname
+      }
+      else if (element.name == "lname"){
+        element.value = lname
+      }
+      else if (element.name == "zip"){
+        element.value = zip
+      }
+      else if (element.name == "city"){
+        element.value = city
+      }
+      else if (element.name == "state"){
+        element.value = state
+      }
+      else if (element.name == "address"){
+        element.value = address
+      }
+    }
+
+  }
+
+  function save_to_local(){
+    localStorage.setItem("preset",true)
+    let elements = document.getElementsByClassName("special")
+    for(i=0;i<8;i++){
+      let element = elements[i]
+      if (element.name == "country"){
+        localStorage.setItem("country",element.value)
+      }
+      else if (element.name == "mobile_number"){
+        localStorage.setItem("mobile_number",element.value)
+      }
+      else if (element.name == "email"){
+        localStorage.setItem("email",element.value)
+      }
+      else if (element.name == "fname"){
+        localStorage.setItem("fname",element.value)
+      }
+      else if (element.name == "lname"){
+        localStorage.setItem("lname",element.value)
+      }
+      else if (element.name == "zip"){
+        localStorage.setItem("zip",element.value)
+      }
+      else if (element.name == "city"){
+        localStorage.setItem("city",element.value)
+      }
+      else if (element.name == "state"){
+        localStorage.setItem("state",element.value)
+      }
+      else if (element.name == "address"){
+        localStorage.setItem("address",element.value)
+      }
+    }
+  }
+
+  function handleCoupon(event){
+    event.preventDefault()
+    save_to_local()
+    event.target.submit()
+  }
   function handleSubmit(event) {
     let elements = document.querySelectorAll(".form-control:invalid");
     if (elements.length > 1) {
