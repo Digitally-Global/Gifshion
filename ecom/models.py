@@ -44,7 +44,7 @@ class Checkout(models.Model):
     city = models.CharField(max_length=50)
     country = models.CharField(max_length=50)
     state = models.CharField(max_length=50)
-    address = models.CharField(max_length=50)
+    address = models.CharField(max_length=500)
     coupons = models.ForeignKey(Coupon, on_delete=models.PROTECT,null=True,blank=True)
     
     def __str__(self):
@@ -154,14 +154,14 @@ def pre_save_post_receiver(sender, instance, *args, **kwargs):
 pre_save.connect(pre_save_post_receiver, Product)
 
 
-def DiscountPost(sender, instance, *args, **kwargs):
-    discount = instance.discount
-    products = instance.product_set.all()
-    for product in products:
-        product.Discount = discount
-        product.save()
-    post_save.connect(DiscountPost, sub_category)
-post_save.connect(DiscountPost, sub_category)
+# def DiscountPost(sender, instance, *args, **kwargs):
+#     discount = instance.discount
+#     products = instance.product_set.all()
+#     for product in products:
+#         product.Discount = discount
+#         product.save()
+#     post_save.connect(DiscountPost, sub_category)
+# post_save.connect(DiscountPost, sub_category)
 
 def check_stock(sender, instance, *args, **kwargs):
     if instance.product_stock_set.exists():
